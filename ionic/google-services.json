@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "620756868871",
+    "firebase_url": "https://nbc-ionic2-push-notification.firebaseio.com",
+    "project_id": "nbc-ionic2-push-notification",
+    "storage_bucket": "nbc-ionic2-push-notification.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:620756868871:android:9663f1cdc8ee9033",
+        "android_client_info": {
+          "package_name": "com.ionicframework.mylora138236"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "620756868871-91d3b0ioq7fiihd0kpq9jg5vqf6384fa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsl9nqB_obJ0EljKeEfNzv1-Z838PJcXY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:620756868871:android:d3bab40fb1393d96",
+        "android_client_info": {
+          "package_name": "com.cytron.toshibatec"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "620756868871-91d3b0ioq7fiihd0kpq9jg5vqf6384fa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsl9nqB_obJ0EljKeEfNzv1-Z838PJcXY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
