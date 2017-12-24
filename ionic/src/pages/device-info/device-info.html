@@ -1,0 +1,118 @@
+<!--
+  Generated template for the DeviceInfoPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+
+<ion-content padding-bottom #info>
+  <ion-fab bottom right>
+    <button ion-fab color="secondary" (click)="scroll()">
+      <ion-icon [name]="'ios-arrow-'+scrolling"></ion-icon>
+    </button>
+  </ion-fab>
+  <ion-item no-lines padding *ngIf="device.id">
+    <!--<ion-icon large name="md-desktop" item-start padding-left></ion-icon>-->
+    <h1 class="title">{{ device.id }}</h1>
+    <ion-badge [color]="device.status? 'secondary':'danger'">{{ device.status? 'Online': 'Offline' }}</ion-badge>
+    <p>Firmware Version: {{ device.fv? device.fv: '--' }}</p>
+    <p>IP Address: {{ device.ip? device.ip: '--' }}</p>
+    <p>Last Seen: {{ device.lastSeen? device.lastSeen: '--'}}</p>
+    <p>Last Reboot: {{ device.lastReboot? device.lastReboot:'--' }}</p>
+    <!--<button item-end *ngIf="!pingInProgress" ion-button (click)="ping()">PING</button>-->
+    <ion-spinner item-end *ngIf="pingInProgress"></ion-spinner>
+  </ion-item>
+  <ion-row>
+    <ion-col text-center>
+      <button [disabled]="pingInProgress" ion-button clear (click)="ping()">
+        Ping
+      </button>
+    </ion-col>
+    <ion-col text-center>
+      <button ion-button clear (click)="refresh()">
+        Refresh
+      </button>
+    </ion-col>
+    <ion-col text-center>
+      <button ion-button color="danger" (click)="reboot()">
+        Reboot
+      </button>
+    </ion-col>
+  </ion-row>
+  <ion-list>
+    <ion-item-divider color="light">Sensors
+      <button item-end ion-button clear (click)="forceShow = !forceShow">
+        {{ forceShow? 'Show Online Only': 'Show All'}}
+      </button>
+    </ion-item-divider>
+    <ion-row>
+      <ion-col [ngClass]="{'hidden': !s.isOnline && !forceShow}" class="sensors" col-12 col-sm-6 col-md-4 col-lg-3 *ngFor="let s of sensors">
+        <ion-card [ngClass]="{'dim': !s.isOnline}">
+          <ion-card-header>
+            <b>Sensor {{ s.pos }}</b>
+            <ion-note *ngIf="!refreshInProgress" [color]="s.isOnline?'secondary':'danger'" float-right>{{ s.isOnline? 'Online': 'Offline'}}</ion-note>
+            <p style="color:#777">{{ s.fv? 'v'+s.fv:'--' }}</p>
+          </ion-card-header>
+          <ion-card-content>
+            <p>Type: {{ s.type? s.type: '--' }}</p>
+            <p>RFID: {{ s.currentRFID? s.currentRFID: '--' }}</p>
+            <p>Weight: {{ s.weight? s.weight: '--' }}</p>
+            <p>Button: {{ s.button? s.button: '--' }}</p>
+            <p>Proximity: {{ s.proximity? s.proximity: '--' }}</p>
+          </ion-card-content>
+          <ion-row>
+            <ion-col text-center>
+              <button [disabled]="!s.isOnline" ion-button clear (click)="overrideLED(s, 'ON')">
+                On
+              </button>
+            </ion-col>
+            <ion-col text-center>
+              <button [disabled]="!s.isOnline" ion-button clear (click)="overrideLED(s, 'OFF')">
+                Off
+              </button>
+            </ion-col>
+            <ion-col text-center>
+              <button [disabled]="!s.isOnline" ion-button (click)="overrideLED(s, 'BLINK')">
+                Blink
+              </button>
+            </ion-col>
+          </ion-row>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <!--<div text-center padding>
+      <button ion-button class="btn-special" large color="custom" (click)="refresh()">
+        Refresh
+      </button>
+    </div>-->
+    <ion-item-divider color="light">Set Interval</ion-item-divider>
+    <ion-item-group padding-bottom>
+      <p padding-left style="font-size: 1.6rem">Set the packet delay and MQTT publish interval for the device.
+      </p>
+      <ion-item>
+        <ion-label stacked>Packet Delay (ms)</ion-label>
+        <ion-input type="text" placeholder="e.g 50 (50ms)" [(ngModel)]="device.intervals.PACKET_INTERVAL"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label stacked>Publish Interval (ms)</ion-label>
+        <ion-input type="text" placeholder="e.g 10000 (10 seconds)" [(ngModel)]="device.intervals.PUB_INTERVAL"></ion-input>
+      </ion-item>
+      <div text-center margin-top>
+        <button ion-button class="btn-special" large color="custom" (click)="setIntervals()">
+          Set
+        </button>
+      </div>
+    </ion-item-group>
+    <!--<ion-item-divider color="danger">Reboot</ion-item-divider>
+    <ion-item-group padding-bottom>
+      <ion-item no-lines>
+        Restart the device immediately.
+      </ion-item>
+      <div text-center>
+        <button class="btn-special" ion-button large color="custom" (click)="reboot()">
+          Reboot Now
+        </button>
+      </div>
+    </ion-item-group>-->
+  </ion-list>
+</ion-content>

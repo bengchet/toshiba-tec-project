@@ -1,0 +1,70 @@
+page-login {
+
+    ion-content{
+        .scroll-content, .fixed-content{
+            background: color($colors, dark);
+        }
+    }
+    .logo-container{
+        width: 100%;
+        text-align: center;
+        img{
+            width: 90%;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+    }
+    .login-page-container{
+        height: 100%;
+        ion-col{
+            margin: auto;
+        }
+    }
+    .login-container{
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .login-box{
+        width: 100%;
+    }
+
+    ion-item{
+    	padding-left:0!important;
+    	background:transparent!important;
+        color:white!important;
+    }
+
+    ion-label{
+    	color:white!important;
+    }
+
+    .input-has-focus {
+        .item-inner {
+            border-bottom: 2px solid white!important;
+            ion-label{
+                font-weight: bold !important;
+            }
+        }
+    }
+
+    .showPasswordBtn{
+        margin: 0!important;
+        padding: 5px 10px!important;
+        font-size: 2rem!important;
+        height:initial!important;
+        align-self: flex-end;
+        color:white;
+    }
+    
+    .isPassword{
+        -webkit-text-security:disc!important;
+    }
+
+    .list > .item-block:first-child {
+        border-top: none!important;
+    }
+
+}

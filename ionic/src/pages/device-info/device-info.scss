@@ -1,0 +1,32 @@
+page-device-info {
+    .btn-special{
+        height: 2.5em!important;
+        font-size: 1.6rem!important;
+        min-width: 150px!important;
+    }
+    .title{
+        font-weight: bold;
+        display: inline-block;
+        margin: 5px 0 !important;
+        vertical-align: middle;
+        padding-right: 5px;
+    }
+    .ping{
+        ion-spinner{
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+        .text{
+            margin: 0;
+            display:inline-block;
+            vertical-align: middle;
+        }
+    }
+
+    .card.dim{
+        background: #ddd!important;
+    }
+    .col.sensors.hidden{
+        display:none;
+    }
+}

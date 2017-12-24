@@ -1,0 +1,18 @@
+page-device {
+    .tab-button-text{
+        text-transform: uppercase!important;
+        font-weight: bold;
+    }
+    ion-title{
+        .header, .subheader{
+            display: block;
+        }
+        span.header{
+            margin-top: 0.2rem;
+        }
+        span.subheader{
+            margin-top: 0.3rem;
+            font-size: 1.3rem;
+        }
+    }
+}

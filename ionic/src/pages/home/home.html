@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      <img src="assets/icon/icon.png" />
+      <div class="custom-title">
+        <span class="header">Toshiba Tec Project</span>
+        <span class="subheader" *ngIf="mqtt.mqttRegisteredBrokerList.length == 0">
+          No registered MQTT Brokers
+        </span>
+        <span class="subheader" *ngIf="mqtt.mqttRegisteredBrokerList.length > 0 && !mqtt.mqttUrl">
+          Please choose a MQTT broker
+        </span>
+        <span class="subheader" *ngIf="mqtt.mqttRegisteredBrokerList.length > 0 && mqtt.mqttUrl">
+          {{ mqtt.mqttConnectionStatus? 'MQTT Connected' : 'Connecting to MQTT...'}}
+        </span>
+      </div>
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="presentPopover($event)">
+        <ion-icon name="more"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-list-header color="light">
+      Main Controller List
+      <ion-spinner *ngIf="isLoading" item-end></ion-spinner>
+      <button *ngIf="!isLoading" ion-button clear item-end (click)="refresh()">
+        Refresh
+      </button>
+    </ion-list-header>
+    <ion-item-sliding *ngFor="let device of devices">
+      <button [disabled]="!mqtt.mqttConnectionStatus" detail-none ion-item (click)="goToDevicePage(device)">
+        <ion-icon large name="md-desktop" item-start padding-left></ion-icon>
+        <h2>
+          <b>{{ device }}</b>
+        </h2>
+        <!--<p>Last seen: {{ device.lastSeen }}</p>-->
+      </button>
+      <ion-item-options side="left">
+        <button ion-button clear icon-only (click)="removeDevice(device.id)">
+          <ion-icon name="remove-circle" color="danger"></ion-icon>
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+    <div text-center margin-top *ngIf="!isLoading">
+      <button ion-button (click)="showAddDeviceDialog()">
+        <ion-icon margin-right name="add"></ion-icon>
+        Add a device
+      </button>
+    </div>
+  </ion-list>
+</ion-content>

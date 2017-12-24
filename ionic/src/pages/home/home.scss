@@ -1,0 +1,41 @@
+page-home {
+    .disconnected{
+        ion-spinner, span{
+            vertical-align: middle;
+        }
+        ion-spinner{
+            margin-right: 5px;
+        }
+    }
+    .connected{
+        ion-icon{
+        margin-left: 5px;
+        font-size: 2.5rem!important;
+        vertical-align:middle;
+        }
+        span{
+            vertical-align:middle;
+        }
+    }
+    ion-title{
+        img{
+            display:inline-block;
+            height: 35px;
+            border-radius: 5px;
+            margin-right: 5px;
+        }
+        div.custom-title{
+            display:inline-block;
+            .header, .subheader{
+                display: block;
+            }
+            span.header{
+                margin-top: 0.2rem;
+            }
+            span.subheader{
+                margin-top: 0.1rem;
+                font-size: 1.3rem;
+            }
+        }
+    }
+}

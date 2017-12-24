@@ -1,0 +1,36 @@
+<!--
+  Generated template for the DevicePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      <span class="header">Device {{ ctrlID }}</span>
+      <span class="subheader">{{ mqtt.mqttConnectionStatus? 'MQTT Connected' : 'Connecting to MQTT...'}}</span>
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <!--<ion-tabs color="custom" *ngIf="ctrlID" name="deviceTabs" tabsPlacement="top" tabsLayout="icon-hide" tabsHighlight="true">
+    <ion-tab *ngFor="let tab of tabs"
+      [root]="tab.page" 
+      [rootParams]="tab.params" 
+      [tabTitle]="tab.title">
+    </ion-tab>
+  </ion-tabs>-->
+  <super-tabs 
+    toolbarBackground="custom" 
+    toolbarColor="light"
+    indicatorColor="light"
+    badgeColor="light"
+    *ngIf="ctrlID" 
+    id="deviceTabs">
+    <super-tab *ngFor="let tab of tabs"
+      [root]="tab.page" 
+      [rootParams]="tab.params" 
+      [title]="tab.title">
+    </super-tab>
+  </super-tabs>
+</ion-content>
