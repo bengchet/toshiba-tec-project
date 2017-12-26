@@ -1,1 +1,111 @@
-webpackJsonp([1],{529:function(l,n,u){"use strict";function a(l){return o._21(0,[(l()(),o._19(-1,null,["\n"])),(l()(),o.Z(1,0,null,null,87,"ion-content",[],[[2,"statusbar-padding",null],[2,"has-refresher",null]],null,null,b.b,b.a)),o.Y(2,4374528,null,0,v.a,[C.a,Y.a,w.a,o.j,o.z,y.a,P.a,o.u,[2,Z.a],[2,j.a]],null,null),(l()(),o._19(-1,1,["\n  "])),(l()(),o.Z(4,0,null,1,83,"ion-row",[["class","login-page-container row"]],null,null,null,null,null)),o.Y(5,16384,null,0,k.a,[],null,null),(l()(),o._19(-1,null,["\n    "])),(l()(),o.Z(7,0,null,null,79,"ion-col",[["class","col"],["col-12",""],["col-lg-6",""],["col-md-6",""],["col-xl-6",""]],null,null,null,null,null)),o.Y(8,16384,null,0,z.a,[],null,null),(l()(),o._19(-1,null,["\n      "])),(l()(),o.Z(10,0,null,null,75,"div",[["class","login-container"]],null,null,null,null,null)),(l()(),o._19(-1,null,["\n        "])),(l()(),o.Z(12,0,null,null,3,"div",[["class","logo-container"]],null,null,null,null,null)),(l()(),o._19(-1,null,["\n          "])),(l()(),o.Z(14,0,null,null,0,"img",[["src","assets/imgs/logo.png"]],null,null,null,null,null)),(l()(),o._19(-1,null,["\n        "])),(l()(),o._19(-1,null,["\n        "])),(l()(),o.Z(17,0,null,null,67,"div",[["class","login-box"],["padding",""]],null,null,null,null,null)),(l()(),o._19(-1,null,["\n          "])),(l()(),o.Z(19,0,null,null,64,"form",[["novalidate",""]],[[2,"ng-untouched",null],[2,"ng-touched",null],[2,"ng-pristine",null],[2,"ng-dirty",null],[2,"ng-valid",null],[2,"ng-invalid",null],[2,"ng-pending",null]],[[null,"submit"],[null,"reset"]],function(l,n,u){var a=!0;if("submit"===n){a=!1!==o._13(l,21).onSubmit(u)&&a}if("reset"===n){a=!1!==o._13(l,21).onReset()&&a}return a},null,null)),o.Y(20,16384,null,0,e.p,[],null,null),o.Y(21,540672,null,0,e.f,[[8,null],[8,null]],{form:[0,"form"]},null),o._16(2048,null,e.b,null,[e.f]),o.Y(23,16384,null,0,e.k,[e.b],null,null),(l()(),o._19(-1,null,["\n            "])),(l()(),o.Z(25,0,null,null,53,"ion-list",[],null,null,null,null,null)),o.Y(26,16384,null,0,F.a,[C.a,o.j,o.z,Y.a,x.l,w.a],null,null),(l()(),o._19(-1,null,["\n              "])),(l()(),o.Z(28,0,null,null,19,"ion-item",[["class","item item-block"]],null,null,null,D.b,D.a)),o.Y(29,1097728,null,3,q.a,[L.a,C.a,o.j,o.z,[2,V.a]],null,null),o._17(335544320,1,{contentLabel:0}),o._17(603979776,2,{_buttons:1}),o._17(603979776,3,{_icons:1}),o.Y(33,16384,null,0,U.a,[],null,null),(l()(),o._19(-1,2,["\n                "])),(l()(),o.Z(35,0,null,1,5,"ion-label",[["floating",""]],null,null,null,null,null)),o.Y(36,16384,[[1,4]],0,B.a,[C.a,o.j,o.z,[8,""],[8,null],[8,null],[8,null]],null,null),(l()(),o._19(-1,null,["\n                  "])),(l()(),o.Z(38,0,null,null,1,"ion-icon",[["margin-right",""],["name","md-person"],["role","img"]],[[2,"hide",null]],null,null,null,null)),o.Y(39,147456,null,0,I.a,[C.a,o.j,o.z],{name:[0,"name"]},null),(l()(),o._19(-1,null,["\n                  Username"])),(l()(),o._19(-1,2,["\n                "])),(l()(),o.Z(42,0,null,3,4,"ion-input",[["formControlName","username"],["type","text"]],[[2,"ng-untouched",null],[2,"ng-touched",null],[2,"ng-pristine",null],[2,"ng-dirty",null],[2,"ng-valid",null],[2,"ng-invalid",null],[2,"ng-pending",null]],[[null,"input"]],function(l,n,u){var a=!0,o=l.component;if("input"===n){a=!1!==(o.loginForm.value.username=o.loginForm.value.username.trim())&&a}return a},N.b,N.a)),o.Y(43,671744,null,0,e.e,[[3,e.b],[8,null],[8,null],[8,null]],{name:[0,"name"]},null),o._16(2048,null,e.i,null,[e.e]),o.Y(45,16384,null,0,e.j,[e.i],null,null),o.Y(46,5423104,null,0,R.a,[C.a,Y.a,L.a,y.a,o.j,o.z,[2,v.a],[2,q.a],[2,e.i],w.a],{type:[0,"type"]},{input:"input"}),(l()(),o._19(-1,2,["\n              "])),(l()(),o._19(-1,null,["\n              "])),(l()(),o.Z(49,0,null,null,28,"ion-item",[["class","item item-block"]],null,null,null,D.b,D.a)),o.Y(50,1097728,null,3,q.a,[L.a,C.a,o.j,o.z,[2,V.a]],null,null),o._17(335544320,4,{contentLabel:0}),o._17(603979776,5,{_buttons:1}),o._17(603979776,6,{_icons:1}),o.Y(54,16384,null,0,U.a,[],null,null),(l()(),o._19(-1,2,["\n                "])),(l()(),o.Z(56,0,null,1,5,"ion-label",[["floating",""]],null,null,null,null,null)),o.Y(57,16384,[[4,4]],0,B.a,[C.a,o.j,o.z,[8,""],[8,null],[8,null],[8,null]],null,null),(l()(),o._19(-1,null,["\n                  "])),(l()(),o.Z(59,0,null,null,1,"ion-icon",[["margin-right",""],["name","md-key"],["role","img"]],[[2,"hide",null]],null,null,null,null)),o.Y(60,147456,null,0,I.a,[C.a,o.j,o.z],{name:[0,"name"]},null),(l()(),o._19(-1,null,["\n                  Password"])),(l()(),o._19(-1,2,["\n                "])),(l()(),o.Z(63,0,null,3,6,"ion-input",[["formControlName","password"],["type","text"]],[[2,"ng-untouched",null],[2,"ng-touched",null],[2,"ng-pristine",null],[2,"ng-dirty",null],[2,"ng-valid",null],[2,"ng-invalid",null],[2,"ng-pending",null]],null,null,N.b,N.a)),o.Y(64,278528,null,0,T.h,[o.p,o.q,o.j,o.A],{ngClass:[0,"ngClass"]},null),o._15(65,{isPassword:0}),o.Y(66,671744,null,0,e.e,[[3,e.b],[8,null],[8,null],[8,null]],{name:[0,"name"]},null),o._16(2048,null,e.i,null,[e.e]),o.Y(68,16384,null,0,e.j,[e.i],null,null),o.Y(69,5423104,null,0,R.a,[C.a,Y.a,L.a,y.a,o.j,o.z,[2,v.a],[2,q.a],[2,e.i],w.a],{type:[0,"type"]},null),(l()(),o._19(-1,2,["\n                "])),(l()(),o.Z(71,0,null,4,5,"button",[["class","showPasswordBtn"],["clear",""],["color","dark"],["ion-button",""],["item-right",""]],null,[[null,"click"],[null,"touchend"]],function(l,n,u){var a=!0,o=l.component;if("click"===n){o.showPassword=!o.showPassword;a=!1!==u.preventDefault()&&a}if("touchend"===n){o.showPassword=!o.showPassword;a=!1!==u.preventDefault()&&a}return a},M.b,M.a)),o.Y(72,1097728,[[5,4]],0,S.a,[[8,""],C.a,o.j,o.z],{color:[0,"color"],clear:[1,"clear"]},null),(l()(),o._19(-1,0,["\n                  "])),(l()(),o.Z(74,0,null,0,1,"ion-icon",[["role","img"]],[[2,"hide",null]],null,null,null,null)),o.Y(75,147456,null,0,I.a,[C.a,o.j,o.z],{name:[0,"name"]},null),(l()(),o._19(-1,0,["\n                "])),(l()(),o._19(-1,2,["\n              "])),(l()(),o._19(-1,null,["\n            "])),(l()(),o._19(-1,null,["\n            "])),(l()(),o.Z(80,0,null,null,2,"button",[["block",""],["color","danger"],["ion-button",""],["large",""],["margin-top",""]],[[8,"disabled",0]],[[null,"click"]],function(l,n,u){var a=!0;if("click"===n){a=!1!==l.component.login()&&a}return a},M.b,M.a)),o.Y(81,1097728,null,0,S.a,[[8,""],C.a,o.j,o.z],{color:[0,"color"],large:[1,"large"],block:[2,"block"]},null),(l()(),o._19(-1,0,["\n              Login\n            "])),(l()(),o._19(-1,null,["\n          "])),(l()(),o._19(-1,null,["\n        "])),(l()(),o._19(-1,null,["\n      "])),(l()(),o._19(-1,null,["\n    "])),(l()(),o._19(-1,null,["\n  "])),(l()(),o._19(-1,1,["\n"]))],function(l,n){var u=n.component;l(n,21,0,u.loginForm);l(n,39,0,"md-person");l(n,43,0,"username");l(n,46,0,"text");l(n,60,0,"md-key");l(n,64,0,l(n,65,0,!u.showPassword));l(n,66,0,"password");l(n,69,0,"text");l(n,72,0,"dark","");l(n,75,0,u.showPassword?"eye":"eye-off");l(n,81,0,"danger","","")},function(l,n){var u=n.component;l(n,1,0,o._13(n,2).statusbarPadding,o._13(n,2)._hasRefresher);l(n,19,0,o._13(n,23).ngClassUntouched,o._13(n,23).ngClassTouched,o._13(n,23).ngClassPristine,o._13(n,23).ngClassDirty,o._13(n,23).ngClassValid,o._13(n,23).ngClassInvalid,o._13(n,23).ngClassPending);l(n,38,0,o._13(n,39)._hidden);l(n,42,0,o._13(n,45).ngClassUntouched,o._13(n,45).ngClassTouched,o._13(n,45).ngClassPristine,o._13(n,45).ngClassDirty,o._13(n,45).ngClassValid,o._13(n,45).ngClassInvalid,o._13(n,45).ngClassPending);l(n,59,0,o._13(n,60)._hidden);l(n,63,0,o._13(n,68).ngClassUntouched,o._13(n,68).ngClassTouched,o._13(n,68).ngClassPristine,o._13(n,68).ngClassDirty,o._13(n,68).ngClassValid,o._13(n,68).ngClassInvalid,o._13(n,68).ngClassPending);l(n,74,0,o._13(n,75)._hidden);l(n,80,0,!u.loginForm.valid)})}Object.defineProperty(n,"__esModule",{value:!0});var o=u(0),i=(u(5),u(20),u(48)),e=u(21),t=function(){function l(l,n,u,a,o){this.navCtrl=l,this.navParams=n,this.formBuilder=u,this.auth=a,this.events=o,this.showPassword=!1,this.loginForm=this.formBuilder.group({username:["",e.n.required],password:["",e.n.required]})}return l.prototype.ionViewDidLoad=function(){},l.prototype.login=function(){var l=this;this.auth.login(this.loginForm.value).then(function(n){n&&(l.events.publish("user:login"),l.navCtrl.setRoot("HomePage"))})},l}(),s=function(){return function(){}}(),r=u(395),g=u(396),_=u(397),d=u(398),c=u(399),m=u(400),h=u(401),p=u(402),f=u(403),b=u(114),v=u(25),C=u(3),Y=u(6),w=u(12),y=u(9),P=u(33),Z=u(7),j=u(22),k=u(118),z=u(117),F=u(40),x=u(8),D=u(83),q=u(18),L=u(17),V=u(39),U=u(59),B=u(58),I=u(32),N=u(406),R=u(81),T=u(16),M=u(35),S=u(24),A=u(14),H=u(60),J=o.X({encapsulation:2,styles:[],data:{}}),O=o.V("page-login",t,function(l){return o._21(0,[(l()(),o.Z(0,0,null,null,1,"page-login",[],null,null,null,a,J)),o.Y(1,49152,null,0,t,[j.a,A.a,e.d,i.a,H.a],null,null)],null,null)},{},{},[]),W=u(170),X=u(56);u.d(n,"LoginPageModuleNgFactory",function(){return E});var E=o.W(s,[],function(l){return o._10([o._11(512,o.i,o.S,[[8,[r.a,g.a,_.a,d.a,c.a,m.a,h.a,p.a,f.a,O]],[3,o.i],o.s]),o._11(4608,T.l,T.k,[o.r,[2,T.t]]),o._11(4608,e.q,e.q,[]),o._11(4608,e.d,e.d,[]),o._11(512,T.c,T.c,[]),o._11(512,e.o,e.o,[]),o._11(512,e.g,e.g,[]),o._11(512,e.m,e.m,[]),o._11(512,W.a,W.a,[]),o._11(512,W.b,W.b,[]),o._11(512,s,s,[]),o._11(256,X.a,t,[])])})}});
+webpackJsonp([1],{
+
+/***/ 604:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LoginPageModule", function() { return LoginPageModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login__ = __webpack_require__(607);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+
+var LoginPageModule = (function () {
+    function LoginPageModule() {
+    }
+    LoginPageModule = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["I" /* NgModule */])({
+            declarations: [
+                __WEBPACK_IMPORTED_MODULE_2__login__["a" /* LoginPage */],
+            ],
+            imports: [
+                __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* IonicPageModule */].forChild(__WEBPACK_IMPORTED_MODULE_2__login__["a" /* LoginPage */]),
+            ],
+        })
+    ], LoginPageModule);
+    return LoginPageModule;
+}());
+
+//# sourceMappingURL=login.module.js.map
+
+/***/ }),
+
+/***/ 607:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__providers_auth_auth__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__(25);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+/**
+ * Generated class for the LoginPage page.
+ *
+ * See https://ionicframework.com/docs/components/#navigation for more info on
+ * Ionic pages and navigation.
+ */
+var LoginPage = (function () {
+    function LoginPage(navCtrl, navParams, formBuilder, auth, events) {
+        this.navCtrl = navCtrl;
+        this.navParams = navParams;
+        this.formBuilder = formBuilder;
+        this.auth = auth;
+        this.events = events;
+        this.showPassword = false;
+        this.loginForm = this.formBuilder.group({
+            username: ['', __WEBPACK_IMPORTED_MODULE_3__angular_forms__["f" /* Validators */].required],
+            password: ['', __WEBPACK_IMPORTED_MODULE_3__angular_forms__["f" /* Validators */].required]
+        });
+    }
+    LoginPage.prototype.ionViewDidLoad = function () {
+    };
+    LoginPage.prototype.login = function () {
+        var _this = this;
+        this.auth.login(this.loginForm.value).then(function (allowed) {
+            if (allowed) {
+                _this.events.publish('user:login');
+                _this.navCtrl.setRoot('HomePage');
+            }
+        });
+    };
+    LoginPage = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["m" /* Component */])({
+            selector: 'page-login',template:/*ion-inline-start:"/home/beng/GitHub/Personal/toshiba-tec-project/ionic/src/pages/login/login.html"*/`<!--\n  Generated template for the LoginPage page.\n\n  See http://ionicframework.com/docs/components/#navigation for more info on\n  Ionic pages and navigation.\n-->\n<ion-content>\n  <ion-row class="login-page-container">\n    <ion-col col-12 col-md-6 col-lg-6 col-xl-6>\n      <div class="login-container">\n        <div class="logo-container">\n          <img src="assets/imgs/logo.png" />\n        </div>\n        <div class="login-box" padding>\n          <form [formGroup]="loginForm">\n            <ion-list>\n              <ion-item>\n                <ion-label floating>\n                  <ion-icon name="md-person" margin-right></ion-icon>\n                  Username</ion-label>\n                <ion-input type="text" formControlName="username" (input)="loginForm.value.username = loginForm.value.username.trim()"></ion-input>\n              </ion-item>\n              <ion-item>\n                <ion-label floating>\n                  <ion-icon name="md-key" margin-right></ion-icon>\n                  Password</ion-label>\n                <ion-input type="text" formControlName="password" [ngClass]="{\'isPassword\':!showPassword}"></ion-input>\n                <button ion-button clear color="dark" class="showPasswordBtn" item-right (click)="showPassword=!showPassword;$event.preventDefault();" (touchend)="showPassword=!showPassword;$event.preventDefault();">\n                  <ion-icon [name]="showPassword?\'eye\':\'eye-off\'"></ion-icon>\n                </button>\n              </ion-item>\n            </ion-list>\n            <button large color="danger" margin-top ion-button block (click)="login()" [disabled]="!loginForm.valid">\n              Login\n            </button>\n          </form>\n        </div>\n      </div>\n    </ion-col>\n  </ion-row>\n</ion-content>`/*ion-inline-end:"/home/beng/GitHub/Personal/toshiba-tec-project/ionic/src/pages/login/login.html"*/,
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2_ionic_angular__["n" /* NavController */],
+            __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["p" /* NavParams */],
+            __WEBPACK_IMPORTED_MODULE_3__angular_forms__["a" /* FormBuilder */],
+            __WEBPACK_IMPORTED_MODULE_0__providers_auth_auth__["a" /* AuthProvider */],
+            __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["g" /* Events */]])
+    ], LoginPage);
+    return LoginPage;
+}());
+
+//# sourceMappingURL=login.js.map
+
+/***/ })
+
+});
+//# sourceMappingURL=1.js.map

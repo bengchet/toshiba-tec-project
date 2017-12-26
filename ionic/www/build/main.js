@@ -1,1 +1,2352 @@
-webpackJsonp([4],{175:function(n,l,t){"use strict";t.d(l,"a",function(){return e}),t.d(l,"b",function(){return i});t(5),t(53),t(20),t(66);var e=function(){function n(n,l,t,e,i,o,s,u,r,a){this.navCtrl=n,this.popover=l,this.mqtt=t,this.auth=e,this.platform=i,this.storage=o,this.alertCtrl=s,this.api=u,this.alert=r,this.push=a,this.devices=[],this.isLoading=!0}return n.prototype.ionViewCanEnter=function(){return this.auth.checkAuthentication()},n.prototype.ionViewWillEnter=function(){this.refresh()},n.prototype.ionViewDidLoad=function(){var n=this;this.platform.is("core")&&!this.push.isPermissionGranted()&&this.push.onDesktopReady().then(function(){n.push.requestPermission()})},n.prototype.refresh=function(){var n=this;this.isLoading=!0,this.api.getControllers().subscribe(function(l){l.success&&(console.log(l.result),n.devices=l.result),n.isLoading=!1})},n.prototype.goToDevicePage=function(n){this.navCtrl.push("DevicePage",{id:n})},n.prototype.showAddDeviceDialog=function(){var n=this;this.alertCtrl.create({title:"Add a device",subTitle:"<p>Please enter the device ID<p>",inputs:[{name:"id",placeholder:"controller ID e.g. 1078310"}],buttons:[{text:"Cancel",role:"cancel"},{text:"Add",handler:function(l){l.id&&n.addDevice(l.id)}}]}).present()},n.prototype.addDevice=function(n){var l=this;console.log(this.devices);0==this.devices.filter(function(l){return l.id==n}).length&&this.api.addController({id:n}).subscribe(function(n){n.success?l.refresh():l.alert.showToast(n.msg,3e3,!0)})},n.prototype.removeDevice=function(n){this.devices=this.devices.filter(function(l){return l.id!=n}),this.storage.set("devices",this.devices)},n.prototype.updateDevices=function(){},n.prototype.presentPopover=function(n){var l=this.popover.create(i);l.onDidDismiss(function(){}),l.present({ev:n})},n}(),i=function(){function n(n,l,t,e){this.viewCtrl=n,this.auth=l,this.app=t,this.mqtt=e}return n.prototype.close=function(n){this.viewCtrl.onDidDismiss(n),this.viewCtrl.dismiss()},n.prototype.goToSettingsPage=function(){var n=this;this.close(function(){return n.app.getRootNavs()[0].push("SettingsPage")})},n.prototype.logout=function(){var n=this;this.auth.logout().then(function(l){l||n.close(function(){n.mqtt.unsubscribeAllTopics(),n.app.getRootNavs()[0].setRoot("LoginPage")})})},n}()},176:function(n,l,t){"use strict";t.d(l,"a",function(){return i});t(5),t(20);var e=t(1),i=(t.n(e),function(){function n(n,l,t,e){this.navCtrl=n,this.navParams=l,this.events=t,this.mqtt=e,this.logs=[],this.autoScroll=!0,this.initialized=!1}return n.prototype.ionViewWillLeave=function(){clearTimeout(this.timeout)},n.prototype.ionViewWillEnter=function(){var n=this;setTimeout(function(){return n.content.scrollToBottom()})},n.prototype.ionViewDidLoad=function(){var n=this;console.log("Trying to subscribe..."),this.events.subscribe("subscription:stop",function(){console.log("unsubscribing mqtt..."),n.events.unsubscribe("subscription:mqtt"),console.log("unsubscribing event..."),n.events.unsubscribe("subscription:stop")}),this.events.subscribe("subscription:mqtt",function(l){l.timestamp=e(Date.now()).format("YYYY-MM-D h:mm:ss a"),n.logs.length>=1800&&(n.logs=[]),n.logs.push(l),n.timeout=setTimeout(function(){n.autoScroll&&n.initialized&&n.content.scrollToBottom()})}),this.content.ionScroll.subscribe(function(){n.content.isScrolling&&"up"==n.content.directionY?n.autoScroll=!1:!n.autoScroll&&n.content.scrollTop+n.content.contentHeight>=n.content.getContentDimensions().scrollHeight-20&&(n.autoScroll=!0)}),setTimeout(function(){return n.initialized=!0})},n}())},177:function(n,l,t){"use strict";t.d(l,"a",function(){return i});t(5),t(20);var e=t(1),i=(t.n(e),function(){function n(n,l,t,e,i){this.navCtrl=n,this.navParams=l,this.mqtt=t,this.events=e,this.zone=i,this.sensors=[],this.device={id:"",status:0,lastSeen:"",lastReboot:"",fv:"",ip:"",intervals:{PUB_INTERVAL:"10000",PACKET_INTERVAL:"50"}},this.ctrlID="",this.forceShow=!1,this.pingStatus=!1,this.pingInProgress=!1,this.pingTimeout=1e4,this.scrolling="down",this.refreshInProgress=!0}return n.prototype.ionViewDidLoad=function(){var n=this;this.ctrlID=this.navParams.get("id"),this.device.id=this.ctrlID,this.resetSensors(),this.events.subscribe("subscription:stop",function(){console.log("unsubscribing mqtt..."),n.events.unsubscribe("subscription:mqtt"),console.log("unsubscribing event..."),n.events.unsubscribe("subscription:stop")}),this.events.subscribe("subscription:mqtt",this.processPayload.bind(this)),this.mqtt.ready().then(function(){n.refresh()}),this.content.ionScrollEnd.subscribe(function(){n.zone.run(function(){n.scrolling=n.content.scrollTop+n.content.contentHeight>=n.content.getContentDimensions().scrollHeight-20?"up":"down"})})},n.prototype.processPayload=function(n){if(n.destinationName!=this.ctrlID+"/IN/CHECK"&&n.destinationName!=this.ctrlID+"/IN/CTRL/REFRESH"&&n.destinationName!=this.ctrlID+"/REBOOT"){if(n.destinationName==this.ctrlID+"/OUT/CHECK")return this.pingInProgress=!1,clearTimeout(this.pingSetTimeout),this.pingSetTimeout=null,this.device.status=1,void(this.device.lastSeen=e(Date.now()).format("YYYY-MM-D h:mm:ss a"));if(n.destinationName!=this.ctrlID+"/IN/RFID/LED1"){if(n.destinationName==this.ctrlID+"/OUT/INTERVAL"){l=JSON.parse(n.payloadString);this.device.fv=l.CTRL_FIRM,this.device.ip=l.IP,this.device.intervals.PACKET_INTERVAL=l.PACKET_INTERVAL,this.device.intervals.PUB_INTERVAL=l.PUB_INTERVAL,this.device.lastReboot=e(Date.now()).format("YYYY-MM-D h:mm:ss a")}else if(n.destinationName==this.ctrlID+"/OUT/RFID/STATUS"){this.refreshInProgress=!1;l=JSON.parse(n.payloadString);(t=parseInt(l.POS))<31&&(this.sensors[t].fv=l.SNSR_FIRM,this.sensors[t].weight=l.WEIGHT,this.sensors[t].proximity=l.PROXIMITY,this.sensors[t].button=l.BUTTON,this.sensors[t].currentRFID=l.RFID,this.sensors[t].type=l.WEIGHT?"Weight":l.PROXIMITY?"Proximity":"Button"),this.sensors[t].isOnline=!0}else if(n.destinationName==this.ctrlID+"/OUT/RFID/WEIGHT"){l=JSON.parse(n.payloadString);console.log(l);(t=parseInt(l.POS))<31&&(this.sensors[t].weight=l.WEIGHT,this.sensors[t].currentRFID=l.RFID),this.sensors[t].isOnline=!0}else if(n.destinationName==this.ctrlID+"/OUT/RFID/PRX1"){l=JSON.parse(n.payloadString);console.log(l);(t=parseInt(l.POS))<31&&(this.sensors[t].proximity=l.PROXIMITY),this.sensors[t].isOnline=!0}else if(n.destinationName==this.ctrlID+"/OUT/RFID/BTN1"){l=JSON.parse(n.payloadString);console.log(l);(t=parseInt(l.POS))<31&&(this.sensors[t].button=l.BUTTON),this.sensors[t].isOnline=!0}this.device.lastSeen=e(Date.now()).format("YYYY-MM-D h:mm:ss a"),this.device.status=1}else{var l=JSON.parse(n.payloadString);console.log(l);var t;(t=parseInt(l.POS))<31&&(this.sensors[t].button="ON"==l.LED?"1":"0")}}},n.prototype.resetSensors=function(){this.sensors=[];for(var n=0;n<31;n++)this.sensors.push({pos:n,isOnline:!1,fv:"",type:"",weight:"",button:"",proximity:"",led:"",currentRFID:"",previousRFID:""})},n.prototype.ping=function(){var n=this;this.pingInProgress=!0,this.pingSetTimeout=setTimeout(function(){n.pingInProgress=!1,n.pingSetTimeout=null},this.pingTimeout),this.mqtt.publish(this.ctrlID+"/IN/CHECK",JSON.stringify({CTRL_ID:this.ctrlID}),1)},n.prototype.refresh=function(){this.refreshInProgress=!0,this.resetSensors(),this.mqtt.publish(this.ctrlID+"/IN/CTRL/REFRESH",JSON.stringify({CTRL_ID:this.ctrlID}),1)},n.prototype.reboot=function(){this.mqtt.publish(this.ctrlID+"/REBOOT",'"REBOOT"',1)},n.prototype.setIntervals=function(){this.mqtt.publish(this.ctrlID+"/IN/INTERVAL",JSON.stringify(this.device.intervals),1)},n.prototype.overrideLED=function(n,l){this.mqtt.publish(this.ctrlID+"/IN/RFID/LED1",JSON.stringify({CTRL_ID:this.ctrlID,RFID:n.currentRFID,POS:n.pos.toString(),LED:l}),1)},n.prototype.scroll=function(){"up"==this.scrolling?this.content.scrollToTop():this.content.scrollToBottom()},n}())},191:function(n,l){function t(n){return Promise.resolve().then(function(){throw new Error("Cannot find module '"+n+"'.")})}t.keys=function(){return[]},t.resolve=t,n.exports=t,t.id=191},215:function(n,l,t){function e(n){var l=i[n];return l?t.e(l[1]).then(function(){return t(l[0])}):Promise.reject(new Error("Cannot find module '"+n+"'."))}var i={"../pages/device/device.module.ngfactory":[527,3],"../pages/home/home.module.ngfactory":[528,2],"../pages/login/login.module.ngfactory":[529,1],"../pages/settings/settings.module.ngfactory":[530,0]};e.keys=function(){return Object.keys(i)},e.id=215,n.exports=e},30:function(n,l,t){"use strict";t.d(l,"a",function(){return s});t(5),t(20),t(53);var e=t(438),i=(t.n(e),t(13)),o=(t.n(i),t(439)),s=(t.n(o),function(){function n(n,l,t,e){var i=this;this.storage=n,this.platform=l,this.http=t,this.events=e,this.mqttConnectionStatus=!1,this.mqttSubscribedTopics=[],this.mqttUrl="",this.mqttPort=8e3,this.mqttOptions={timeout:10,keepAliveInterval:10},this.mqttRegisteredBrokerList=[],this.callbacks=[],this.noReconnect=!1,console.log("[mqtt] Initiating MQTT..."),this._readyPromise=new Promise(function(n){i._readyResolve=n}),this.storage.get("mqttBrokers").then(function(n){n&&n.length>0&&(i.mqttRegisteredBrokerList=n,console.log(i.mqttRegisteredBrokerList),i.startBroker())})}return n.prototype.ready=function(){return this._readyPromise},n.prototype.triggerReady=function(){this._readyResolve()},n.prototype.prepareReady=function(){this.mqttConnectionStatus?this.triggerReady():this.events.subscribe("mqtt:ready",this.completed.bind(this))},n.prototype.completed=function(){this.events.unsubscribe("mqtt:ready"),this.triggerReady()},n.prototype.reset=function(){this.mqttRegisteredBrokerList=[],this.callbacks=[],this.disconnectTimeout&&(clearTimeout(this.disconnectTimeout),this.disconnectTimeout=null),this.failureTimeout&&(clearTimeout(this.failureTimeout),this.failureTimeout=null),this.mqttUrl="",this.disconnectBroker()},n.prototype.startBroker=function(){var n=this;console.log("[mqtt] start broker"),this.disconnectBroker();var l=this.getDefaultBroker();if(console.log("Default",l),l.url){this.mqttUrl=l.url,this.mqttPort=l.port?parseInt(l.port):8e3,this.mqttOptions=l.options?l.options:this.mqttOptions,this.failureTimeout&&clearTimeout(this.failureTimeout),this.disconnectTimeout&&clearTimeout(this.disconnectTimeout);var t=function(){setTimeout(function(){n.isOnline()?(n.noReconnect=!1,n.connect()):t()},2e3)};t()}},n.prototype.callback=function(n){for(var l in this.callbacks)this.callbacks[l](n)},n.prototype.registerCallback=function(n,l){this.callbacks[n]=l},n.prototype.unregisterCallback=function(n){this.callbacks=this.callbacks.filter(function(l,t){return t!=n})},n.prototype.publish=function(n,l,t){var i=new e.Paho.MQTT.Message(l);i.destinationName=n,i.qos=t,this.mqttClient.send(i)},n.prototype.subscribeTopic=function(n,l){-1==this.mqttSubscribedTopics.indexOf(n)&&(this.mqttSubscribedTopics.push(n),this.mqttClient.subscribe(n,{qos:l})),console.log(this.mqttSubscribedTopics)},n.prototype.unsubscribeTopic=function(n){this.mqttClient.unsubscribe(n,{}),this.mqttSubscribedTopics=this.mqttSubscribedTopics.filter(function(l){return l!=n}),console.log(this.mqttSubscribedTopics)},n.prototype.unsubscribeTopics=function(n){var l=this;n.forEach(function(n){l.unsubscribeTopic(n)})},n.prototype.unsubscribeAllTopics=function(){var n=this;this.mqttSubscribedTopics.forEach(function(l){n.unsubscribeTopic(l)}),this.mqttSubscribedTopics=[]},n.prototype.onConnected=function(){var n=this;this.events.publish("mqtt:ready"),this.mqttConnectionStatus=!0,console.log("[mqtt] MQTT connected"),this.mqttSubscribedTopics.forEach(function(l){n.mqttClient.subscribe(l,{qos:1})})},n.prototype.onLostConnection=function(){var n=this;if(console.log("[mqtt] MQTT disconnected"),this.mqttConnectionStatus=!1,!this.noReconnect){var l=function(){n.disconnectTimeout=setTimeout(function(){n.isOnline()?n.connect():l()},0)};l()}},n.prototype.onFailure=function(n){var l=this;if(console.log("[mqtt] MQTT Failure: ",n),this.mqttConnectionStatus=!1,!this.noReconnect){var t=function(){l.failureTimeout=setTimeout(function(){l.isOnline()?l.connect():t()},3e3)};t()}},n.prototype.connect=function(){console.log("[mqtt] Connecting..."),this.mqttClient=new e.Paho.MQTT.Client(this.mqttUrl,this.mqttPort,"clientId_"+Math.random().toString(16).substring(2,8)),this.mqttClient.onConnectionLost=this.onLostConnection.bind(this),this.mqttClient.onMessageArrived=this.callback.bind(this);var n=JSON.parse(JSON.stringify(this.mqttOptions));n.onSuccess=this.onConnected.bind(this),n.onFailure=this.onFailure.bind(this),this.mqttClient.connect(n)},n.prototype.getAllSubscribedTopics=function(){return i.Observable.of(this.mqttSubscribedTopics)},n.prototype.getRegisteredBrokerList=function(){return i.Observable.of(this.mqttRegisteredBrokerList)},n.prototype.addBroker=function(n,l,t){var e=this;return new Promise(function(i){e.mqttRegisteredBrokerList.filter(function(l){return l.url==n}).length>0?i():(e.mqttRegisteredBrokerList.push({url:n,port:l||8e3,options:t||e.mqttOptions,default:!1}),e.storage.set("mqttBrokers",e.mqttRegisteredBrokerList).then(function(){return i()}))})},n.prototype.removeBroker=function(n){var l=this;return new Promise(function(t){n==l.mqttUrl&&l.disconnectBroker(),l.mqttRegisteredBrokerList=l.mqttRegisteredBrokerList.filter(function(l){return l.url!=n}),l.storage.set("mqttBrokers",l.mqttRegisteredBrokerList).then(function(){return t()})})},n.prototype.disconnectBroker=function(){console.log("[mqtt] Disconnect from current broker"),this.mqttClient&&(console.log("[mqtt] Got client, disconnect first..."),this.noReconnect=!0,this.isOnline()&&this.mqttClient.isConnected()&&(this.mqttClient.disconnect(),this.unsubscribeAllTopics()),this.mqttClient=null,this.mqttSubscribedTopics=[])},n.prototype.setDefaultBroker=function(n){return this.mqttRegisteredBrokerList.forEach(function(l){l.default=l.url==n}),this.storage.set("mqttBrokers",this.mqttRegisteredBrokerList)},n.prototype.getDefaultBroker=function(){var n=this.mqttRegisteredBrokerList.filter(function(n){return n.default});return n.length>0?n[0]:{}},n.prototype.isOnline=function(){return this.platform.is("cordova")?navigator.connection.type!==Connection.NONE:navigator.onLine},n}())},392:function(n,l,t){"use strict";t.d(l,"a",function(){return e}),t.d(l,"b",function(){return i}),t.d(l,"c",function(){return o});var e=function(){return function(){this.host="https://iot.cytron.io/toshiba-tec-project",this.endpoint=this.host+"/api"}}(),i={UNAUTHORIZED_MESSAGE:"Seems like we have problem identifying your account. Please login again.",OFFLINE_MESSAGE:"Seems like there is no Internet connection. Please check your Internet connection.",NOT_FOUND:"Seems like we have problem connecting to server. Please try again later.",SERVER_ERR:"Seems like there is server problem. Please consult our technical support for more details."},o={apiKey:"AIzaSyCyLL3j363FRmxxa05m8pBoYXl-_0wuBAo",authDomain:"nbc-ionic2-push-notification.firebaseapp.com",databaseURL:"https://nbc-ionic2-push-notification.firebaseio.com",projectId:"nbc-ionic2-push-notification",storageBucket:"nbc-ionic2-push-notification.appspot.com",messagingSenderId:"620756868871"}},408:function(n,l,t){"use strict";function e(n){return d._21(0,[(n()(),d.Z(0,0,null,null,1,"span",[["class","subheader"]],null,null,null,null,null)),(n()(),d._19(-1,null,["\n          No registered MQTT Brokers\n        "]))],null,null)}function i(n){return d._21(0,[(n()(),d.Z(0,0,null,null,1,"span",[["class","subheader"]],null,null,null,null,null)),(n()(),d._19(-1,null,["\n          Please choose a MQTT broker\n        "]))],null,null)}function o(n){return d._21(0,[(n()(),d.Z(0,0,null,null,1,"span",[["class","subheader"]],null,null,null,null,null)),(n()(),d._19(1,null,["\n          ","\n        "]))],null,function(n,l){n(l,1,0,l.component.mqtt.mqttConnectionStatus?"MQTT Connected":"Connecting to MQTT...")})}function s(n){return d._21(0,[(n()(),d.Z(0,0,null,null,1,"ion-spinner",[["item-end",""]],[[2,"spinner-paused",null]],null,null,p.b,p.a)),d.Y(1,114688,null,0,g.a,[f.a,d.j,d.z],null,null)],function(n,l){n(l,1,0)},function(n,l){n(l,0,0,d._13(l,1)._paused)})}function u(n){return d._21(0,[(n()(),d.Z(0,0,null,null,2,"button",[["clear",""],["ion-button",""],["item-end",""]],null,[[null,"click"]],function(n,l,t){var e=!0;if("click"===l){e=!1!==n.component.refresh()&&e}return e},m.b,m.a)),d.Y(1,1097728,[[3,4]],0,_.a,[[8,""],f.a,d.j,d.z],{clear:[0,"clear"]},null),(n()(),d._19(-1,0,["\n        Refresh\n      "]))],function(n,l){n(l,1,0,"")},null)}function r(n){return d._21(0,[(n()(),d.Z(0,0,null,null,33,"ion-item-sliding",[],null,null,null,b.b,b.a)),d.Y(1,49152,null,2,v.a,[[2,y.a],j.a,d.z,d.j,d.u],null,null),d._17(335544320,5,{item:0}),d._17(603979776,6,{_itemOptions:1}),(n()(),d._19(-1,null,["\n      "])),(n()(),d.Z(5,0,null,0,16,"button",[["class","item item-block"],["detail-none",""],["ion-item",""]],[[8,"disabled",0]],[[null,"click"]],function(n,l,t){var e=!0;if("click"===l){e=!1!==n.component.goToDevicePage(n.context.$implicit)&&e}return e},k.b,k.a)),d.Y(6,1097728,[[5,4]],3,T.a,[I.a,f.a,d.j,d.z,[2,S.a]],null,null),d._17(335544320,7,{contentLabel:0}),d._17(603979776,8,{_buttons:1}),d._17(603979776,9,{_icons:1}),d.Y(10,16384,null,0,P.a,[],null,null),(n()(),d._19(-1,2,["\n        "])),(n()(),d.Z(12,0,null,0,1,"ion-icon",[["item-start",""],["large",""],["name","md-desktop"],["padding-left",""],["role","img"]],[[2,"hide",null]],null,null,null,null)),d.Y(13,147456,[[9,4]],0,q.a,[f.a,d.j,d.z],{name:[0,"name"]},null),(n()(),d._19(-1,2,["\n        "])),(n()(),d.Z(15,0,null,2,4,"h2",[],null,null,null,null,null)),(n()(),d._19(-1,null,["\n          "])),(n()(),d.Z(17,0,null,null,1,"b",[],null,null,null,null,null)),(n()(),d._19(18,null,["",""])),(n()(),d._19(-1,null,["\n        "])),(n()(),d._19(-1,2,["\n        "])),(n()(),d._19(-1,2,["\n      "])),(n()(),d._19(-1,null,["\n      "])),(n()(),d.Z(23,0,null,1,9,"ion-item-options",[["side","left"]],null,null,null,null,null)),d.Y(24,16384,[[6,4]],0,D.a,[d.j,j.a],{side:[0,"side"]},null),(n()(),d._19(-1,null,["\n        "])),(n()(),d.Z(26,0,null,null,5,"button",[["clear",""],["icon-only",""],["ion-button",""]],null,[[null,"click"]],function(n,l,t){var e=!0;if("click"===l){e=!1!==n.component.removeDevice(n.context.$implicit.id)&&e}return e},m.b,m.a)),d.Y(27,1097728,null,0,_.a,[[8,""],f.a,d.j,d.z],{clear:[0,"clear"]},null),(n()(),d._19(-1,0,["\n          "])),(n()(),d.Z(29,0,null,0,1,"ion-icon",[["color","danger"],["name","remove-circle"],["role","img"]],[[2,"hide",null]],null,null,null,null)),d.Y(30,147456,null,0,q.a,[f.a,d.j,d.z],{color:[0,"color"],name:[1,"name"]},null),(n()(),d._19(-1,0,["\n        "])),(n()(),d._19(-1,null,["\n      "])),(n()(),d._19(-1,null,["\n    "]))],function(n,l){n(l,13,0,"md-desktop");n(l,24,0,"left");n(l,27,0,"");n(l,30,0,"danger","remove-circle")},function(n,l){n(l,5,0,!l.component.mqtt.mqttConnectionStatus);n(l,12,0,d._13(l,13)._hidden);n(l,18,0,l.context.$implicit);n(l,29,0,d._13(l,30)._hidden)})}function a(n){return d._21(0,[(n()(),d.Z(0,0,null,null,8,"div",[["margin-top",""],["text-center",""]],null,null,null,null,null)),(n()(),d._19(-1,null,["\n      "])),(n()(),d.Z(2,0,null,null,5,"button",[["ion-button",""]],null,[[null,"click"]],function(n,l,t){var e=!0;if("click"===l){e=!1!==n.component.showAddDeviceDialog()&&e}return e},m.b,m.a)),d.Y(3,1097728,null,0,_.a,[[8,""],f.a,d.j,d.z],null,null),(n()(),d._19(-1,0,["\n        "])),(n()(),d.Z(5,0,null,0,1,"ion-icon",[["margin-right",""],["name","add"],["role","img"]],[[2,"hide",null]],null,null,null,null)),d.Y(6,147456,null,0,q.a,[f.a,d.j,d.z],{name:[0,"name"]},null),(n()(),d._19(-1,0,["\n        Add a device\n      "])),(n()(),d._19(-1,null,["\n    "]))],function(n,l){n(l,6,0,"add")},function(n,l){n(l,5,0,d._13(l,6)._hidden)})}function c(n){return d._21(0,[(n()(),d.Z(0,0,null,null,39,"ion-header",[],null,null,null,null,null)),d.Y(1,16384,null,0,R.a,[f.a,d.j,d.z,[2,C.a]],null,null),(n()(),d._19(-1,null,["\n  "])),(n()(),d.Z(3,0,null,null,35,"ion-navbar",[["class","toolbar"]],[[8,"hidden",0],[2,"statusbar-padding",null]],null,null,Y.b,Y.a)),d.Y(4,49152,null,0,w.a,[O.a,[2,C.a],[2,Z.a],f.a,d.j,d.z],null,null),(n()(),d._19(-1,3,["\n    "])),(n()(),d.Z(6,0,null,3,19,"ion-title",[],null,null,null,L.b,L.a)),d.Y(7,49152,null,0,z.a,[f.a,d.j,d.z,[2,N.a],[2,w.a]],null,null),(n()(),d._19(-1,0,["\n      "])),(n()(),d.Z(9,0,null,0,0,"img",[["src","assets/icon/icon.png"]],null,null,null,null,null)),(n()(),d._19(-1,0,["\n      "])),(n()(),d.Z(11,0,null,0,13,"div",[["class","custom-title"]],null,null,null,null,null)),(n()(),d._19(-1,null,["\n        "])),(n()(),d.Z(13,0,null,null,1,"span",[["class","header"]],null,null,null,null,null)),(n()(),d._19(-1,null,["Toshiba Tec Project"])),(n()(),d._19(-1,null,["\n        "])),(n()(),d.U(16777216,null,null,1,null,e)),d.Y(17,16384,null,0,x.j,[d.I,d.F],{ngIf:[0,"ngIf"]},null),(n()(),d._19(-1,null,["\n        "])),(n()(),d.U(16777216,null,null,1,null,i)),d.Y(20,16384,null,0,x.j,[d.I,d.F],{ngIf:[0,"ngIf"]},null),(n()(),d._19(-1,null,["\n        "])),(n()(),d.U(16777216,null,null,1,null,o)),d.Y(23,16384,null,0,x.j,[d.I,d.F],{ngIf:[0,"ngIf"]},null),(n()(),d._19(-1,null,["\n      "])),(n()(),d._19(-1,0,["\n    "])),(n()(),d._19(-1,3,["\n    "])),(n()(),d.Z(27,0,null,2,10,"ion-buttons",[["end",""]],null,null,null,null,null)),d.Y(28,16384,null,1,A.a,[f.a,d.j,d.z,[2,N.a],[2,w.a]],null,null),d._17(603979776,1,{_buttons:1}),(n()(),d._19(-1,null,["\n      "])),(n()(),d.Z(31,0,null,null,5,"button",[["icon-only",""],["ion-button",""]],null,[[null,"click"]],function(n,l,t){var e=!0;if("click"===l){e=!1!==n.component.presentPopover(t)&&e}return e},m.b,m.a)),d.Y(32,1097728,[[1,4]],0,_.a,[[8,""],f.a,d.j,d.z],null,null),(n()(),d._19(-1,0,["\n        "])),(n()(),d.Z(34,0,null,0,1,"ion-icon",[["name","more"],["role","img"]],[[2,"hide",null]],null,null,null,null)),d.Y(35,147456,null,0,q.a,[f.a,d.j,d.z],{name:[0,"name"]},null),(n()(),d._19(-1,0,["\n      "])),(n()(),d._19(-1,null,["\n    "])),(n()(),d._19(-1,3,["\n  "])),(n()(),d._19(-1,null,["\n"])),(n()(),d._19(-1,null,["\n\n"])),(n()(),d.Z(41,0,null,null,26,"ion-content",[],[[2,"statusbar-padding",null],[2,"has-refresher",null]],null,null,E.b,E.a)),d.Y(42,4374528,null,0,U.a,[f.a,j.a,F.a,d.j,d.z,O.a,B.a,d.u,[2,C.a],[2,Z.a]],null,null),(n()(),d._19(-1,1,["\n  "])),(n()(),d.Z(44,0,null,1,22,"ion-list",[],null,null,null,null,null)),d.Y(45,16384,null,0,y.a,[f.a,d.j,d.z,j.a,M.l,F.a],null,null),(n()(),d._19(-1,null,["\n    "])),(n()(),d.Z(47,0,null,null,12,"ion-list-header",[["class","item"],["color","light"]],null,null,null,k.b,k.a)),d.Y(48,1097728,null,3,T.a,[I.a,f.a,d.j,d.z,[2,S.a]],{color:[0,"color"]},null),d._17(335544320,2,{contentLabel:0}),d._17(603979776,3,{_buttons:1}),d._17(603979776,4,{_icons:1}),d.Y(52,16384,null,0,H.a,[f.a,d.z,d.j,[8,null]],{color:[0,"color"]},null),(n()(),d._19(-1,2,["\n      Main Controller List\n      "])),(n()(),d.U(16777216,null,4,1,null,s)),d.Y(55,16384,null,0,x.j,[d.I,d.F],{ngIf:[0,"ngIf"]},null),(n()(),d._19(-1,2,["\n      "])),(n()(),d.U(16777216,null,4,1,null,u)),d.Y(58,16384,null,0,x.j,[d.I,d.F],{ngIf:[0,"ngIf"]},null),(n()(),d._19(-1,2,["\n    "])),(n()(),d._19(-1,null,["\n    "])),(n()(),d.U(16777216,null,null,1,null,r)),d.Y(62,802816,null,0,x.i,[d.I,d.F,d.p],{ngForOf:[0,"ngForOf"]},null),(n()(),d._19(-1,null,["\n    "])),(n()(),d.U(16777216,null,null,1,null,a)),d.Y(65,16384,null,0,x.j,[d.I,d.F],{ngIf:[0,"ngIf"]},null),(n()(),d._19(-1,null,["\n  "])),(n()(),d._19(-1,1,["\n"]))],function(n,l){var t=l.component;n(l,17,0,0==t.mqtt.mqttRegisteredBrokerList.length);n(l,20,0,t.mqtt.mqttRegisteredBrokerList.length>0&&!t.mqtt.mqttUrl);n(l,23,0,t.mqtt.mqttRegisteredBrokerList.length>0&&t.mqtt.mqttUrl);n(l,35,0,"more");n(l,48,0,"light");n(l,52,0,"light");n(l,55,0,t.isLoading);n(l,58,0,!t.isLoading);n(l,62,0,t.devices);n(l,65,0,!t.isLoading)},function(n,l){n(l,3,0,d._13(l,4)._hidden,d._13(l,4)._sbPadding);n(l,34,0,d._13(l,35)._hidden);n(l,41,0,d._13(l,42).statusbarPadding,d._13(l,42)._hasRefresher)})}function h(n){return d._21(0,[(n()(),d._19(-1,null,["\n    "])),(n()(),d.Z(1,0,null,null,24,"ion-list",[],null,null,null,null,null)),d.Y(2,16384,null,0,y.a,[f.a,d.j,d.z,j.a,M.l,F.a],null,null),(n()(),d._19(-1,null,["\n    "])),(n()(),d.Z(4,0,null,null,9,"button",[["class","item item-block"],["detail-none",""],["ion-item",""]],null,[[null,"click"]],function(n,l,t){var e=!0;if("click"===l){e=!1!==n.component.goToSettingsPage()&&e}return e},k.b,k.a)),d.Y(5,1097728,null,3,T.a,[I.a,f.a,d.j,d.z,[2,S.a]],null,null),d._17(335544320,1,{contentLabel:0}),d._17(603979776,2,{_buttons:1}),d._17(603979776,3,{_icons:1}),d.Y(9,16384,null,0,P.a,[],null,null),(n()(),d._19(-1,2,["\n      "])),(n()(),d.Z(11,0,null,2,1,"ion-icon",[["margin-right",""],["name","build"],["role","img"]],[[2,"hide",null]],null,null,null,null)),d.Y(12,147456,[[3,4]],0,q.a,[f.a,d.j,d.z],{name:[0,"name"]},null),(n()(),d._19(-1,2,["\n      Settings\n    "])),(n()(),d._19(-1,null,["\n      "])),(n()(),d.Z(15,0,null,null,9,"button",[["class","item item-block"],["detail-none",""],["ion-item",""]],null,[[null,"click"]],function(n,l,t){var e=!0;if("click"===l){e=!1!==n.component.logout()&&e}return e},k.b,k.a)),d.Y(16,1097728,null,3,T.a,[I.a,f.a,d.j,d.z,[2,S.a]],null,null),d._17(335544320,4,{contentLabel:0}),d._17(603979776,5,{_buttons:1}),d._17(603979776,6,{_icons:1}),d.Y(20,16384,null,0,P.a,[],null,null),(n()(),d._19(-1,2,["\n        "])),(n()(),d.Z(22,0,null,2,1,"ion-icon",[["margin-right",""],["name","exit"],["role","img"]],[[2,"hide",null]],null,null,null,null)),d.Y(23,147456,[[6,4]],0,q.a,[f.a,d.j,d.z],{name:[0,"name"]},null),(n()(),d._19(-1,2,["\n        Logout\n      "])),(n()(),d._19(-1,null,["\n    "])),(n()(),d._19(-1,null,["\n  "]))],function(n,l){n(l,12,0,"build");n(l,23,0,"exit")},function(n,l){n(l,11,0,d._13(l,12)._hidden);n(l,22,0,d._13(l,23)._hidden)})}t.d(l,"a",function(){return tn}),t.d(l,"b",function(){return on});var d=t(0),p=t(139),g=t(65),f=t(3),m=t(35),_=t(24),b=t(514),v=t(93),y=t(40),j=t(6),k=t(83),T=t(18),I=t(17),S=t(39),P=t(59),q=t(32),D=t(92),R=t(115),C=t(7),Y=t(404),w=t(41),O=t(9),Z=t(22),L=t(405),z=t(84),N=t(57),x=t(16),A=t(157),E=t(114),U=t(25),F=t(12),B=t(33),M=t(8),H=t(95),V=t(175),$=t(102),G=t(30),J=t(48),W=t(138),K=t(89),Q=t(69),X=t(78),nn=t(66),ln=d.X({encapsulation:2,styles:[],data:{}}),tn=d.V("page-home",V.a,function(n){return d._21(0,[(n()(),d.Z(0,0,null,null,1,"page-home",[],null,null,null,c,ln)),d.Y(1,49152,null,0,V.a,[Z.a,$.a,G.a,J.a,j.a,W.a,K.a,Q.a,X.a,nn.a],null,null)],null,null)},{},{},[]),en=d.X({encapsulation:2,styles:[],data:{}}),on=d.V("ng-component",V.b,function(n){return d._21(0,[(n()(),d.Z(0,0,null,null,1,"ng-component",[],null,null,null,h,en)),d.Y(1,49152,null,0,V.b,[C.a,J.a,O.a,G.a],null,null)],null,null)},{},{},[])},409:function(n,l,t){"use strict";function e(n){return p._21(0,[(n()(),p.Z(0,0,null,null,2,"ion-nav",[],null,null,null,U.b,U.a)),p._16(6144,null,F.a,null,[B.a]),p.Y(2,4374528,null,0,B.a,[[2,M.a],[2,H.a],V.a,$.a,G.a,p.j,p.u,p.z,p.i,J.l,W.a,[2,K.a],Q.a,p.k],{root:[0,"root"]},null),(n()(),p._19(-1,null,["\n"]))],function(n,l){n(l,2,0,l.component.rootPage)},null)}function i(n){return p._21(0,[(n()(),p.Z(0,0,null,null,11,"ion-fab",[["bottom",""],["right",""]],null,null,null,en.b,en.a)),p.Y(1,1228800,null,2,on.a,[G.a],null,null),p._17(335544320,2,{_mainButton:0}),p._17(603979776,3,{_fabLists:1}),(n()(),p._19(-1,0,["\n    "])),(n()(),p.Z(5,0,null,0,5,"button",[["color","secondary"],["ion-fab",""]],null,[[null,"click"]],function(n,l,t){var e=!0;if("click"===l){e=!1!==p._13(n.parent,3).scrollToBottom()&&e}return e},sn.b,sn.a)),p.Y(6,49152,[[2,4]],0,un.a,[$.a,p.j,p.z],{color:[0,"color"]},null),(n()(),p._19(-1,0,["\n      "])),(n()(),p.Z(8,0,null,0,1,"ion-icon",[["name","ios-arrow-down"],["role","img"]],[[2,"hide",null]],null,null,null,null)),p.Y(9,147456,null,0,rn.a,[$.a,p.j,p.z],{name:[0,"name"]},null),(n()(),p._19(-1,0,["\n    "])),(n()(),p._19(-1,0,["\n  "]))],function(n,l){n(l,6,0,"secondary");n(l,9,0,"ios-arrow-down")},function(n,l){n(l,8,0,p._13(l,9)._hidden)})}function o(n){return p._21(0,[(n()(),p.Z(0,0,null,null,18,"ion-item",[["class","item item-block"],["color","lighter-custom"]],null,null,null,an.b,an.a)),p.Y(1,1097728,null,3,cn.a,[hn.a,$.a,p.j,p.z,[2,dn.a]],{color:[0,"color"]},null),p._17(335544320,4,{contentLabel:0}),p._17(603979776,5,{_buttons:1}),p._17(603979776,6,{_icons:1}),p.Y(5,16384,null,0,pn.a,[],null,null),(n()(),p._19(-1,2,["\n      "])),(n()(),p.Z(7,0,null,2,1,"small",[],null,null,null,null,null)),(n()(),p._19(8,null,["",""])),(n()(),p._19(-1,2,["\n      "])),(n()(),p.Z(10,0,null,2,4,"h2",[],null,null,null,null,null)),(n()(),p._19(-1,null,["\n        "])),(n()(),p.Z(12,0,null,null,1,"b",[],null,null,null,null,null)),(n()(),p._19(13,null,["",""])),(n()(),p._19(-1,null,["\n      "])),(n()(),p._19(-1,2,["\n      "])),(n()(),p.Z(16,0,null,2,1,"p",[["text-wrap",""]],null,null,null,null,null)),(n()(),p._19(17,null,["",""])),(n()(),p._19(-1,2,["\n    "]))],function(n,l){n(l,1,0,"lighter-custom")},function(n,l){n(l,8,0,l.context.$implicit.timestamp);n(l,13,0,l.context.$implicit.destinationName);n(l,17,0,l.context.$implicit.payloadString)})}function s(n){return p._21(0,[p._17(402653184,1,{content:0}),(n()(),p._19(-1,null,["\n\n"])),(n()(),p.Z(2,0,null,null,12,"ion-content",[["padding-bottom",""]],[[2,"statusbar-padding",null],[2,"has-refresher",null]],null,null,gn.b,gn.a)),p.Y(3,4374528,[[1,4],["content",4]],0,fn.a,[$.a,G.a,Q.a,p.j,p.z,V.a,mn.a,p.u,[2,M.a],[2,H.a]],null,null),(n()(),p._19(-1,1,["\n  "])),(n()(),p.U(16777216,null,0,1,null,i)),p.Y(6,16384,null,0,_n.j,[p.I,p.F],{ngIf:[0,"ngIf"]},null),(n()(),p._19(-1,1,["\n  "])),(n()(),p.Z(8,0,null,1,5,"ion-list",[],null,null,null,null,null)),p.Y(9,16384,null,0,bn.a,[$.a,p.j,p.z,G.a,J.l,Q.a],null,null),(n()(),p._19(-1,null,["\n    "])),(n()(),p.U(16777216,null,null,1,null,o)),p.Y(12,802816,null,0,_n.i,[p.I,p.F,p.p],{ngForOf:[0,"ngForOf"]},null),(n()(),p._19(-1,null,["\n  "])),(n()(),p._19(-1,1,["\n"]))],function(n,l){var t=l.component;n(l,6,0,t.logs.length>0);n(l,12,0,t.logs)},function(n,l){n(l,2,0,p._13(l,3).statusbarPadding,p._13(l,3)._hasRefresher)})}function u(n){return p._21(0,[(n()(),p.Z(0,0,null,null,1,"ion-spinner",[["item-end",""]],[[2,"spinner-paused",null]],null,null,kn.b,kn.a)),p.Y(1,114688,null,0,Tn.a,[$.a,p.j,p.z],null,null)],function(n,l){n(l,1,0)},function(n,l){n(l,0,0,p._13(l,1)._paused)})}function r(n){return p._21(0,[(n()(),p.Z(0,0,null,null,30,"ion-item",[["class","item item-block"],["no-lines",""],["padding",""]],null,null,null,an.b,an.a)),p.Y(1,1097728,null,3,cn.a,[hn.a,$.a,p.j,p.z,[2,dn.a]],null,null),p._17(335544320,4,{contentLabel:0}),p._17(603979776,5,{_buttons:1}),p._17(603979776,6,{_icons:1}),p.Y(5,16384,null,0,pn.a,[],null,null),(n()(),p._19(-1,2,["\n    "])),(n()(),p._19(-1,2,["\n    "])),(n()(),p.Z(8,0,null,2,1,"h1",[["class","title"]],null,null,null,null,null)),(n()(),p._19(9,null,["",""])),(n()(),p._19(-1,2,["\n    "])),(n()(),p.Z(11,0,null,2,2,"ion-badge",[],null,null,null,null,null)),p.Y(12,16384,null,0,In.a,[$.a,p.j,p.z],{color:[0,"color"]},null),(n()(),p._19(13,null,["",""])),(n()(),p._19(-1,2,["\n    "])),(n()(),p.Z(15,0,null,2,1,"p",[],null,null,null,null,null)),(n()(),p._19(16,null,["Firmware Version: ",""])),(n()(),p._19(-1,2,["\n    "])),(n()(),p.Z(18,0,null,2,1,"p",[],null,null,null,null,null)),(n()(),p._19(19,null,["IP Address: ",""])),(n()(),p._19(-1,2,["\n    "])),(n()(),p.Z(21,0,null,2,1,"p",[],null,null,null,null,null)),(n()(),p._19(22,null,["Last Seen: ",""])),(n()(),p._19(-1,2,["\n    "])),(n()(),p.Z(24,0,null,2,1,"p",[],null,null,null,null,null)),(n()(),p._19(25,null,["Last Reboot: ",""])),(n()(),p._19(-1,2,["\n    "])),(n()(),p._19(-1,2,["\n    "])),(n()(),p.U(16777216,null,4,1,null,u)),p.Y(29,16384,null,0,_n.j,[p.I,p.F],{ngIf:[0,"ngIf"]},null),(n()(),p._19(-1,2,["\n  "]))],function(n,l){var t=l.component;n(l,12,0,t.device.status?"secondary":"danger");n(l,29,0,t.pingInProgress)},function(n,l){var t=l.component;n(l,9,0,t.device.id);n(l,13,0,t.device.status?"Online":"Offline");n(l,16,0,t.device.fv?t.device.fv:"--");n(l,19,0,t.device.ip?t.device.ip:"--");n(l,22,0,t.device.lastSeen?t.device.lastSeen:"--");n(l,25,0,t.device.lastReboot?t.device.lastReboot:"--")})}function a(n){return p._21(0,[(n()(),p.Z(0,0,null,null,2,"ion-note",[["float-right",""]],null,null,null,null,null)),p.Y(1,16384,null,0,Sn.a,[$.a,p.j,p.z],{color:[0,"color"]},null),(n()(),p._19(2,null,["",""]))],function(n,l){n(l,1,0,l.parent.context.$implicit.isOnline?"secondary":"danger")},function(n,l){n(l,2,0,l.parent.context.$implicit.isOnline?"Online":"Offline")})}function c(n){return p._21(0,[(n()(),p.Z(0,0,null,null,70,"ion-col",[["class","sensors col"],["col-12",""],["col-lg-3",""],["col-md-4",""],["col-sm-6",""]],null,null,null,null,null)),p.Y(1,278528,null,0,_n.h,[p.p,p.q,p.j,p.A],{klass:[0,"klass"],ngClass:[1,"ngClass"]},null),p._15(2,{hidden:0}),p.Y(3,16384,null,0,Pn.a,[],null,null),(n()(),p._19(-1,null,["\n        "])),(n()(),p.Z(5,0,null,null,64,"ion-card",[],null,null,null,null,null)),p.Y(6,278528,null,0,_n.h,[p.p,p.q,p.j,p.A],{ngClass:[0,"ngClass"]},null),p._15(7,{dim:0}),p.Y(8,16384,null,0,qn.a,[$.a,p.j,p.z],null,null),(n()(),p._19(-1,null,["\n          "])),(n()(),p.Z(10,0,null,null,11,"ion-card-header",[],null,null,null,null,null)),p.Y(11,16384,null,0,Dn.a,[$.a,p.j,p.z],null,null),(n()(),p._19(-1,null,["\n            "])),(n()(),p.Z(13,0,null,null,1,"b",[],null,null,null,null,null)),(n()(),p._19(14,null,["Sensor ",""])),(n()(),p._19(-1,null,["\n            "])),(n()(),p.U(16777216,null,null,1,null,a)),p.Y(17,16384,null,0,_n.j,[p.I,p.F],{ngIf:[0,"ngIf"]},null),(n()(),p._19(-1,null,["\n            "])),(n()(),p.Z(19,0,null,null,1,"p",[["style","color:#777"]],null,null,null,null,null)),(n()(),p._19(20,null,["",""])),(n()(),p._19(-1,null,["\n          "])),(n()(),p._19(-1,null,["\n          "])),(n()(),p.Z(23,0,null,null,17,"ion-card-content",[],null,null,null,null,null)),p.Y(24,16384,null,0,Rn.a,[$.a,p.j,p.z],null,null),(n()(),p._19(-1,null,["\n            "])),(n()(),p.Z(26,0,null,null,1,"p",[],null,null,null,null,null)),(n()(),p._19(27,null,["Type: ",""])),(n()(),p._19(-1,null,["\n            "])),(n()(),p.Z(29,0,null,null,1,"p",[],null,null,null,null,null)),(n()(),p._19(30,null,["RFID: ",""])),(n()(),p._19(-1,null,["\n            "])),(n()(),p.Z(32,0,null,null,1,"p",[],null,null,null,null,null)),(n()(),p._19(33,null,["Weight: ",""])),(n()(),p._19(-1,null,["\n            "])),(n()(),p.Z(35,0,null,null,1,"p",[],null,null,null,null,null)),(n()(),p._19(36,null,["Button: ",""])),(n()(),p._19(-1,null,["\n            "])),(n()(),p.Z(38,0,null,null,1,"p",[],null,null,null,null,null)),(n()(),p._19(39,null,["Proximity: ",""])),(n()(),p._19(-1,null,["\n          "])),(n()(),p._19(-1,null,["\n          "])),(n()(),p.Z(42,0,null,null,26,"ion-row",[["class","row"]],null,null,null,null,null)),p.Y(43,16384,null,0,Cn.a,[],null,null),(n()(),p._19(-1,null,["\n            "])),(n()(),p.Z(45,0,null,null,6,"ion-col",[["class","col"],["text-center",""]],null,null,null,null,null)),p.Y(46,16384,null,0,Pn.a,[],null,null),(n()(),p._19(-1,null,["\n              "])),(n()(),p.Z(48,0,null,null,2,"button",[["clear",""],["ion-button",""]],[[8,"disabled",0]],[[null,"click"]],function(n,l,t){var e=!0;if("click"===l){e=!1!==n.component.overrideLED(n.context.$implicit,"ON")&&e}return e},Yn.b,Yn.a)),p.Y(49,1097728,null,0,wn.a,[[8,""],$.a,p.j,p.z],{clear:[0,"clear"]},null),(n()(),p._19(-1,0,["\n                On\n              "])),(n()(),p._19(-1,null,["\n            "])),(n()(),p._19(-1,null,["\n            "])),(n()(),p.Z(53,0,null,null,6,"ion-col",[["class","col"],["text-center",""]],null,null,null,null,null)),p.Y(54,16384,null,0,Pn.a,[],null,null),(n()(),p._19(-1,null,["\n              "])),(n()(),p.Z(56,0,null,null,2,"button",[["clear",""],["ion-button",""]],[[8,"disabled",0]],[[null,"click"]],function(n,l,t){var e=!0;if("click"===l){e=!1!==n.component.overrideLED(n.context.$implicit,"OFF")&&e}return e},Yn.b,Yn.a)),p.Y(57,1097728,null,0,wn.a,[[8,""],$.a,p.j,p.z],{clear:[0,"clear"]},null),(n()(),p._19(-1,0,["\n                Off\n              "])),(n()(),p._19(-1,null,["\n            "])),(n()(),p._19(-1,null,["\n            "])),(n()(),p.Z(61,0,null,null,6,"ion-col",[["class","col"],["text-center",""]],null,null,null,null,null)),p.Y(62,16384,null,0,Pn.a,[],null,null),(n()(),p._19(-1,null,["\n              "])),(n()(),p.Z(64,0,null,null,2,"button",[["ion-button",""]],[[8,"disabled",0]],[[null,"click"]],function(n,l,t){var e=!0;if("click"===l){e=!1!==n.component.overrideLED(n.context.$implicit,"BLINK")&&e}return e},Yn.b,Yn.a)),p.Y(65,1097728,null,0,wn.a,[[8,""],$.a,p.j,p.z],null,null),(n()(),p._19(-1,0,["\n                Blink\n              "])),(n()(),p._19(-1,null,["\n            "])),(n()(),p._19(-1,null,["\n          "])),(n()(),p._19(-1,null,["\n        "])),(n()(),p._19(-1,null,["\n      "]))],function(n,l){var t=l.component;n(l,1,0,"sensors",n(l,2,0,!l.context.$implicit.isOnline&&!t.forceShow));n(l,6,0,n(l,7,0,!l.context.$implicit.isOnline));n(l,17,0,!t.refreshInProgress);n(l,49,0,"");n(l,57,0,"")},function(n,l){n(l,14,0,l.context.$implicit.pos);n(l,20,0,l.context.$implicit.fv?"v"+l.context.$implicit.fv:"--");n(l,27,0,l.context.$implicit.type?l.context.$implicit.type:"--");n(l,30,0,l.context.$implicit.currentRFID?l.context.$implicit.currentRFID:"--");n(l,33,0,l.context.$implicit.weight?l.context.$implicit.weight:"--");n(l,36,0,l.context.$implicit.button?l.context.$implicit.button:"--");n(l,39,0,l.context.$implicit.proximity?l.context.$implicit.proximity:"--");n(l,48,0,!l.context.$implicit.isOnline);n(l,56,0,!l.context.$implicit.isOnline);n(l,64,0,!l.context.$implicit.isOnline)})}function h(n){return p._21(0,[p._17(402653184,1,{content:0}),(n()(),p._19(-1,null,["\n\n"])),(n()(),p.Z(2,0,null,null,129,"ion-content",[["padding-bottom",""]],[[2,"statusbar-padding",null],[2,"has-refresher",null]],null,null,gn.b,gn.a)),p.Y(3,4374528,[[1,4],["info",4]],0,fn.a,[$.a,G.a,Q.a,p.j,p.z,V.a,mn.a,p.u,[2,M.a],[2,H.a]],null,null),(n()(),p._19(-1,1,["\n  "])),(n()(),p.Z(5,0,null,0,11,"ion-fab",[["bottom",""],["right",""]],null,null,null,en.b,en.a)),p.Y(6,1228800,null,2,on.a,[G.a],null,null),p._17(335544320,2,{_mainButton:0}),p._17(603979776,3,{_fabLists:1}),(n()(),p._19(-1,0,["\n    "])),(n()(),p.Z(10,0,null,0,5,"button",[["color","secondary"],["ion-fab",""]],null,[[null,"click"]],function(n,l,t){var e=!0;if("click"===l){e=!1!==n.component.scroll()&&e}return e},sn.b,sn.a)),p.Y(11,49152,[[2,4]],0,un.a,[$.a,p.j,p.z],{color:[0,"color"]},null),(n()(),p._19(-1,0,["\n      "])),(n()(),p.Z(13,0,null,0,1,"ion-icon",[["role","img"]],[[2,"hide",null]],null,null,null,null)),p.Y(14,147456,null,0,rn.a,[$.a,p.j,p.z],{name:[0,"name"]},null),(n()(),p._19(-1,0,["\n    "])),(n()(),p._19(-1,0,["\n  "])),(n()(),p._19(-1,1,["\n  "])),(n()(),p.U(16777216,null,1,1,null,r)),p.Y(19,16384,null,0,_n.j,[p.I,p.F],{ngIf:[0,"ngIf"]},null),(n()(),p._19(-1,1,["\n  "])),(n()(),p.Z(21,0,null,1,26,"ion-row",[["class","row"]],null,null,null,null,null)),p.Y(22,16384,null,0,Cn.a,[],null,null),(n()(),p._19(-1,null,["\n    "])),(n()(),p.Z(24,0,null,null,6,"ion-col",[["class","col"],["text-center",""]],null,null,null,null,null)),p.Y(25,16384,null,0,Pn.a,[],null,null),(n()(),p._19(-1,null,["\n      "])),(n()(),p.Z(27,0,null,null,2,"button",[["clear",""],["ion-button",""]],[[8,"disabled",0]],[[null,"click"]],function(n,l,t){var e=!0;if("click"===l){e=!1!==n.component.ping()&&e}return e},Yn.b,Yn.a)),p.Y(28,1097728,null,0,wn.a,[[8,""],$.a,p.j,p.z],{clear:[0,"clear"]},null),(n()(),p._19(-1,0,["\n        Ping\n      "])),(n()(),p._19(-1,null,["\n    "])),(n()(),p._19(-1,null,["\n    "])),(n()(),p.Z(32,0,null,null,6,"ion-col",[["class","col"],["text-center",""]],null,null,null,null,null)),p.Y(33,16384,null,0,Pn.a,[],null,null),(n()(),p._19(-1,null,["\n      "])),(n()(),p.Z(35,0,null,null,2,"button",[["clear",""],["ion-button",""]],null,[[null,"click"]],function(n,l,t){var e=!0;if("click"===l){e=!1!==n.component.refresh()&&e}return e},Yn.b,Yn.a)),p.Y(36,1097728,null,0,wn.a,[[8,""],$.a,p.j,p.z],{clear:[0,"clear"]},null),(n()(),p._19(-1,0,["\n        Refresh\n      "])),(n()(),p._19(-1,null,["\n    "])),(n()(),p._19(-1,null,["\n    "])),(n()(),p.Z(40,0,null,null,6,"ion-col",[["class","col"],["text-center",""]],null,null,null,null,null)),p.Y(41,16384,null,0,Pn.a,[],null,null),(n()(),p._19(-1,null,["\n      "])),(n()(),p.Z(43,0,null,null,2,"button",[["color","danger"],["ion-button",""]],null,[[null,"click"]],function(n,l,t){var e=!0;if("click"===l){e=!1!==n.component.reboot()&&e}return e},Yn.b,Yn.a)),p.Y(44,1097728,null,0,wn.a,[[8,""],$.a,p.j,p.z],{color:[0,"color"]},null),(n()(),p._19(-1,0,["\n        Reboot\n      "])),(n()(),p._19(-1,null,["\n    "])),(n()(),p._19(-1,null,["\n  "])),(n()(),p._19(-1,1,["\n  "])),(n()(),p.Z(49,0,null,1,81,"ion-list",[],null,null,null,null,null)),p.Y(50,16384,null,0,bn.a,[$.a,p.j,p.z,G.a,J.l,Q.a],null,null),(n()(),p._19(-1,null,["\n    "])),(n()(),p.Z(52,0,null,null,10,"ion-item-divider",[["class","item item-divider"],["color","light"]],null,null,null,an.b,an.a)),p.Y(53,1097728,null,3,cn.a,[hn.a,$.a,p.j,p.z,[2,dn.a]],{color:[0,"color"]},null),p._17(335544320,7,{contentLabel:0}),p._17(603979776,8,{_buttons:1}),p._17(603979776,9,{_icons:1}),p.Y(57,16384,null,0,On.a,[$.a,p.j,p.z],{color:[0,"color"]},null),(n()(),p._19(-1,2,["Sensors\n      "])),(n()(),p.Z(59,0,null,4,2,"button",[["clear",""],["ion-button",""],["item-end",""]],null,[[null,"click"]],function(n,l,t){var e=!0,i=n.component;if("click"===l){e=!1!=(i.forceShow=!i.forceShow)&&e}return e},Yn.b,Yn.a)),p.Y(60,1097728,[[8,4]],0,wn.a,[[8,""],$.a,p.j,p.z],{clear:[0,"clear"]},null),(n()(),p._19(61,0,["\n        ","\n      "])),(n()(),p._19(-1,2,["\n    "])),(n()(),p._19(-1,null,["\n    "])),(n()(),p.Z(64,0,null,null,5,"ion-row",[["class","row"]],null,null,null,null,null)),p.Y(65,16384,null,0,Cn.a,[],null,null),(n()(),p._19(-1,null,["\n      "])),(n()(),p.U(16777216,null,null,1,null,c)),p.Y(68,802816,null,0,_n.i,[p.I,p.F,p.p],{ngForOf:[0,"ngForOf"]},null),(n()(),p._19(-1,null,["\n    "])),(n()(),p._19(-1,null,["\n    "])),(n()(),p._19(-1,null,["\n    "])),(n()(),p.Z(72,0,null,null,6,"ion-item-divider",[["class","item item-divider"],["color","light"]],null,null,null,an.b,an.a)),p.Y(73,1097728,null,3,cn.a,[hn.a,$.a,p.j,p.z,[2,dn.a]],{color:[0,"color"]},null),p._17(335544320,10,{contentLabel:0}),p._17(603979776,11,{_buttons:1}),p._17(603979776,12,{_icons:1}),p.Y(77,16384,null,0,On.a,[$.a,p.j,p.z],{color:[0,"color"]},null),(n()(),p._19(-1,2,["Set Interval"])),(n()(),p._19(-1,null,["\n    "])),(n()(),p.Z(80,0,null,null,48,"ion-item-group",[["padding-bottom",""]],null,null,null,null,null)),p.Y(81,16384,null,0,Zn.a,[],null,null),(n()(),p._19(-1,null,["\n      "])),(n()(),p.Z(83,0,null,null,1,"p",[["padding-left",""],["style","font-size: 1.6rem"]],null,null,null,null,null)),(n()(),p._19(-1,null,["Set the packet delay and MQTT publish interval for the device.\n      "])),(n()(),p._19(-1,null,["\n      "])),(n()(),p.Z(86,0,null,null,16,"ion-item",[["class","item item-block"]],null,null,null,an.b,an.a)),p.Y(87,1097728,null,3,cn.a,[hn.a,$.a,p.j,p.z,[2,dn.a]],null,null),p._17(335544320,13,{contentLabel:0}),p._17(603979776,14,{_buttons:1}),p._17(603979776,15,{_icons:1}),p.Y(91,16384,null,0,pn.a,[],null,null),(n()(),p._19(-1,2,["\n        "])),(n()(),p.Z(93,0,null,1,2,"ion-label",[["stacked",""]],null,null,null,null,null)),p.Y(94,16384,[[13,4]],0,Ln.a,[$.a,p.j,p.z,[8,null],[8,""],[8,null],[8,null]],null,null),(n()(),p._19(-1,null,["Packet Delay (ms)"])),(n()(),p._19(-1,2,["\n        "])),(n()(),p.Z(97,0,null,3,4,"ion-input",[["placeholder","e.g 50 (50ms)"],["type","text"]],[[2,"ng-untouched",null],[2,"ng-touched",null],[2,"ng-pristine",null],[2,"ng-dirty",null],[2,"ng-valid",null],[2,"ng-invalid",null],[2,"ng-pending",null]],[[null,"ngModelChange"]],function(n,l,t){var e=!0;if("ngModelChange"===l){e=!1!==(n.component.device.intervals.PACKET_INTERVAL=t)&&e}return e},zn.b,zn.a)),p.Y(98,671744,null,0,Nn.l,[[8,null],[8,null],[8,null],[8,null]],{model:[0,"model"]},{update:"ngModelChange"}),p._16(2048,null,Nn.i,null,[Nn.l]),p.Y(100,16384,null,0,Nn.j,[Nn.i],null,null),p.Y(101,5423104,null,0,xn.a,[$.a,G.a,hn.a,V.a,p.j,p.z,[2,fn.a],[2,cn.a],[2,Nn.i],Q.a],{type:[0,"type"],placeholder:[1,"placeholder"]},null),(n()(),p._19(-1,2,["\n      "])),(n()(),p._19(-1,null,["\n      "])),(n()(),p.Z(104,0,null,null,16,"ion-item",[["class","item item-block"]],null,null,null,an.b,an.a)),p.Y(105,1097728,null,3,cn.a,[hn.a,$.a,p.j,p.z,[2,dn.a]],null,null),p._17(335544320,16,{contentLabel:0}),p._17(603979776,17,{_buttons:1}),p._17(603979776,18,{_icons:1}),p.Y(109,16384,null,0,pn.a,[],null,null),(n()(),p._19(-1,2,["\n        "])),(n()(),p.Z(111,0,null,1,2,"ion-label",[["stacked",""]],null,null,null,null,null)),p.Y(112,16384,[[16,4]],0,Ln.a,[$.a,p.j,p.z,[8,null],[8,""],[8,null],[8,null]],null,null),(n()(),p._19(-1,null,["Publish Interval (ms)"])),(n()(),p._19(-1,2,["\n        "])),(n()(),p.Z(115,0,null,3,4,"ion-input",[["placeholder","e.g 10000 (10 seconds)"],["type","text"]],[[2,"ng-untouched",null],[2,"ng-touched",null],[2,"ng-pristine",null],[2,"ng-dirty",null],[2,"ng-valid",null],[2,"ng-invalid",null],[2,"ng-pending",null]],[[null,"ngModelChange"]],function(n,l,t){var e=!0;if("ngModelChange"===l){e=!1!==(n.component.device.intervals.PUB_INTERVAL=t)&&e}return e},zn.b,zn.a)),p.Y(116,671744,null,0,Nn.l,[[8,null],[8,null],[8,null],[8,null]],{model:[0,"model"]},{update:"ngModelChange"}),p._16(2048,null,Nn.i,null,[Nn.l]),p.Y(118,16384,null,0,Nn.j,[Nn.i],null,null),p.Y(119,5423104,null,0,xn.a,[$.a,G.a,hn.a,V.a,p.j,p.z,[2,fn.a],[2,cn.a],[2,Nn.i],Q.a],{type:[0,"type"],placeholder:[1,"placeholder"]},null),(n()(),p._19(-1,2,["\n      "])),(n()(),p._19(-1,null,["\n      "])),(n()(),p.Z(122,0,null,null,5,"div",[["margin-top",""],["text-center",""]],null,null,null,null,null)),(n()(),p._19(-1,null,["\n        "])),(n()(),p.Z(124,0,null,null,2,"button",[["class","btn-special"],["color","custom"],["ion-button",""],["large",""]],null,[[null,"click"]],function(n,l,t){var e=!0;if("click"===l){e=!1!==n.component.setIntervals()&&e}return e},Yn.b,Yn.a)),p.Y(125,1097728,null,0,wn.a,[[8,""],$.a,p.j,p.z],{color:[0,"color"],large:[1,"large"]},null),(n()(),p._19(-1,0,["\n          Set\n        "])),(n()(),p._19(-1,null,["\n      "])),(n()(),p._19(-1,null,["\n    "])),(n()(),p._19(-1,null,["\n    "])),(n()(),p._19(-1,null,["\n  "])),(n()(),p._19(-1,1,["\n"]))],function(n,l){var t=l.component;n(l,11,0,"secondary");n(l,14,0,"ios-arrow-"+t.scrolling);n(l,19,0,t.device.id);n(l,28,0,"");n(l,36,0,"");n(l,44,0,"danger");n(l,53,0,"light");n(l,57,0,"light");n(l,60,0,"");n(l,68,0,t.sensors);n(l,73,0,"light");n(l,77,0,"light");n(l,98,0,t.device.intervals.PACKET_INTERVAL);n(l,101,0,"text","e.g 50 (50ms)");n(l,116,0,t.device.intervals.PUB_INTERVAL);n(l,119,0,"text","e.g 10000 (10 seconds)");n(l,125,0,"custom","")},function(n,l){var t=l.component;n(l,2,0,p._13(l,3).statusbarPadding,p._13(l,3)._hasRefresher);n(l,13,0,p._13(l,14)._hidden);n(l,27,0,t.pingInProgress);n(l,61,0,t.forceShow?"Show Online Only":"Show All");n(l,97,0,p._13(l,100).ngClassUntouched,p._13(l,100).ngClassTouched,p._13(l,100).ngClassPristine,p._13(l,100).ngClassDirty,p._13(l,100).ngClassValid,p._13(l,100).ngClassInvalid,p._13(l,100).ngClassPending);n(l,115,0,p._13(l,118).ngClassUntouched,p._13(l,118).ngClassTouched,p._13(l,118).ngClassPristine,p._13(l,118).ngClassDirty,p._13(l,118).ngClassValid,p._13(l,118).ngClassInvalid,p._13(l,118).ngClassPending)})}Object.defineProperty(l,"__esModule",{value:!0});var d=t(42),p=t(0),g=(t(5),t(69)),f=t(70),m=(t(20),t(111)),_=t(112),b=t(53),v=t(392),y=t(30),j=t(66),k=t(48),T=t(358),I=(t(389),function(){return function(n,l,t,e,i,o,s){var u=this;this.auth=e,this.mqtt=i,this.events=o,this.push=s,this.rootPage="",n.ready().then(function(){u.mqtt.prepareReady(),n.is("core")&&T.initializeApp(v.c),n.is("mobile")&&l.styleDefault(),n.is("mobile")?u.push.init():u.push.initDesktop(),u.auth.checkAuthentication().then(function(l){l?(u.events.publish("user:login"),u.rootPage="HomePage"):u.rootPage="LoginPage",n.is("mobile")&&t.hide()})})}}()),S=(t(175),t(161)),P=t(162),q=t(78),D=(t(407),t(176)),R=t(177),C=function(){return function(){}}(),Y=t(71),w=t(395),O=t(396),Z=t(397),L=t(398),z=t(399),N=t(400),x=t(401),A=t(402),E=t(403),U=t(526),F=t(49),B=t(76),M=t(7),H=t(22),V=t(9),$=t(3),G=t(6),J=t(8),W=t(34),K=t(23),Q=t(12),X=t(60),nn=p.X({encapsulation:2,styles:[],data:{}}),ln=p.V("ng-component",I,function(n){return p._21(0,[(n()(),p.Z(0,0,null,null,1,"ng-component",[],null,null,null,e,nn)),p.Y(1,49152,null,0,I,[G.a,_.a,m.a,k.a,y.a,X.a,j.a],null,null)],null,null)},{},{},[]),tn=t(408),en=t(393),on=t(75),sn=t(394),un=t(52),rn=t(32),an=t(83),cn=t(18),hn=t(17),dn=t(39),pn=t(59),gn=t(114),fn=t(25),mn=t(33),_n=t(16),bn=t(40),vn=t(14),yn=p.X({encapsulation:2,styles:[],data:{}}),jn=p.V("page-device-console",D.a,function(n){return p._21(0,[(n()(),p.Z(0,0,null,null,1,"page-device-console",[],null,null,null,s,yn)),p.Y(1,49152,null,0,D.a,[H.a,vn.a,X.a,y.a],null,null)],null,null)},{},{},[]),kn=t(139),Tn=t(65),In=t(116),Sn=t(147),Pn=t(117),qn=t(131),Dn=t(133),Rn=t(132),Cn=t(118),Yn=t(35),wn=t(24),On=t(119),Zn=t(120),Ln=t(58),zn=t(406),Nn=t(21),xn=t(81),An=p.X({encapsulation:2,styles:[],data:{}}),En=p.V("page-device-info",R.a,function(n){return p._21(0,[(n()(),p.Z(0,0,null,null,1,"page-device-info",[],null,null,null,h,An)),p.Y(1,49152,null,0,R.a,[H.a,vn.a,y.a,X.a,p.u],null,null)],null,null)},{},{},[]),Un=t(140),Fn=t(82),Bn=t(138),Mn=t(129),Hn=t(89),Vn=t(46),$n=t(136),Gn=t(170),Jn=t(73),Wn=t(56),Kn=t(144),Qn=t(90),Xn=t(102),nl=t(142),ll=t(156),tl=t(390),el=t(141),il=t(43),ol=t(137),sl=t(143),ul=t(178),rl=p.W(C,[Y.b],function(n){return p._10([p._11(512,p.i,p.S,[[8,[w.a,O.a,Z.a,L.a,z.a,N.a,x.a,A.a,E.a,ln,tn.b,jn,En]],[3,p.i],p.s]),p._11(4608,f.c,f.c,[]),p._11(4608,f.h,f.b,[]),p._11(5120,f.k,f.l,[]),p._11(4608,f.j,f.j,[f.c,f.h,f.k]),p._11(4608,f.g,f.a,[]),p._11(5120,f.e,f.m,[f.j,f.g]),p._11(5120,p.r,p._9,[[3,p.r]]),p._11(4608,_n.l,_n.k,[p.r,[2,_n.t]]),p._11(5120,p.b,p._0,[]),p._11(5120,p.p,p._6,[]),p._11(5120,p.q,p._7,[]),p._11(4608,d.c,d.q,[_n.d]),p._11(6144,p.D,null,[d.c]),p._11(4608,d.f,Un.a,[]),p._11(5120,d.d,function(n,l,t,e,i){return[new d.k(n,l),new d.o(t),new d.n(e,i)]},[_n.d,p.u,_n.d,_n.d,d.f]),p._11(4608,d.e,d.e,[d.d,p.u]),p._11(135680,d.m,d.m,[_n.d]),p._11(4608,d.l,d.l,[d.e,d.m]),p._11(6144,p.B,null,[d.l]),p._11(6144,d.p,null,[d.m]),p._11(4608,p.G,p.G,[p.u]),p._11(4608,d.h,d.h,[_n.d]),p._11(4608,d.i,d.i,[_n.d]),p._11(4608,Nn.q,Nn.q,[]),p._11(4608,Nn.d,Nn.d,[]),p._11(4608,Fn.a,Fn.a,[]),p._11(5120,Bn.a,Bn.c,[Bn.b]),p._11(4608,Mn.a,Mn.a,[V.a,$.a]),p._11(4608,Hn.a,Hn.a,[V.a,$.a]),p._11(4608,X.a,X.a,[]),p._11(4608,hn.a,hn.a,[]),p._11(4608,Vn.a,Vn.a,[G.a]),p._11(4608,mn.a,mn.a,[$.a,G.a,p.u,Q.a]),p._11(4608,$n.a,$n.a,[V.a,$.a]),p._11(5120,_n.g,Gn.c,[_n.r,[2,_n.a],$.a]),p._11(4608,_n.f,_n.f,[_n.g]),p._11(5120,Jn.b,Jn.d,[V.a,Jn.a]),p._11(5120,K.a,K.b,[V.a,Jn.b,_n.f,Wn.b,p.i]),p._11(4608,Kn.a,Kn.a,[V.a,$.a,K.a]),p._11(4608,Qn.a,Qn.a,[V.a,$.a]),p._11(4608,Xn.a,Xn.a,[V.a,$.a,K.a]),p._11(4608,nl.a,nl.a,[$.a,G.a,Q.a,V.a,J.l]),p._11(4608,ll.a,ll.a,[V.a,$.a]),p._11(4608,W.a,W.a,[G.a,$.a]),p._11(4608,_.a,_.a,[]),p._11(4608,m.a,m.a,[]),p._11(4608,S.a,S.a,[]),p._11(4608,y.a,y.a,[Bn.a,G.a,f.e,X.a]),p._11(4608,k.a,k.a,[Bn.a,y.a,X.a]),p._11(4608,P.a,P.a,[]),p._11(4608,q.a,q.a,[Hn.a,$n.a,ll.a]),p._11(4608,g.a,g.a,[G.a,f.e,p.u,Bn.a,X.a,k.a]),p._11(4608,j.a,j.a,[G.a,S.a,P.a,X.a,Bn.a,p.u,q.a,g.a]),p._11(512,f.f,f.f,[]),p._11(512,_n.c,_n.c,[]),p._11(512,p.k,tl.a,[]),p._11(256,$.b,{preloadModules:!0},[]),p._11(1024,el.a,el.b,[]),p._11(1024,G.a,G.b,[d.b,el.a,p.u]),p._11(1024,$.a,$.c,[$.b,G.a]),p._11(512,Q.a,Q.a,[G.a]),p._11(512,il.a,il.a,[]),p._11(512,V.a,V.a,[$.a,G.a,[2,il.a]]),p._11(512,J.l,J.l,[V.a]),p._11(256,Jn.a,{links:[{loadChildren:"../pages/device/device.module.ngfactory#HomePageModuleNgFactory",name:"DevicePage",segment:"device/:id",priority:"low",defaultHistory:[]},{loadChildren:"../pages/home/home.module.ngfactory#HomePageModuleNgFactory",name:"HomePage",segment:"home",priority:"low",defaultHistory:[]},{loadChildren:"../pages/login/login.module.ngfactory#LoginPageModuleNgFactory",name:"LoginPage",segment:"login",priority:"high",defaultHistory:[]},{loadChildren:"../pages/settings/settings.module.ngfactory#SettingsPageModuleNgFactory",name:"SettingsPage",segment:"settings",priority:"low",defaultHistory:["HomePage"]}]},[]),p._11(512,p.h,p.h,[]),p._11(512,ol.a,ol.a,[p.h]),p._11(1024,Wn.b,Wn.c,[ol.a,p.o]),p._11(1024,p.c,function(n,l,t,e,i,o,s,u,r,a,c,h,p){return[d.s(n),sl.a(l),X.b(t,e),nl.b(i,o,s,u,r),Wn.d(a,c,h,p)]},[[2,p.t],$.a,G.a,Q.a,$.a,G.a,Q.a,V.a,J.l,$.a,Jn.a,Wn.b,p.u]),p._11(512,p.d,p.d,[[2,p.c]]),p._11(131584,p.f,p.f,[p.u,p.T,p.o,p.k,p.i,p.d]),p._11(512,p.e,p.e,[p.f]),p._11(512,d.a,d.a,[[3,d.a]]),p._11(512,Nn.o,Nn.o,[]),p._11(512,Nn.g,Nn.g,[]),p._11(512,Nn.m,Nn.m,[]),p._11(512,Gn.a,Gn.a,[]),p._11(512,ul.a,ul.a,[]),p._11(512,b.a,b.a,[]),p._11(512,C,C,[]),p._11(256,Bn.b,null,[]),p._11(256,Y.a,I,[]),p._11(256,_n.a,"/",[])])});Object(p.M)(),Object(d.j)().bootstrapModuleFactory(rl)},442:function(n,l,t){function e(n){return t(i(n))}function i(n){var l=o[n];if(!(l+1))throw new Error("Cannot find module '"+n+"'.");return l}var o={"./af":216,"./af.js":216,"./ar":217,"./ar-dz":218,"./ar-dz.js":218,"./ar-kw":219,"./ar-kw.js":219,"./ar-ly":220,"./ar-ly.js":220,"./ar-ma":221,"./ar-ma.js":221,"./ar-sa":222,"./ar-sa.js":222,"./ar-tn":223,"./ar-tn.js":223,"./ar.js":217,"./az":224,"./az.js":224,"./be":225,"./be.js":225,"./bg":226,"./bg.js":226,"./bm":227,"./bm.js":227,"./bn":228,"./bn.js":228,"./bo":229,"./bo.js":229,"./br":230,"./br.js":230,"./bs":231,"./bs.js":231,"./ca":232,"./ca.js":232,"./cs":233,"./cs.js":233,"./cv":234,"./cv.js":234,"./cy":235,"./cy.js":235,"./da":236,"./da.js":236,"./de":237,"./de-at":238,"./de-at.js":238,"./de-ch":239,"./de-ch.js":239,"./de.js":237,"./dv":240,"./dv.js":240,"./el":241,"./el.js":241,"./en-au":242,"./en-au.js":242,"./en-ca":243,"./en-ca.js":243,"./en-gb":244,"./en-gb.js":244,"./en-ie":245,"./en-ie.js":245,"./en-nz":246,"./en-nz.js":246,"./eo":247,"./eo.js":247,"./es":248,"./es-do":249,"./es-do.js":249,"./es-us":250,"./es-us.js":250,"./es.js":248,"./et":251,"./et.js":251,"./eu":252,"./eu.js":252,"./fa":253,"./fa.js":253,"./fi":254,"./fi.js":254,"./fo":255,"./fo.js":255,"./fr":256,"./fr-ca":257,"./fr-ca.js":257,"./fr-ch":258,"./fr-ch.js":258,"./fr.js":256,"./fy":259,"./fy.js":259,"./gd":260,"./gd.js":260,"./gl":261,"./gl.js":261,"./gom-latn":262,"./gom-latn.js":262,"./gu":263,"./gu.js":263,"./he":264,"./he.js":264,"./hi":265,"./hi.js":265,"./hr":266,"./hr.js":266,"./hu":267,"./hu.js":267,"./hy-am":268,"./hy-am.js":268,"./id":269,"./id.js":269,"./is":270,"./is.js":270,"./it":271,"./it.js":271,"./ja":272,"./ja.js":272,"./jv":273,"./jv.js":273,"./ka":274,"./ka.js":274,"./kk":275,"./kk.js":275,"./km":276,"./km.js":276,"./kn":277,"./kn.js":277,"./ko":278,"./ko.js":278,"./ky":279,"./ky.js":279,"./lb":280,"./lb.js":280,"./lo":281,"./lo.js":281,"./lt":282,"./lt.js":282,"./lv":283,"./lv.js":283,"./me":284,"./me.js":284,"./mi":285,"./mi.js":285,"./mk":286,"./mk.js":286,"./ml":287,"./ml.js":287,"./mr":288,"./mr.js":288,"./ms":289,"./ms-my":290,"./ms-my.js":290,"./ms.js":289,"./my":291,"./my.js":291,"./nb":292,"./nb.js":292,"./ne":293,"./ne.js":293,"./nl":294,"./nl-be":295,"./nl-be.js":295,"./nl.js":294,"./nn":296,"./nn.js":296,"./pa-in":297,"./pa-in.js":297,"./pl":298,"./pl.js":298,"./pt":299,"./pt-br":300,"./pt-br.js":300,"./pt.js":299,"./ro":301,"./ro.js":301,"./ru":302,"./ru.js":302,"./sd":303,"./sd.js":303,"./se":304,"./se.js":304,"./si":305,"./si.js":305,"./sk":306,"./sk.js":306,"./sl":307,"./sl.js":307,"./sq":308,"./sq.js":308,"./sr":309,"./sr-cyrl":310,"./sr-cyrl.js":310,"./sr.js":309,"./ss":311,"./ss.js":311,"./sv":312,"./sv.js":312,"./sw":313,"./sw.js":313,"./ta":314,"./ta.js":314,"./te":315,"./te.js":315,"./tet":316,"./tet.js":316,"./th":317,"./th.js":317,"./tl-ph":318,"./tl-ph.js":318,"./tlh":319,"./tlh.js":319,"./tr":320,"./tr.js":320,"./tzl":321,"./tzl.js":321,"./tzm":322,"./tzm-latn":323,"./tzm-latn.js":323,"./tzm.js":322,"./uk":324,"./uk.js":324,"./ur":325,"./ur.js":325,"./uz":326,"./uz-latn":327,"./uz-latn.js":327,"./uz.js":326,"./vi":328,"./vi.js":328,"./x-pseudo":329,"./x-pseudo.js":329,"./yo":330,"./yo.js":330,"./zh-cn":331,"./zh-cn.js":331,"./zh-hk":332,"./zh-hk.js":332,"./zh-tw":333,"./zh-tw.js":333};e.keys=function(){return Object.keys(o)},e.resolve=i,n.exports=e,e.id=442},48:function(n,l,t){"use strict";t.d(l,"a",function(){return e});t(5),t(30),t(53),t(20);var e=function(){function n(n,l,t){this.storage=n,this.mqtt=l,this.events=t,this.username="toshiba",this.password="toshibatec1234",this.isAuthenticated=!1}return n.prototype.login=function(n){var l=this;return new Promise(function(t,e){l.isAuthenticated=n.username==l.username&&n.password==l.password,l.storage.set("isAuthenticated",l.isAuthenticated).then(function(){t(l.isAuthenticated)})})},n.prototype.logout=function(){var n=this;return new Promise(function(l,t){n.isAuthenticated=!1,n.storage.set("isAuthenticated",n.isAuthenticated).then(function(){n.storage.clear(),n.mqtt.reset(),n.events.publish("user:logout"),l(n.isAuthenticated)})})},n.prototype.checkAuthentication=function(){return this.storage.get("isAuthenticated")},n}()},66:function(n,l,t){"use strict";t.d(l,"a",function(){return o});t(5),t(78),t(20),t(161),t(162);var e=t(13),i=(t.n(e),t(53),t(69),t(455)),o=(t.n(i),function(){function n(n,l,t,i,o,s,u,r){var a=this;this.platform=n,this.device=l,this.push=t,this.events=i,this.storage=o,this.zone=s,this.alertService=u,this.api=r,this.pushOptions={android:{senderID:"620756868871",forceShow:"true"},ios:{senderID:"620756868871",gcmSandbox:!0,alert:!0,badge:!0,sound:!0,clearBadge:!0},windows:{}},this.notifications=[],this.isDeviceRegistered=!1,this.registerSchedulerInterval=1e4,this.isLoggedIn=!1,this.subscription=e.Observable.create(function(n){a.observer=n}),this.registerFunc=function(){console.log("[PUSH] Running scheduler..."),a.isLoggedIn&&a.isDeviceRegistered?a.registerDevice().then(function(n){n?(console.log("[PUSH] Successfully registered device!"),a.stopScheduler()):a.restartScheduler()}).catch(function(n){a.restartScheduler()}):a.restartScheduler()},n.ready().then(function(){if(a.platform.is("mobile"))a.device_uuid=a.device.uuid,console.log("[PUSH] Device uuid:",a.device_uuid);else{var n=window.navigator,l=window.screen,t=n.mimeTypes.length;t+=n.userAgent.replace(/\D+/g,""),t+=n.plugins.length,t+=l.height||"",t+=l.width||"",a.device_uuid=t+=l.pixelDepth||"",a._desktopReadyPromise=new Promise(function(n){a._desktopResolve=n}),a.triggerReady()}}),i.subscribe("user:login",function(){a.isLoggedIn=!0}),i.subscribe("user:logout",function(){console.log("user logout"),a.isLoggedIn=!1,a.triggerScheduler()}),this.triggerScheduler()}return n.prototype.isInitialised=function(){return this.isDeviceRegistered},n.prototype.isWiFiRequired=function(){return!1},n.prototype.isCordovaRequired=function(){return!0},n.prototype.isLoggedInRequired=function(){return!1},n.prototype.name=function(){return"PushService"},n.prototype.triggerScheduler=function(){this.platform.is("mobile")&&(console.log("[PUSH] Trigger scheduler..."),this.registerFunc())},n.prototype.restartScheduler=function(){this.registerScheduler=setTimeout(this.registerFunc.bind(this),this.registerSchedulerInterval)},n.prototype.stopScheduler=function(){clearTimeout(this.registerScheduler)},n.prototype.init=function(){var n=this;console.log("[PUSH] Starting Push Service"),Promise.all([this.storage.get("notifications"),this.initNotificationsCounter()]).then(function(l){l[0]?n.notifications=l[0]:(n.notifications=[],n.updateStorage()),console.log("[PUSH] Push notifications list: ",n.notifications),n.pushObject=n.push.init(n.pushOptions),n.pushObject.on("notification").subscribe(function(l){var t=function(){console.log("[PUSH] Received a notification",JSON.stringify(l)),n.zone.run(function(){n.addNotification(l)})};n.platform.is("ios")?n.pushObject.finish().then(function(){t()}):n.platform.is("android")&&t()}),n.pushObject.on("registration").subscribe(function(l){console.log("[PUSH] Device registered "+JSON.stringify(l)),n.registerId=l.registrationId,n.isDeviceRegistered=!0}),n.pushObject.on("error").subscribe(function(l){console.error("[PUSH] Error with Push plugin",l),n.isDeviceRegistered=!1})})},n.prototype.updateStorage=function(){return this.storage.set("notifications",this.notifications)},n.prototype.update=function(){var n=this;this.storage.get("notifications").then(function(l){n.notifications=l||[]})},n.prototype.addNotification=function(n){var l=this;-1==this.notifications.map(function(n){return n.additionalData.notId}).indexOf(n.additionalData.notId)&&n.additionalData.jobId&&(this.notifications.push(n),this.updateStorage().then(function(){l.observer.next(!0)}))},n.prototype.removeNotification=function(n){var l=this,t=!1,e=this.notifications.filter(function(l){return l.additionalData.jobId==n&&(t=!0),l.additionalData.jobId!=n});t&&(this.notifications=e,this.updateStorage().then(function(){l.observer.next(!1)}))},n.prototype.getAmount=function(){return this.notifications.length},n.prototype.registerDevice=function(){var n=this;return new Promise(function(l,t){if(n.platform.is("mobile")){!function(){var t=n.platform.is("ios")?"ios":"android";n.api.registerDevice({deviceId:n.device_uuid,deviceToken:n.registerId,deviceType:t}).subscribe(function(t){console.log("[PUSH] Got response from server",t),t.success?(console.log("[PUSH] Push registration successful!"),n.storage.set("fcm_token",n.registerId).then(function(){return l(!0)})):(console.log("[PUSH] Push registration failed!"),l(!1))})}()}else l(!0)})},n.prototype.unregisterDevice=function(){var n=this;return new Promise(function(l,t){n.platform.is("mobile")?n.api.unregisterDevice({deviceId:n.device_uuid}).subscribe(function(n){console.log("[PUSH] Push unregister response: ",n),l(n.success)},function(n){console.log("[PUSH] Push unregister failed!",n),l(!1)}):l(!0)})},n.prototype.unregisterPushService=function(){},n.prototype.initNotificationsCounter=function(){var n=this;return new Promise(function(l,t){n.platform.is("mobile")?n.getLocalNotificationsCounter().then(function(t){t?l():n.setLocalNotificationsCounter(0).then(function(){l()})}):l()})},n.prototype.setLocalNotificationsCounter=function(n){return this.storage.set("localCounter",n)},n.prototype.getLocalNotificationsCounter=function(){return this.storage.get("localCounter")},n.prototype.resetUI=function(){var n=this;this.messaging.getToken().then(function(l){l?n.sendTokenToServer(l):(console.log("No Instance ID token available. Request permission to generate one."),n.setTokenSentToServer(!1))}).catch(function(l){console.log("An error occurred while retrieving token. ",l),n.setTokenSentToServer(!1)})},n.prototype.initDesktop=function(){var n=this;navigator.serviceWorker.register("firebase-messaging-sw.js").then(function(l){n.messaging=i.messaging(),n.messaging.useServiceWorker(l),n.messaging.onTokenRefresh(function(){n.messaging.getToken().then(function(l){n.setTokenSentToServer(!1),n.sendTokenToServer(l),n.resetUI()})}),n.messaging.onMessage(function(n){console.log(n)}),n.resetUI(),n.isDeviceRegistered=!0,n.events.publish("desktopPush:ready")})},n.prototype.onDesktopReady=function(){return this._desktopReadyPromise},n.prototype.triggerReady=function(){var n=this;this.isDeviceRegistered?this._desktopResolve():this.events.subscribe("desktopPush:ready",function(){n._desktopResolve()})},n.prototype.isTokenSentToServer=function(){return 1==window.localStorage.getItem("sentToServer")},n.prototype.setTokenSentToServer=function(n){window.localStorage.setItem("sentToServer",n?1:0)},n.prototype.isPermissionGranted=function(){return 1==window.localStorage.getItem("gcm_desktop_notifcation")},n.prototype.setPermissionGranted=function(n){window.localStorage.setItem("gcm_desktop_notification",n?1:0)},n.prototype.requestPermission=function(){var n=this;this.messaging.requestPermission().then(function(){console.log("[PUSH] Desktop notification permission granted."),n.setPermissionGranted(!0),n.resetUI()}).catch(function(l){console.log("[PUSH] Unable to get desktop permission to notify.",l),n.setPermissionGranted(!1)})},n.prototype.deleteToken=function(){var n=this;this.messaging.getToken().then(function(l){n.messaging.deleteToken(l).then(function(){console.log("Token deleted."),n.setTokenSentToServer(!1),n.resetUI()}).catch(function(n){console.log("Unable to delete token. ",n)})})},n.prototype.sendTokenToServer=function(n){this.isTokenSentToServer()?console.log("[PUSH] Token already sent to server so won't send it again unless it changes"):(this.setTokenSentToServer(!0),this.api.registerDevice({deviceId:this.device_uuid,deviceToken:n,deviceType:"browser"}).subscribe(function(n){console.log("[PUSH] Got response from server",n),n.success?console.log("[PUSH] Desktop Push registration successful!"):console.log("[PUSH] Desktop Push registration failed!")}))},n}())},69:function(n,l,t){"use strict";t.d(l,"a",function(){return c});t(5);var e=t(70),i=(t(20),t(13)),o=(t.n(i),t(515)),s=(t.n(o),t(518)),u=(t.n(s),t(522)),r=(t.n(u),t(357)),a=(t.n(r),t(53),t(392)),c=(t(48),function(){function n(n,l,t,e,i,o){this.platform=n,this.http=l,this.zone=t,this.storage=e,this.events=i,this.auth=o,this.connect_timeout=25e3,this.retry=1,this.username="",this.password="";var s=new a.a;this.host=s.host,this.endpoint=s.endpoint}return n.prototype.getControllers=function(){return this.getRequest("getRegisteredControllers")},n.prototype.addController=function(n){return this.postRequest("addController",n,!0)},n.prototype.registerDevice=function(n){return this.postRequest("addDeviceId",n,!0)},n.prototype.unregisterDevice=function(n){return this.postRequest("removeDeviceId",n,!0)},n.prototype.getRequest=function(n,l){var t=this;return i.Observable.create(function(i){!function(){var o=t.endpoint+"/"+n;console.log("[API] Get request endpoint",o);var s=new e.d({Authorization:"Basic "+btoa(t.auth.username+":"+t.auth.password)}),u=new e.g({headers:s,search:l?t.json2url(l):null});console.log("[API] Get request params",u.search?u.search.toString():"none"),t.http.get(o,u).timeout(t.connect_timeout).retry(t.retry).subscribe(function(n){var l=n.json();console.log("[API] Get request response",l),i.next(l),i.complete()},function(n){if(console.log("[API] Get request error",n.status,n),401==n.status);else if(404==n.status)i.next({success:!1,message:a.b.NOT_FOUND,result:null}),i.complete();else if(500==n.status){var l="";l=t.isOnline()?a.b.SERVER_ERR:a.b.OFFLINE_MESSAGE,i.next({success:!1,message:l,result:null}),i.complete()}else i.next({success:!1,message:n.message,result:null}),i.complete()},function(){console.log("[API] Get request completed")})}()})},n.prototype.postRequest=function(n,l,t,o){var s=this;return i.Observable.create(function(i){!function(){var u=s.endpoint+"/"+n;console.log("[API] Post request endpoint",u);var r=new e.d({Authorization:t?"Basic "+btoa(s.auth.username+":"+s.auth.password):null,"Content-Type":o?"application/json":"application/x-www-form-urlencoded"}),c=new e.g({headers:r}),h=o?l:s.json2url(l).toString();console.log("[API] Post request params",h),s.http.post(u,h,c).timeout(s.connect_timeout).retry(s.retry).subscribe(function(n){var l=n.json();console.log("[API] Post request response",l),i.next(l),i.complete()},function(n){if(console.log("[API] Post request error",n.status,n),401==n.status);else if(404==n.status)i.next({success:!1,message:a.b.NOT_FOUND,result:null}),i.complete();else if(500==n.status){var l="";l=s.isOnline()?a.b.SERVER_ERR:a.b.OFFLINE_MESSAGE,i.next({success:!1,message:l,result:null}),i.complete()}else i.next({success:!1,message:n.message,result:null}),i.complete()},function(){console.log("[API] Post request completed")})}()})},n.prototype.json2url=function(n){var l=new e.i;for(var t in n)n.hasOwnProperty(t)&&l.append(t,n[t]);return l},n.prototype.isOnline=function(){return this.platform.is("cordova")?navigator.connection.type!==Connection.NONE:navigator.onLine},n}())},78:function(n,l,t){"use strict";t.d(l,"a",function(){return i});t(5),t(20);var e=t(357),i=(t.n(e),function(){function n(n,l,t){this.alertCtrl=n,this.loadingCtrl=l,this.toastCtrl=t}return n.prototype.dismissAll=function(){this.dismissAlert(),this.dismissToast()},n.prototype.showAlert=function(n,l,t,e,i,o){var s=this;this.dismissAlert();this.alert=this.alertCtrl.create({title:n,message:l,buttons:t||[{text:"OK",handler:function(){}}],inputs:e||[],mode:i||null}),o&&(this.alertCallback=o),this.alert.onDidDismiss(function(){s.alert=null,s.alertCallback&&(s.alertCallback(),s.alertCallback=null)}),this.alert.present()},n.prototype.dismissAlert=function(){this.alert&&this.alert.dismiss()},n.prototype.showToast=function(n,l,t){var e=this;this.dismissToast(),this.toast=this.toastCtrl.create({message:n,duration:l,showCloseButton:t,position:"bottom",closeButtonText:"Close"}),this.toast.onDidDismiss(function(){e.toast=null}),this.toast.present()},n.prototype.dismissToast=function(){this.toast&&this.toast.dismiss()},n.prototype.showLoading=function(n,l){var t=this;n&&(this.loadingCallback=n),this.loading||(this.loading=this.loadingCtrl.create({cssClass:"loginLoading",content:l||null}),this.loading.onDidDismiss(function(n){t.loading=null,t.loadingCallback&&(null!=n?t.loadingCallback(n):t.loadingCallback()),t.loadingCallback=null}),this.loading.present(),this.loadingTimeout=setTimeout(function(){t.loading&&(t.loadingCallback=function(){t.showToast("Not responding",3e3,!0)},t.dismissLoading(),t.loadingTimeout=null)},3e4))},n.prototype.dismissLoading=function(n){this.loading&&(this.loadingTimeout&&(clearTimeout(this.loadingTimeout),this.loadingTimeout=null),null!=n?this.loading.dismiss(n):this.loading.dismiss())},n}())}},[409]);
+webpackJsonp([4],{
+
+/***/ 116:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AlertProvider; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_ionic_angular__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__(330);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var AlertProvider = (function () {
+    function AlertProvider(alertCtrl, loadingCtrl, toastCtrl) {
+        this.alertCtrl = alertCtrl;
+        this.loadingCtrl = loadingCtrl;
+        this.toastCtrl = toastCtrl;
+    }
+    AlertProvider.prototype.dismissAll = function () {
+        this.dismissAlert();
+        this.dismissToast();
+        //this.dismissLoading();
+    };
+    AlertProvider.prototype.showAlert = function (title, message, buttons, inputs, mode, cb) {
+        var _this = this;
+        // dismiss any existing alerts
+        this.dismissAlert();
+        var _buttons = [];
+        if (buttons) {
+            _buttons = buttons;
+        }
+        else {
+            _buttons = [{
+                    text: 'OK',
+                    handler: function () { }
+                }];
+        }
+        this.alert = this.alertCtrl.create({
+            title: title,
+            message: message,
+            buttons: _buttons,
+            inputs: inputs ? inputs : [],
+            mode: mode ? mode : null
+        });
+        if (cb)
+            this.alertCallback = cb;
+        this.alert.onDidDismiss(function () {
+            _this.alert = null;
+            if (_this.alertCallback) {
+                _this.alertCallback();
+                _this.alertCallback = null;
+            }
+        });
+        this.alert.present();
+    };
+    AlertProvider.prototype.dismissAlert = function () {
+        if (this.alert) {
+            this.alert.dismiss();
+        }
+    };
+    AlertProvider.prototype.showToast = function (message, duration, showCloseBtn) {
+        var _this = this;
+        this.dismissToast();
+        this.toast = this.toastCtrl.create({
+            message: message,
+            duration: duration,
+            showCloseButton: showCloseBtn,
+            position: 'bottom',
+            closeButtonText: 'Close'
+        });
+        this.toast.onDidDismiss(function () {
+            _this.toast = null;
+        });
+        this.toast.present();
+    };
+    AlertProvider.prototype.dismissToast = function () {
+        if (this.toast)
+            this.toast.dismiss();
+    };
+    AlertProvider.prototype.showLoading = function (action, content) {
+        var _this = this;
+        if (action)
+            this.loadingCallback = action;
+        if (!this.loading) {
+            this.loading = this.loadingCtrl.create({
+                cssClass: 'loginLoading',
+                content: content ? content : null
+            });
+            this.loading.onDidDismiss(function (status) {
+                _this.loading = null;
+                if (_this.loadingCallback) {
+                    if (status != null)
+                        _this.loadingCallback(status);
+                    else
+                        _this.loadingCallback();
+                }
+                _this.loadingCallback = null;
+            });
+            this.loading.present();
+            this.loadingTimeout = setTimeout(function () {
+                if (_this.loading) {
+                    // clear all callback actions first
+                    _this.loadingCallback = function () {
+                        _this.showToast('Not responding', 3000, true);
+                    };
+                    _this.dismissLoading();
+                    _this.loadingTimeout = null;
+                }
+            }, 30000);
+        }
+    };
+    AlertProvider.prototype.dismissLoading = function (status) {
+        if (this.loading) {
+            if (this.loadingTimeout) {
+                clearTimeout(this.loadingTimeout);
+                this.loadingTimeout = null;
+            }
+            if (status != null)
+                this.loading.dismiss(status);
+            else
+                this.loading.dismiss();
+        }
+    };
+    AlertProvider = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["A" /* Injectable */])(),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_0_ionic_angular__["a" /* AlertController */],
+            __WEBPACK_IMPORTED_MODULE_0_ionic_angular__["m" /* LoadingController */],
+            __WEBPACK_IMPORTED_MODULE_0_ionic_angular__["t" /* ToastController */]])
+    ], AlertProvider);
+    return AlertProvider;
+}());
+
+//# sourceMappingURL=alert.js.map
+
+/***/ }),
+
+/***/ 117:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PushServiceProvider; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__alert__ = __webpack_require__(116);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_device__ = __webpack_require__(331);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ionic_native_push__ = __webpack_require__(333);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_Observable__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_Observable__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_storage__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__api_service__ = __webpack_require__(91);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_firebase__ = __webpack_require__(493);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_firebase___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_firebase__);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+//import { Service } from './../service-manager';
+
+
+
+// Native
+
+
+
+// Storage
+
+
+
+var PushServiceProvider = (function () {
+    function PushServiceProvider(platform, device, push, events, storage, zone, alertService, api) {
+        var _this = this;
+        this.platform = platform;
+        this.device = device;
+        this.push = push;
+        this.events = events;
+        this.storage = storage;
+        this.zone = zone;
+        this.alertService = alertService;
+        this.api = api;
+        this.pushOptions = {
+            android: {
+                senderID: '620756868871',
+                forceShow: 'true'
+            },
+            ios: {
+                senderID: '620756868871',
+                gcmSandbox: true,
+                alert: true,
+                badge: true,
+                sound: true,
+                clearBadge: true
+            },
+            windows: {}
+        };
+        this.notifications = [];
+        this.isDeviceRegistered = false;
+        this.registerSchedulerInterval = 10000;
+        this.isLoggedIn = false;
+        this.subscription = __WEBPACK_IMPORTED_MODULE_5_rxjs_Observable__["Observable"].create(function (observer) {
+            _this.observer = observer;
+        });
+        this.registerFunc = function () {
+            console.log('[PUSH] Running scheduler...');
+            if (!_this.isLoggedIn || !_this.isDeviceRegistered) {
+                _this.restartScheduler();
+            }
+            else {
+                _this.registerDevice().then(function (success) {
+                    if (!success)
+                        _this.restartScheduler();
+                    else {
+                        console.log('[PUSH] Successfully registered device!');
+                        _this.stopScheduler();
+                    }
+                }).catch(function (Err) {
+                    _this.restartScheduler();
+                });
+            }
+        };
+        platform.ready().then(function () {
+            if (_this.platform.is('mobile')) {
+                _this.device_uuid = _this.device.uuid;
+                console.log("[PUSH] Device uuid:", _this.device_uuid);
+            }
+            else {
+                var nav = window.navigator;
+                var screen_1 = window.screen;
+                var guid = nav.mimeTypes.length;
+                guid += nav.userAgent.replace(/\D+/g, '');
+                guid += nav.plugins.length;
+                guid += screen_1.height || '';
+                guid += screen_1.width || '';
+                guid += screen_1.pixelDepth || '';
+                _this.device_uuid = guid;
+                _this._desktopReadyPromise = new Promise(function (rs) { _this._desktopResolve = rs; });
+                _this.triggerReady();
+            }
+        });
+        events.subscribe('user:login', function () {
+            _this.isLoggedIn = true;
+        });
+        events.subscribe('user:logout', function () {
+            console.log('user logout');
+            _this.isLoggedIn = false;
+            // when logout, trigger register func
+            _this.triggerScheduler();
+        });
+        // trigger register func at start
+        this.triggerScheduler();
+    }
+    PushServiceProvider.prototype.isInitialised = function () {
+        return this.isDeviceRegistered;
+    };
+    PushServiceProvider.prototype.isWiFiRequired = function () {
+        return false;
+    };
+    PushServiceProvider.prototype.isCordovaRequired = function () {
+        return true;
+    };
+    PushServiceProvider.prototype.isLoggedInRequired = function () {
+        return false;
+    };
+    PushServiceProvider.prototype.name = function () {
+        return 'PushService';
+    };
+    PushServiceProvider.prototype.triggerScheduler = function () {
+        if (this.platform.is('mobile')) {
+            console.log('[PUSH] Trigger scheduler...');
+            this.registerFunc();
+        }
+    };
+    PushServiceProvider.prototype.restartScheduler = function () {
+        // start scheduler
+        this.registerScheduler = setTimeout(this.registerFunc.bind(this), this.registerSchedulerInterval);
+    };
+    PushServiceProvider.prototype.stopScheduler = function () {
+        clearTimeout(this.registerScheduler);
+    };
+    PushServiceProvider.prototype.init = function () {
+        var _this = this;
+        console.log('[PUSH] Starting Push Service');
+        // local and push notification settings
+        Promise.all([
+            this.storage.get('notifications'),
+            this.initNotificationsCounter()
+        ]).then(function (data) {
+            // store the data
+            if (data[0])
+                _this.notifications = data[0];
+            else {
+                _this.notifications = [];
+                _this.updateStorage();
+            }
+            console.log('[PUSH] Push notifications list: ', _this.notifications);
+            _this.pushObject = _this.push.init(_this.pushOptions);
+            _this.pushObject.on('notification').subscribe(function (notification) {
+                var action = function () {
+                    console.log('[PUSH] Received a notification', JSON.stringify(notification));
+                    // add notifcations to storage
+                    _this.zone.run(function () {
+                        _this.addNotification(notification);
+                    });
+                };
+                if (_this.platform.is('ios')) {
+                    _this.pushObject.finish().then(function () {
+                        action();
+                    });
+                }
+                else if (_this.platform.is('android')) {
+                    action();
+                }
+            });
+            _this.pushObject.on('registration').subscribe(function (registration) {
+                console.log('[PUSH] Device registered ' + JSON.stringify(registration));
+                _this.registerId = registration.registrationId;
+                _this.isDeviceRegistered = true;
+            });
+            _this.pushObject.on('error').subscribe(function (error) {
+                console.error('[PUSH] Error with Push plugin', error);
+                //this.alertService.showToast('We have error with push notification activation. Please restart the app', 3000, true);
+                _this.isDeviceRegistered = false;
+            });
+        });
+    };
+    PushServiceProvider.prototype.updateStorage = function () {
+        return this.storage.set('notifications', this.notifications);
+    };
+    PushServiceProvider.prototype.update = function () {
+        var _this = this;
+        this.storage.get('notifications').then(function (data) {
+            // store the data
+            if (data)
+                _this.notifications = data;
+            else {
+                _this.notifications = [];
+            }
+            //this.broadcast();
+        });
+    };
+    PushServiceProvider.prototype.addNotification = function (notification) {
+        var _this = this;
+        //let array = this.notifications.map(function (d) { return d['additionalData']['google.message_id']; });
+        //let idx = array.indexOf(notification['additionalData']['google.message_id']);
+        var array = this.notifications.map(function (d) { return d['additionalData']['notId']; });
+        var idx = array.indexOf(notification['additionalData']['notId']);
+        //console.log(array, notification)
+        if (idx == -1 && notification['additionalData']['jobId']) {
+            this.notifications.push(notification);
+            // update storage
+            this.updateStorage().then(function () {
+                // broadcast new notifications list
+                _this.observer.next(true);
+            });
+        }
+    };
+    PushServiceProvider.prototype.removeNotification = function (id) {
+        var _this = this;
+        // filter any notification that related to same id
+        var isRemoved = false;
+        var array = this.notifications.filter(function (item) {
+            if (item.additionalData.jobId == id)
+                isRemoved = true;
+            return (item.additionalData.jobId != id);
+        });
+        if (isRemoved) {
+            this.notifications = array;
+            // update storage
+            this.updateStorage().then(function () {
+                // broadcast new notifications list
+                _this.observer.next(false);
+            });
+        }
+    };
+    PushServiceProvider.prototype.getAmount = function () {
+        return this.notifications.length;
+    };
+    PushServiceProvider.prototype.registerDevice = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            if (_this.platform.is('mobile')) {
+                var _request = function () {
+                    var type = _this.platform.is('ios') ? 'ios' : 'android';
+                    _this.api.registerDevice({
+                        deviceId: _this.device_uuid,
+                        deviceToken: _this.registerId,
+                        deviceType: type
+                    }).subscribe(function (resp) {
+                        console.log('[PUSH] Got response from server', resp);
+                        if (resp.success) {
+                            console.log('[PUSH] Push registration successful!');
+                            _this.storage.set('fcm_token', _this.registerId).then(function () { return resolve(true); });
+                        }
+                        else {
+                            console.log('[PUSH] Push registration failed!');
+                            resolve(false);
+                            // set retry after 5 seconds 
+                            //setTimeout(_request, 5000);
+                        }
+                    });
+                };
+                _request();
+            }
+            else {
+                resolve(true);
+            }
+        });
+    };
+    PushServiceProvider.prototype.unregisterDevice = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            if (_this.platform.is('mobile')) {
+                _this.api.unregisterDevice({
+                    deviceId: _this.device_uuid,
+                }).subscribe(function (resp) {
+                    console.log('[PUSH] Push unregister response: ', resp);
+                    resolve(resp.success);
+                }, function (err) {
+                    console.log('[PUSH] Push unregister failed!', err);
+                    resolve(false);
+                });
+            }
+            else {
+                resolve(true);
+            }
+        });
+    };
+    PushServiceProvider.prototype.unregisterPushService = function () {
+    };
+    PushServiceProvider.prototype.initNotificationsCounter = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            if (_this.platform.is('mobile')) {
+                _this.getLocalNotificationsCounter().then(function (val) {
+                    if (!val) {
+                        _this.setLocalNotificationsCounter(0).then(function () {
+                            resolve();
+                        });
+                    }
+                    else
+                        resolve();
+                });
+            }
+            else
+                resolve();
+        });
+    };
+    PushServiceProvider.prototype.setLocalNotificationsCounter = function (val) {
+        return this.storage.set('localCounter', val);
+    };
+    PushServiceProvider.prototype.getLocalNotificationsCounter = function () {
+        return this.storage.get('localCounter');
+    };
+    // Desktop
+    PushServiceProvider.prototype.resetUI = function () {
+        var _this = this;
+        // [START get_token]
+        // Get Instance ID token. Initially this makes a network call, once retrieved
+        // subsequent calls to getToken will return from cache.
+        this.messaging.getToken()
+            .then(function (currentToken) {
+            if (currentToken) {
+                _this.sendTokenToServer(currentToken);
+            }
+            else {
+                // Show permission request.
+                console.log('No Instance ID token available. Request permission to generate one.');
+                // Show permission UI.
+                _this.setTokenSentToServer(false);
+            }
+        })
+            .catch(function (err) {
+            console.log('An error occurred while retrieving token. ', err);
+            _this.setTokenSentToServer(false);
+        });
+    };
+    PushServiceProvider.prototype.initDesktop = function () {
+        var _this = this;
+        navigator.serviceWorker.register('service-worker.js')
+            .then(function (registration) {
+            _this.messaging = __WEBPACK_IMPORTED_MODULE_8_firebase__["messaging"]();
+            _this.messaging.useServiceWorker(registration);
+            _this.messaging.onTokenRefresh(function () {
+                _this.messaging.getToken().then(function (token) {
+                    _this.setTokenSentToServer(false);
+                    _this.sendTokenToServer(token);
+                    _this.resetUI();
+                });
+            });
+            _this.messaging.onMessage(function (payload) {
+                console.log(payload);
+            });
+            _this.resetUI();
+            _this.isDeviceRegistered = true;
+            _this.events.publish('desktopPush:ready');
+        });
+    };
+    PushServiceProvider.prototype.onDesktopReady = function () {
+        return this._desktopReadyPromise;
+    };
+    PushServiceProvider.prototype.triggerReady = function () {
+        var _this = this;
+        if (this.isDeviceRegistered) {
+            this._desktopResolve();
+        }
+        else {
+            this.events.subscribe('desktopPush:ready', function () {
+                _this._desktopResolve();
+            });
+        }
+    };
+    PushServiceProvider.prototype.isTokenSentToServer = function () {
+        return window.localStorage.getItem('sentToServer') == 1;
+    };
+    PushServiceProvider.prototype.setTokenSentToServer = function (sent) {
+        window.localStorage.setItem('sentToServer', sent ? 1 : 0);
+    };
+    PushServiceProvider.prototype.isPermissionGranted = function () {
+        return window.localStorage.getItem('gcm_desktop_notifcation') == 1;
+    };
+    PushServiceProvider.prototype.setPermissionGranted = function (granted) {
+        window.localStorage.setItem('gcm_desktop_notification', granted ? 1 : 0);
+    };
+    PushServiceProvider.prototype.requestPermission = function () {
+        var _this = this;
+        this.messaging.requestPermission().then(function () {
+            console.log('[PUSH] Desktop notification permission granted.');
+            _this.setPermissionGranted(true);
+            _this.resetUI();
+        }).catch(function (e) {
+            console.log('[PUSH] Unable to get desktop permission to notify.', e);
+            _this.setPermissionGranted(false);
+        });
+    };
+    PushServiceProvider.prototype.deleteToken = function () {
+        var _this = this;
+        this.messaging.getToken()
+            .then(function (currentToken) {
+            _this.messaging.deleteToken(currentToken)
+                .then(function () {
+                console.log('Token deleted.');
+                _this.setTokenSentToServer(false);
+                _this.resetUI();
+            }).catch(function (err) {
+                console.log('Unable to delete token. ', err);
+            });
+        });
+    };
+    PushServiceProvider.prototype.sendTokenToServer = function (token) {
+        if (!this.isTokenSentToServer()) {
+            this.setTokenSentToServer(true);
+            this.api.registerDevice({
+                deviceId: this.device_uuid,
+                deviceToken: token,
+                deviceType: 'browser'
+            }).subscribe(function (resp) {
+                console.log('[PUSH] Got response from server', resp);
+                if (resp.success) {
+                    console.log('[PUSH] Desktop Push registration successful!');
+                }
+                else {
+                    console.log('[PUSH] Desktop Push registration failed!');
+                }
+            });
+        }
+        else {
+            console.log('[PUSH] Token already sent to server so won\'t send it again ' +
+                'unless it changes');
+        }
+    };
+    PushServiceProvider = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["A" /* Injectable */])(),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2_ionic_angular__["q" /* Platform */],
+            __WEBPACK_IMPORTED_MODULE_3__ionic_native_device__["a" /* Device */],
+            __WEBPACK_IMPORTED_MODULE_4__ionic_native_push__["a" /* Push */],
+            __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["g" /* Events */],
+            __WEBPACK_IMPORTED_MODULE_6__ionic_storage__["b" /* Storage */],
+            __WEBPACK_IMPORTED_MODULE_1__angular_core__["M" /* NgZone */],
+            __WEBPACK_IMPORTED_MODULE_0__alert__["a" /* AlertProvider */],
+            __WEBPACK_IMPORTED_MODULE_7__api_service__["a" /* ApiService */]])
+    ], PushServiceProvider);
+    return PushServiceProvider;
+}());
+
+//# sourceMappingURL=push-service.js.map
+
+/***/ }),
+
+/***/ 162:
+/***/ (function(module, exports) {
+
+function webpackEmptyAsyncContext(req) {
+	// Here Promise.resolve().then() is used instead of new Promise() to prevent
+	// uncatched exception popping up in devtools
+	return Promise.resolve().then(function() {
+		throw new Error("Cannot find module '" + req + "'.");
+	});
+}
+webpackEmptyAsyncContext.keys = function() { return []; };
+webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
+module.exports = webpackEmptyAsyncContext;
+webpackEmptyAsyncContext.id = 162;
+
+/***/ }),
+
+/***/ 204:
+/***/ (function(module, exports, __webpack_require__) {
+
+var map = {
+	"../pages/device/device.module": [
+		602,
+		2
+	],
+	"../pages/home/home.module": [
+		603,
+		3
+	],
+	"../pages/login/login.module": [
+		604,
+		1
+	],
+	"../pages/settings/settings.module": [
+		605,
+		0
+	]
+};
+function webpackAsyncContext(req) {
+	var ids = map[req];
+	if(!ids)
+		return Promise.reject(new Error("Cannot find module '" + req + "'."));
+	return __webpack_require__.e(ids[1]).then(function() {
+		return __webpack_require__(ids[0]);
+	});
+};
+webpackAsyncContext.keys = function webpackAsyncContextKeys() {
+	return Object.keys(map);
+};
+webpackAsyncContext.id = 204;
+module.exports = webpackAsyncContext;
+
+/***/ }),
+
+/***/ 415:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Config; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return Constants; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return firebaseConfig; });
+var Config = (function () {
+    function Config() {
+        //this.host = 'http://localhost:3001';
+        this.host = 'https://iot.cytron.io/toshiba-tec-project';
+        this.endpoint = this.host + '/api';
+    }
+    return Config;
+}());
+
+var Constants = {
+    'UNAUTHORIZED_MESSAGE': 'Seems like we have problem identifying your account. Please login again.',
+    'OFFLINE_MESSAGE': 'Seems like there is no Internet connection. Please check your Internet connection.',
+    'NOT_FOUND': 'Seems like we have problem connecting to server. Please try again later.',
+    'SERVER_ERR': 'Seems like there is server problem. Please consult our technical support for more details.'
+};
+var firebaseConfig = {
+    apiKey: "AIzaSyCyLL3j363FRmxxa05m8pBoYXl-_0wuBAo",
+    authDomain: "nbc-ionic2-push-notification.firebaseapp.com",
+    databaseURL: "https://nbc-ionic2-push-notification.firebaseio.com",
+    projectId: "nbc-ionic2-push-notification",
+    storageBucket: "nbc-ionic2-push-notification.appspot.com",
+    messagingSenderId: "620756868871"
+};
+//# sourceMappingURL=config.js.map
+
+/***/ }),
+
+/***/ 418:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DeviceConsolePage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_moment__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_moment__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_mqtt_mqtt__ = __webpack_require__(44);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+/**
+ * Generated class for the DeviceConsolePage page.
+ *
+ * See https://ionicframework.com/docs/components/#navigation for more info on
+ * Ionic pages and navigation.
+ */
+var DeviceConsolePage = (function () {
+    function DeviceConsolePage(navCtrl, navParams, events, mqtt) {
+        this.navCtrl = navCtrl;
+        this.navParams = navParams;
+        this.events = events;
+        this.mqtt = mqtt;
+        this.logs = [];
+        this.autoScroll = true;
+        this.initialized = false;
+    }
+    DeviceConsolePage.prototype.ionViewWillLeave = function () {
+        clearTimeout(this.timeout);
+    };
+    DeviceConsolePage.prototype.ionViewWillEnter = function () {
+        var _this = this;
+        setTimeout(function () { return _this.content.scrollToBottom(); });
+    };
+    DeviceConsolePage.prototype.ionViewDidLoad = function () {
+        var _this = this;
+        console.log('Trying to subscribe...');
+        this.events.subscribe('subscription:stop', function () {
+            console.log('unsubscribing mqtt...');
+            _this.events.unsubscribe('subscription:mqtt');
+            console.log('unsubscribing event...');
+            _this.events.unsubscribe('subscription:stop');
+        });
+        this.events.subscribe('subscription:mqtt', function (value) {
+            //console.log(value)
+            value.timestamp = __WEBPACK_IMPORTED_MODULE_2_moment__(Date.now()).format('YYYY-MM-D h:mm:ss a');
+            if (_this.logs.length >= 1800) {
+                _this.logs = [];
+            }
+            _this.logs.push(value);
+            _this.timeout = setTimeout(function () {
+                if (_this.autoScroll && _this.initialized) {
+                    _this.content.scrollToBottom();
+                }
+            });
+        });
+        this.content.ionScroll.subscribe(function () {
+            if (_this.content.isScrolling && _this.content.directionY == 'up') {
+                _this.autoScroll = false;
+            }
+            else if (!_this.autoScroll && _this.content.scrollTop + _this.content.contentHeight >= _this.content.getContentDimensions().scrollHeight - 20) {
+                _this.autoScroll = true;
+            }
+        });
+        setTimeout(function () { return _this.initialized = true; });
+    };
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_8" /* ViewChild */])('content'),
+        __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* Content */])
+    ], DeviceConsolePage.prototype, "content", void 0);
+    DeviceConsolePage = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
+            selector: 'page-device-console',template:/*ion-inline-start:"/home/beng/GitHub/Personal/toshiba-tec-project/ionic/src/pages/device-console/device-console.html"*/`<!--\n  Generated template for the DeviceConsolePage page.\n\n  See http://ionicframework.com/docs/components/#navigation for more info on\n  Ionic pages and navigation.\n-->\n\n<ion-content #content padding-bottom>\n  <ion-fab bottom right *ngIf="logs.length > 0">\n    <button ion-fab color="secondary" (click)="content.scrollToBottom()">\n      <ion-icon name="ios-arrow-down"></ion-icon>\n    </button>\n  </ion-fab>\n  <ion-list>\n    <ion-item color="lighter-custom" *ngFor="let log of logs; let i=index">\n      <small>{{ log.timestamp }}</small>\n      <h2>\n        <b>{{ log.destinationName }}</b>\n      </h2>\n      <p text-wrap>{{ log.payloadString }}</p>\n    </ion-item>\n  </ion-list>\n</ion-content>`/*ion-inline-end:"/home/beng/GitHub/Personal/toshiba-tec-project/ionic/src/pages/device-console/device-console.html"*/,
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["n" /* NavController */],
+            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["p" /* NavParams */],
+            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* Events */],
+            __WEBPACK_IMPORTED_MODULE_3__providers_mqtt_mqtt__["a" /* MqttProvider */]])
+    ], DeviceConsolePage);
+    return DeviceConsolePage;
+}());
+
+//# sourceMappingURL=device-console.js.map
+
+/***/ }),
+
+/***/ 419:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DeviceInfoPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__providers_mqtt_mqtt__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_moment__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_moment__);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+var MAX_SENSORS = 31;
+var DeviceInfoPage = (function () {
+    function DeviceInfoPage(navCtrl, navParams, mqtt, events, zone) {
+        this.navCtrl = navCtrl;
+        this.navParams = navParams;
+        this.mqtt = mqtt;
+        this.events = events;
+        this.zone = zone;
+        this.sensors = [];
+        this.device = {
+            id: '',
+            status: 0,
+            lastSeen: '',
+            lastReboot: '',
+            fv: '',
+            ip: '',
+            intervals: {
+                PUB_INTERVAL: "10000",
+                PACKET_INTERVAL: "50"
+            }
+        };
+        this.ctrlID = '';
+        this.forceShow = false;
+        this.pingStatus = false;
+        this.pingInProgress = false;
+        this.pingTimeout = 10000;
+        this.scrolling = 'down';
+        this.refreshInProgress = true;
+    }
+    DeviceInfoPage.prototype.ionViewDidLoad = function () {
+        var _this = this;
+        this.ctrlID = this.navParams.get('id');
+        this.device.id = this.ctrlID;
+        // initialise sensors
+        this.resetSensors();
+        this.events.subscribe('subscription:stop', function () {
+            console.log('unsubscribing mqtt...');
+            _this.events.unsubscribe('subscription:mqtt');
+            console.log('unsubscribing event...');
+            _this.events.unsubscribe('subscription:stop');
+        });
+        this.events.subscribe('subscription:mqtt', this.processPayload.bind(this));
+        this.mqtt.ready().then(function () {
+            _this.refresh();
+        });
+        this.content.ionScrollEnd.subscribe(function () {
+            //console.log(this.content.scrollTop, this.content.scrollHeight, this.content.contentHeight)
+            _this.zone.run(function () {
+                if (_this.content.scrollTop + _this.content.contentHeight >= _this.content.getContentDimensions().scrollHeight - 20) {
+                    _this.scrolling = 'up';
+                }
+                else {
+                    _this.scrolling = 'down';
+                }
+            });
+        });
+    };
+    DeviceInfoPage.prototype.processPayload = function (value) {
+        if (value.destinationName == this.ctrlID + '/IN/CHECK' ||
+            value.destinationName == this.ctrlID + '/IN/CTRL/REFRESH' ||
+            value.destinationName == this.ctrlID + '/REBOOT') {
+            return;
+        }
+        else if (value.destinationName == this.ctrlID + '/OUT/CHECK') {
+            this.pingInProgress = false;
+            clearTimeout(this.pingSetTimeout);
+            this.pingSetTimeout = null;
+            this.device.status = 1;
+            this.device.lastSeen = __WEBPACK_IMPORTED_MODULE_3_moment__(Date.now()).format('YYYY-MM-D h:mm:ss a');
+            return;
+        }
+        else if (value.destinationName == this.ctrlID + '/IN/RFID/LED1') {
+            var json = JSON.parse(value.payloadString);
+            console.log(json);
+            var pos = parseInt(json.POS);
+            if (pos < MAX_SENSORS) {
+                if (json.LED == 'ON') {
+                    this.sensors[pos].button = '1';
+                }
+                else {
+                    this.sensors[pos].button = '0';
+                }
+            }
+            return;
+        }
+        else if (value.destinationName == this.ctrlID + '/OUT/INTERVAL') {
+            var json = JSON.parse(value.payloadString);
+            this.device.fv = json.CTRL_FIRM;
+            this.device.ip = json.IP;
+            this.device.intervals.PACKET_INTERVAL = json.PACKET_INTERVAL;
+            this.device.intervals.PUB_INTERVAL = json.PUB_INTERVAL;
+            this.device.lastReboot = __WEBPACK_IMPORTED_MODULE_3_moment__(Date.now()).format('YYYY-MM-D h:mm:ss a');
+        }
+        else if (value.destinationName == this.ctrlID + '/OUT/RFID/STATUS') {
+            this.refreshInProgress = false;
+            var json = JSON.parse(value.payloadString);
+            var pos = parseInt(json.POS);
+            if (pos < MAX_SENSORS) {
+                this.sensors[pos].fv = json.SNSR_FIRM;
+                this.sensors[pos].weight = json.WEIGHT;
+                this.sensors[pos].proximity = json.PROXIMITY;
+                this.sensors[pos].button = json.BUTTON;
+                this.sensors[pos].currentRFID = json.RFID;
+                if (json.WEIGHT) {
+                    this.sensors[pos].type = 'Weight';
+                }
+                else if (json.PROXIMITY) {
+                    this.sensors[pos].type = 'Proximity';
+                }
+                else {
+                    this.sensors[pos].type = 'Button';
+                }
+            }
+            this.sensors[pos].isOnline = true;
+        }
+        else if (value.destinationName == this.ctrlID + '/OUT/RFID/WEIGHT') {
+            var json = JSON.parse(value.payloadString);
+            console.log(json);
+            var pos = parseInt(json.POS);
+            if (pos < MAX_SENSORS) {
+                this.sensors[pos].weight = json.WEIGHT;
+                this.sensors[pos].currentRFID = json.RFID;
+            }
+            this.sensors[pos].isOnline = true;
+        }
+        else if (value.destinationName == this.ctrlID + '/OUT/RFID/PRX1') {
+            var json = JSON.parse(value.payloadString);
+            console.log(json);
+            var pos = parseInt(json.POS);
+            if (pos < MAX_SENSORS) {
+                this.sensors[pos].proximity = json.PROXIMITY;
+            }
+            this.sensors[pos].isOnline = true;
+        }
+        else if (value.destinationName == this.ctrlID + '/OUT/RFID/BTN1') {
+            var json = JSON.parse(value.payloadString);
+            console.log(json);
+            var pos = parseInt(json.POS);
+            if (pos < MAX_SENSORS) {
+                this.sensors[pos].button = json.BUTTON;
+            }
+            this.sensors[pos].isOnline = true;
+        }
+        this.device.lastSeen = __WEBPACK_IMPORTED_MODULE_3_moment__(Date.now()).format('YYYY-MM-D h:mm:ss a');
+        this.device.status = 1;
+        //console.log(this.sensors)
+    };
+    DeviceInfoPage.prototype.resetSensors = function () {
+        this.sensors = [];
+        for (var i = 0; i < MAX_SENSORS; i++) {
+            this.sensors.push({
+                pos: i,
+                isOnline: false,
+                fv: '',
+                type: '',
+                weight: '',
+                button: '',
+                proximity: '',
+                led: '',
+                currentRFID: '',
+                previousRFID: ''
+            });
+        }
+    };
+    DeviceInfoPage.prototype.ping = function () {
+        var _this = this;
+        this.pingInProgress = true;
+        this.pingSetTimeout = setTimeout(function () {
+            _this.pingInProgress = false;
+            _this.pingSetTimeout = null;
+        }, this.pingTimeout);
+        this.mqtt.publish(this.ctrlID + '/IN/CHECK', JSON.stringify({ CTRL_ID: this.ctrlID }), 1);
+    };
+    DeviceInfoPage.prototype.refresh = function () {
+        this.refreshInProgress = true;
+        this.resetSensors();
+        this.mqtt.publish(this.ctrlID + '/IN/CTRL/REFRESH', JSON.stringify({ CTRL_ID: this.ctrlID }), 1);
+    };
+    DeviceInfoPage.prototype.reboot = function () {
+        this.mqtt.publish(this.ctrlID + '/REBOOT', "\"REBOOT\"", 1);
+    };
+    DeviceInfoPage.prototype.setIntervals = function () {
+        this.mqtt.publish(this.ctrlID + '/IN/INTERVAL', JSON.stringify(this.device.intervals), 1);
+    };
+    DeviceInfoPage.prototype.overrideLED = function (device, state) {
+        this.mqtt.publish(this.ctrlID + '/IN/RFID/LED1', JSON.stringify({
+            CTRL_ID: this.ctrlID,
+            RFID: device.currentRFID,
+            POS: device.pos.toString(),
+            LED: state
+        }), 1);
+    };
+    DeviceInfoPage.prototype.scroll = function () {
+        if (this.scrolling == 'up') {
+            this.content.scrollToTop();
+        }
+        else {
+            this.content.scrollToBottom();
+        }
+    };
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["_8" /* ViewChild */])('info'),
+        __metadata("design:type", __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["d" /* Content */])
+    ], DeviceInfoPage.prototype, "content", void 0);
+    DeviceInfoPage = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["m" /* Component */])({
+            selector: 'page-device-info',template:/*ion-inline-start:"/home/beng/GitHub/Personal/toshiba-tec-project/ionic/src/pages/device-info/device-info.html"*/`<!--\n  Generated template for the DeviceInfoPage page.\n\n  See http://ionicframework.com/docs/components/#navigation for more info on\n  Ionic pages and navigation.\n-->\n\n<ion-content padding-bottom #info>\n  <ion-fab bottom right>\n    <button ion-fab color="secondary" (click)="scroll()">\n      <ion-icon [name]="\'ios-arrow-\'+scrolling"></ion-icon>\n    </button>\n  </ion-fab>\n  <ion-item no-lines padding *ngIf="device.id">\n    <!--<ion-icon large name="md-desktop" item-start padding-left></ion-icon>-->\n    <h1 class="title">{{ device.id }}</h1>\n    <ion-badge [color]="device.status? \'secondary\':\'danger\'">{{ device.status? \'Online\': \'Offline\' }}</ion-badge>\n    <p>Firmware Version: {{ device.fv? device.fv: \'--\' }}</p>\n    <p>IP Address: {{ device.ip? device.ip: \'--\' }}</p>\n    <p>Last Seen: {{ device.lastSeen? device.lastSeen: \'--\'}}</p>\n    <p>Last Reboot: {{ device.lastReboot? device.lastReboot:\'--\' }}</p>\n    <!--<button item-end *ngIf="!pingInProgress" ion-button (click)="ping()">PING</button>-->\n    <ion-spinner item-end *ngIf="pingInProgress"></ion-spinner>\n  </ion-item>\n  <ion-row>\n    <ion-col text-center>\n      <button [disabled]="pingInProgress" ion-button clear (click)="ping()">\n        Ping\n      </button>\n    </ion-col>\n    <ion-col text-center>\n      <button ion-button clear (click)="refresh()">\n        Refresh\n      </button>\n    </ion-col>\n    <ion-col text-center>\n      <button ion-button color="danger" (click)="reboot()">\n        Reboot\n      </button>\n    </ion-col>\n  </ion-row>\n  <ion-list>\n    <ion-item-divider color="light">Sensors\n      <button item-end ion-button clear (click)="forceShow = !forceShow">\n        {{ forceShow? \'Show Online Only\': \'Show All\'}}\n      </button>\n    </ion-item-divider>\n    <ion-row>\n      <ion-col [ngClass]="{\'hidden\': !s.isOnline && !forceShow}" class="sensors" col-12 col-sm-6 col-md-4 col-lg-3 *ngFor="let s of sensors">\n        <ion-card [ngClass]="{\'dim\': !s.isOnline}">\n          <ion-card-header>\n            <b>Sensor {{ s.pos }}</b>\n            <ion-note *ngIf="!refreshInProgress" [color]="s.isOnline?\'secondary\':\'danger\'" float-right>{{ s.isOnline? \'Online\': \'Offline\'}}</ion-note>\n            <p style="color:#777">{{ s.fv? \'v\'+s.fv:\'--\' }}</p>\n          </ion-card-header>\n          <ion-card-content>\n            <p>Type: {{ s.type? s.type: \'--\' }}</p>\n            <p>RFID: {{ s.currentRFID? s.currentRFID: \'--\' }}</p>\n            <p>Weight: {{ s.weight? s.weight: \'--\' }}</p>\n            <p>Button: {{ s.button? s.button: \'--\' }}</p>\n            <p>Proximity: {{ s.proximity? s.proximity: \'--\' }}</p>\n          </ion-card-content>\n          <ion-row>\n            <ion-col text-center>\n              <button [disabled]="!s.isOnline" ion-button clear (click)="overrideLED(s, \'ON\')">\n                On\n              </button>\n            </ion-col>\n            <ion-col text-center>\n              <button [disabled]="!s.isOnline" ion-button clear (click)="overrideLED(s, \'OFF\')">\n                Off\n              </button>\n            </ion-col>\n            <ion-col text-center>\n              <button [disabled]="!s.isOnline" ion-button (click)="overrideLED(s, \'BLINK\')">\n                Blink\n              </button>\n            </ion-col>\n          </ion-row>\n        </ion-card>\n      </ion-col>\n    </ion-row>\n    <!--<div text-center padding>\n      <button ion-button class="btn-special" large color="custom" (click)="refresh()">\n        Refresh\n      </button>\n    </div>-->\n    <ion-item-divider color="light">Set Interval</ion-item-divider>\n    <ion-item-group padding-bottom>\n      <p padding-left style="font-size: 1.6rem">Set the packet delay and MQTT publish interval for the device.\n      </p>\n      <ion-item>\n        <ion-label stacked>Packet Delay (ms)</ion-label>\n        <ion-input type="text" placeholder="e.g 50 (50ms)" [(ngModel)]="device.intervals.PACKET_INTERVAL"></ion-input>\n      </ion-item>\n      <ion-item>\n        <ion-label stacked>Publish Interval (ms)</ion-label>\n        <ion-input type="text" placeholder="e.g 10000 (10 seconds)" [(ngModel)]="device.intervals.PUB_INTERVAL"></ion-input>\n      </ion-item>\n      <div text-center margin-top>\n        <button ion-button class="btn-special" large color="custom" (click)="setIntervals()">\n          Set\n        </button>\n      </div>\n    </ion-item-group>\n    <!--<ion-item-divider color="danger">Reboot</ion-item-divider>\n    <ion-item-group padding-bottom>\n      <ion-item no-lines>\n        Restart the device immediately.\n      </ion-item>\n      <div text-center>\n        <button class="btn-special" ion-button large color="custom" (click)="reboot()">\n          Reboot Now\n        </button>\n      </div>\n    </ion-item-group>-->\n  </ion-list>\n</ion-content>`/*ion-inline-end:"/home/beng/GitHub/Personal/toshiba-tec-project/ionic/src/pages/device-info/device-info.html"*/,
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2_ionic_angular__["n" /* NavController */],
+            __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["p" /* NavParams */],
+            __WEBPACK_IMPORTED_MODULE_0__providers_mqtt_mqtt__["a" /* MqttProvider */],
+            __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["g" /* Events */],
+            __WEBPACK_IMPORTED_MODULE_1__angular_core__["M" /* NgZone */]])
+    ], DeviceInfoPage);
+    return DeviceInfoPage;
+}());
+
+//# sourceMappingURL=device-info.js.map
+
+/***/ }),
+
+/***/ 421:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HomePage; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return PopoverPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ionic_storage__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__providers_mqtt_mqtt__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_auth_auth__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_ionic_angular_navigation_view_controller__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_ionic_angular_components_app_app__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__providers_api_service__ = __webpack_require__(91);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__providers_alert__ = __webpack_require__(116);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__providers_push_push_service__ = __webpack_require__(117);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+
+
+
+
+var HomePage = (function () {
+    function HomePage(navCtrl, popover, mqtt, auth, platform, storage, alertCtrl, api, alert, push) {
+        this.navCtrl = navCtrl;
+        this.popover = popover;
+        this.mqtt = mqtt;
+        this.auth = auth;
+        this.platform = platform;
+        this.storage = storage;
+        this.alertCtrl = alertCtrl;
+        this.api = api;
+        this.alert = alert;
+        this.push = push;
+        /*devices = [{
+          id: '1078310',
+          status: 0,
+          lastSeen: moment(Date.now()).format('LLL')
+        },{
+          id: '1077772',
+          status: 0,
+          lastSeen: moment(Date.now()).format('LLL')
+        }];*/
+        this.devices = [];
+        this.isLoading = true;
+    }
+    HomePage.prototype.ionViewCanEnter = function () {
+        return this.auth.checkAuthentication();
+    };
+    HomePage.prototype.ionViewWillEnter = function () {
+        /*this.storage.get('devices').then(devices => {
+          if(devices)
+            this.devices = JSON.parse(JSON.stringify(devices))
+        })*/
+        this.refresh();
+    };
+    HomePage.prototype.ionViewDidLoad = function () {
+        var _this = this;
+        if (this.platform.is('core') && !this.push.isPermissionGranted()) {
+            // asking permission for notification
+            this.push.onDesktopReady().then(function () {
+                _this.push.requestPermission();
+            });
+        }
+    };
+    HomePage.prototype.refresh = function () {
+        var _this = this;
+        this.isLoading = true;
+        this.api.getControllers().subscribe(function (res) {
+            if (res.success) {
+                console.log(res.result);
+                _this.devices = res.result;
+            }
+            _this.isLoading = false;
+        });
+    };
+    HomePage.prototype.goToDevicePage = function (dev) {
+        this.navCtrl.push('DevicePage', { id: dev });
+    };
+    HomePage.prototype.showAddDeviceDialog = function () {
+        var _this = this;
+        var alert = this.alertCtrl.create({
+            title: 'Add a device',
+            subTitle: '<p>Please enter the device ID<p>',
+            inputs: [
+                {
+                    name: 'id',
+                    placeholder: 'controller ID e.g. 1078310'
+                }
+            ],
+            buttons: [
+                {
+                    text: 'Cancel',
+                    role: 'cancel'
+                },
+                {
+                    text: 'Add',
+                    handler: function (data) {
+                        if (data.id) {
+                            _this.addDevice(data.id);
+                        }
+                    }
+                }
+            ]
+        });
+        alert.present();
+    };
+    HomePage.prototype.addDevice = function (id) {
+        var _this = this;
+        console.log(this.devices);
+        var dev = this.devices.filter(function (item) {
+            return item.id == id;
+        });
+        if (dev.length == 0) {
+            this.api.addController({ id: id }).subscribe(function (res) {
+                if (res.success) {
+                    _this.refresh();
+                }
+                else {
+                    _this.alert.showToast(res.msg, 3000, true);
+                }
+            });
+            /*this.devices.push({
+              id: id,
+              status: 0,
+              lastSeen: moment(Date.now()).format('LLL')
+            })
+            this.storage.set('devices', this.devices)*/
+        }
+    };
+    HomePage.prototype.removeDevice = function (id) {
+        this.devices = this.devices.filter(function (item) {
+            return item.id != id;
+        });
+        this.storage.set('devices', this.devices);
+    };
+    HomePage.prototype.updateDevices = function () {
+    };
+    HomePage.prototype.presentPopover = function (ev) {
+        var popover = this.popover.create(PopoverPage);
+        popover.onDidDismiss(function () { });
+        popover.present({
+            ev: ev
+        });
+    };
+    HomePage = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["m" /* Component */])({
+            selector: 'page-home',template:/*ion-inline-start:"/home/beng/GitHub/Personal/toshiba-tec-project/ionic/src/pages/home/home.html"*/`<ion-header>\n  <ion-navbar>\n    <ion-title>\n      <img src="assets/icon/icon.png" />\n      <div class="custom-title">\n        <span class="header">Toshiba Tec Project</span>\n        <span class="subheader" *ngIf="mqtt.mqttRegisteredBrokerList.length == 0">\n          No registered MQTT Brokers\n        </span>\n        <span class="subheader" *ngIf="mqtt.mqttRegisteredBrokerList.length > 0 && !mqtt.mqttUrl">\n          Please choose a MQTT broker\n        </span>\n        <span class="subheader" *ngIf="mqtt.mqttRegisteredBrokerList.length > 0 && mqtt.mqttUrl">\n          {{ mqtt.mqttConnectionStatus? \'MQTT Connected\' : \'Connecting to MQTT...\'}}\n        </span>\n      </div>\n    </ion-title>\n    <ion-buttons end>\n      <button ion-button icon-only (click)="presentPopover($event)">\n        <ion-icon name="more"></ion-icon>\n      </button>\n    </ion-buttons>\n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n  <ion-list>\n    <ion-list-header color="light">\n      Main Controller List\n      <ion-spinner *ngIf="isLoading" item-end></ion-spinner>\n      <button *ngIf="!isLoading" ion-button clear item-end (click)="refresh()">\n        Refresh\n      </button>\n    </ion-list-header>\n    <ion-item-sliding *ngFor="let device of devices">\n      <button [disabled]="!mqtt.mqttConnectionStatus" detail-none ion-item (click)="goToDevicePage(device)">\n        <ion-icon large name="md-desktop" item-start padding-left></ion-icon>\n        <h2>\n          <b>{{ device }}</b>\n        </h2>\n        <!--<p>Last seen: {{ device.lastSeen }}</p>-->\n      </button>\n      <ion-item-options side="left">\n        <button ion-button clear icon-only (click)="removeDevice(device.id)">\n          <ion-icon name="remove-circle" color="danger"></ion-icon>\n        </button>\n      </ion-item-options>\n    </ion-item-sliding>\n    <div text-center margin-top *ngIf="!isLoading">\n      <button ion-button (click)="showAddDeviceDialog()">\n        <ion-icon margin-right name="add"></ion-icon>\n        Add a device\n      </button>\n    </div>\n  </ion-list>\n</ion-content>`/*ion-inline-end:"/home/beng/GitHub/Personal/toshiba-tec-project/ionic/src/pages/home/home.html"*/
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_4_ionic_angular__["n" /* NavController */],
+            __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["r" /* PopoverController */],
+            __WEBPACK_IMPORTED_MODULE_1__providers_mqtt_mqtt__["a" /* MqttProvider */],
+            __WEBPACK_IMPORTED_MODULE_2__providers_auth_auth__["a" /* AuthProvider */],
+            __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["q" /* Platform */],
+            __WEBPACK_IMPORTED_MODULE_0__ionic_storage__["b" /* Storage */],
+            __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["a" /* AlertController */],
+            __WEBPACK_IMPORTED_MODULE_7__providers_api_service__["a" /* ApiService */],
+            __WEBPACK_IMPORTED_MODULE_8__providers_alert__["a" /* AlertProvider */],
+            __WEBPACK_IMPORTED_MODULE_9__providers_push_push_service__["a" /* PushServiceProvider */]])
+    ], HomePage);
+    return HomePage;
+}());
+
+var PopoverPage = (function () {
+    function PopoverPage(viewCtrl, auth, app, mqtt) {
+        this.viewCtrl = viewCtrl;
+        this.auth = auth;
+        this.app = app;
+        this.mqtt = mqtt;
+    }
+    PopoverPage.prototype.close = function (action) {
+        this.viewCtrl.onDidDismiss(action);
+        this.viewCtrl.dismiss();
+    };
+    PopoverPage.prototype.goToSettingsPage = function () {
+        var _this = this;
+        this.close(function () { return _this.app.getRootNavs()[0].push('SettingsPage'); });
+    };
+    PopoverPage.prototype.logout = function () {
+        var _this = this;
+        this.auth.logout().then(function (isAuthenticated) {
+            if (!isAuthenticated)
+                _this.close(function () {
+                    // clear topics
+                    _this.mqtt.unsubscribeAllTopics();
+                    _this.app.getRootNavs()[0].setRoot('LoginPage');
+                });
+        });
+    };
+    PopoverPage = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["m" /* Component */])({
+            template: "\n    <ion-list>\n    <button ion-item detail-none (click)=\"goToSettingsPage()\">\n      <ion-icon name=\"build\" margin-right></ion-icon>\n      Settings\n    </button>\n      <button ion-item detail-none (click)=\"logout()\">\n        <ion-icon name=\"exit\" margin-right></ion-icon>\n        Logout\n      </button>\n    </ion-list>\n  "
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_5_ionic_angular_navigation_view_controller__["a" /* ViewController */],
+            __WEBPACK_IMPORTED_MODULE_2__providers_auth_auth__["a" /* AuthProvider */],
+            __WEBPACK_IMPORTED_MODULE_6_ionic_angular_components_app_app__["a" /* App */],
+            __WEBPACK_IMPORTED_MODULE_1__providers_mqtt_mqtt__["a" /* MqttProvider */]])
+    ], PopoverPage);
+    return PopoverPage;
+}());
+
+//# sourceMappingURL=home.js.map
+
+/***/ }),
+
+/***/ 422:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(423);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(444);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__(0);
+
+
+
+Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["_14" /* enableProdMode */])();
+Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_1__app_module__["a" /* AppModule */]);
+//# sourceMappingURL=main.js.map
+
+/***/ }),
+
+/***/ 44:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MqttProvider; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_http__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_storage__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ng2_mqtt_mqttws31__ = __webpack_require__(472);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ng2_mqtt_mqttws31___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_ng2_mqtt_mqttws31__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_Observable__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_Observable__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_of__ = __webpack_require__(473);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_of___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_of__);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+
+var MqttProvider = (function () {
+    function MqttProvider(storage, platform, http, events) {
+        var _this = this;
+        this.storage = storage;
+        this.platform = platform;
+        this.http = http;
+        this.events = events;
+        this.mqttConnectionStatus = false;
+        this.mqttSubscribedTopics = [];
+        this.mqttUrl = '';
+        this.mqttPort = 8000;
+        this.mqttOptions = {
+            timeout: 10,
+            keepAliveInterval: 10
+        };
+        this.mqttRegisteredBrokerList = [];
+        this.callbacks = [];
+        this.noReconnect = false;
+        console.log('[mqtt] Initiating MQTT...');
+        // create observer
+        this._readyPromise = new Promise(function (res) { _this._readyResolve = res; });
+        // check for default broker from broker list
+        this.storage.get('mqttBrokers').then(function (value) {
+            if (value && value.length > 0) {
+                // update broker list
+                _this.mqttRegisteredBrokerList = value;
+                console.log(_this.mqttRegisteredBrokerList);
+                // start broker
+                _this.startBroker();
+            }
+        });
+    }
+    MqttProvider.prototype.ready = function () {
+        return this._readyPromise;
+    };
+    MqttProvider.prototype.triggerReady = function () {
+        this._readyResolve();
+    };
+    MqttProvider.prototype.prepareReady = function () {
+        if (this.mqttConnectionStatus)
+            this.triggerReady();
+        else {
+            this.events.subscribe('mqtt:ready', this.completed.bind(this));
+        }
+    };
+    MqttProvider.prototype.completed = function () {
+        this.events.unsubscribe('mqtt:ready');
+        this.triggerReady();
+    };
+    MqttProvider.prototype.reset = function () {
+        this.mqttRegisteredBrokerList = [];
+        this.callbacks = [];
+        if (this.disconnectTimeout) {
+            clearTimeout(this.disconnectTimeout);
+            this.disconnectTimeout = null;
+        }
+        if (this.failureTimeout) {
+            clearTimeout(this.failureTimeout);
+            this.failureTimeout = null;
+        }
+        this.mqttUrl = '';
+        this.disconnectBroker();
+    };
+    MqttProvider.prototype.startBroker = function () {
+        var _this = this;
+        console.log('[mqtt] start broker');
+        this.disconnectBroker();
+        var defaultBroker = this.getDefaultBroker();
+        console.log('Default', defaultBroker);
+        if (!defaultBroker.url)
+            return;
+        this.mqttUrl = defaultBroker.url;
+        this.mqttPort = defaultBroker.port ? parseInt(defaultBroker.port) : 8000;
+        this.mqttOptions = defaultBroker.options ? defaultBroker.options : this.mqttOptions;
+        if (this.failureTimeout)
+            clearTimeout(this.failureTimeout);
+        if (this.disconnectTimeout)
+            clearTimeout(this.disconnectTimeout);
+        var reconnectOnStart = function () {
+            setTimeout(function () {
+                if (_this.isOnline()) {
+                    _this.noReconnect = false;
+                    _this.connect();
+                }
+                else
+                    reconnectOnStart();
+            }, 2000);
+        };
+        reconnectOnStart();
+    };
+    MqttProvider.prototype.callback = function (message) {
+        //this.observer.next(message)
+        for (var i in this.callbacks) {
+            this.callbacks[i](message);
+        }
+    };
+    MqttProvider.prototype.registerCallback = function (id, cb) {
+        this.callbacks[id] = cb;
+    };
+    MqttProvider.prototype.unregisterCallback = function (id) {
+        this.callbacks = this.callbacks.filter(function (item, key) {
+            return key != id;
+        });
+    };
+    /*getObservable() {
+      return this.observable;
+    }*/
+    MqttProvider.prototype.publish = function (topic, payload, qos) {
+        var msg = new __WEBPACK_IMPORTED_MODULE_4_ng2_mqtt_mqttws31__["Paho"].MQTT.Message(payload);
+        msg.destinationName = topic;
+        msg.qos = qos;
+        this.mqttClient.send(msg);
+    };
+    MqttProvider.prototype.subscribeTopic = function (topic, qos) {
+        if (this.mqttSubscribedTopics.indexOf(topic) == -1) {
+            // add the topic
+            this.mqttSubscribedTopics.push(topic);
+            this.mqttClient.subscribe(topic, { qos: qos });
+        }
+        console.log(this.mqttSubscribedTopics);
+    };
+    MqttProvider.prototype.unsubscribeTopic = function (topic) {
+        this.mqttClient.unsubscribe(topic, {});
+        this.mqttSubscribedTopics = this.mqttSubscribedTopics.filter(function (_topic) {
+            return _topic != topic;
+        });
+        console.log(this.mqttSubscribedTopics);
+    };
+    MqttProvider.prototype.unsubscribeTopics = function (topics) {
+        var _this = this;
+        topics.forEach(function (topic) {
+            _this.unsubscribeTopic(topic);
+        });
+    };
+    MqttProvider.prototype.unsubscribeAllTopics = function () {
+        var _this = this;
+        this.mqttSubscribedTopics.forEach(function (topic) {
+            _this.unsubscribeTopic(topic);
+        });
+        this.mqttSubscribedTopics = [];
+    };
+    MqttProvider.prototype.onConnected = function () {
+        var _this = this;
+        this.events.publish('mqtt:ready');
+        this.mqttConnectionStatus = true;
+        console.log('[mqtt] MQTT connected');
+        this.mqttSubscribedTopics.forEach(function (topic) {
+            _this.mqttClient.subscribe(topic, { qos: 1 });
+        });
+    };
+    MqttProvider.prototype.onLostConnection = function () {
+        var _this = this;
+        console.log('[mqtt] MQTT disconnected');
+        this.mqttConnectionStatus = false;
+        // Trying to reconnect
+        if (!this.noReconnect) {
+            var reconnectOnDisconnect_1 = function () {
+                _this.disconnectTimeout = setTimeout(function () {
+                    if (_this.isOnline())
+                        _this.connect();
+                    else
+                        reconnectOnDisconnect_1();
+                }, 0);
+            };
+            reconnectOnDisconnect_1();
+        }
+    };
+    MqttProvider.prototype.onFailure = function (err) {
+        var _this = this;
+        console.log('[mqtt] MQTT Failure: ', err);
+        this.mqttConnectionStatus = false;
+        // Trying to reconnect
+        if (!this.noReconnect) {
+            var reconnectOnFailure_1 = function () {
+                _this.failureTimeout = setTimeout(function () {
+                    if (_this.isOnline())
+                        _this.connect();
+                    else
+                        reconnectOnFailure_1();
+                }, 3000);
+            };
+            reconnectOnFailure_1();
+        }
+    };
+    MqttProvider.prototype.connect = function () {
+        console.log('[mqtt] Connecting...');
+        this.mqttClient = new __WEBPACK_IMPORTED_MODULE_4_ng2_mqtt_mqttws31__["Paho"].MQTT.Client(this.mqttUrl, this.mqttPort, "clientId_" + Math.random().toString(16).substring(2, 8));
+        this.mqttClient.onConnectionLost = this.onLostConnection.bind(this);
+        this.mqttClient.onMessageArrived = this.callback.bind(this);
+        var options = JSON.parse(JSON.stringify(this.mqttOptions));
+        options.onSuccess = this.onConnected.bind(this);
+        options.onFailure = this.onFailure.bind(this);
+        this.mqttClient.connect(options);
+    };
+    MqttProvider.prototype.getAllSubscribedTopics = function () {
+        return __WEBPACK_IMPORTED_MODULE_5_rxjs_Observable__["Observable"].of(this.mqttSubscribedTopics);
+    };
+    MqttProvider.prototype.getRegisteredBrokerList = function () {
+        return __WEBPACK_IMPORTED_MODULE_5_rxjs_Observable__["Observable"].of(this.mqttRegisteredBrokerList);
+    };
+    MqttProvider.prototype.addBroker = function (url, port, options) {
+        var _this = this;
+        return new Promise(function (rs) {
+            var isExist = _this.mqttRegisteredBrokerList.filter(function (broker) {
+                return broker.url == url;
+            }).length > 0;
+            if (isExist)
+                rs();
+            else {
+                _this.mqttRegisteredBrokerList.push({
+                    'url': url,
+                    'port': port ? port : 8000,
+                    'options': options ? options : _this.mqttOptions,
+                    'default': false
+                });
+                _this.storage.set('mqttBrokers', _this.mqttRegisteredBrokerList)
+                    .then(function () { return rs(); });
+            }
+        });
+    };
+    MqttProvider.prototype.removeBroker = function (url) {
+        var _this = this;
+        return new Promise(function (rs) {
+            if (url == _this.mqttUrl) {
+                _this.disconnectBroker();
+            }
+            _this.mqttRegisteredBrokerList = _this.mqttRegisteredBrokerList.filter(function (broker) {
+                return broker.url != url;
+            });
+            _this.storage.set('mqttBrokers', _this.mqttRegisteredBrokerList)
+                .then(function () { return rs(); });
+        });
+    };
+    MqttProvider.prototype.disconnectBroker = function () {
+        console.log('[mqtt] Disconnect from current broker');
+        if (this.mqttClient) {
+            console.log('[mqtt] Got client, disconnect first...');
+            this.noReconnect = true;
+            if (this.isOnline() && this.mqttClient.isConnected()) {
+                this.mqttClient.disconnect();
+                this.unsubscribeAllTopics();
+            }
+            this.mqttClient = null;
+            this.mqttSubscribedTopics = [];
+        }
+    };
+    MqttProvider.prototype.setDefaultBroker = function (url) {
+        this.mqttRegisteredBrokerList.forEach(function (broker) {
+            if (broker.url != url) {
+                broker.default = false;
+            }
+            else {
+                broker.default = true;
+            }
+        });
+        return this.storage.set('mqttBrokers', this.mqttRegisteredBrokerList);
+    };
+    MqttProvider.prototype.getDefaultBroker = function () {
+        var brokers = this.mqttRegisteredBrokerList.filter(function (broker) {
+            return broker.default;
+        });
+        if (brokers.length > 0)
+            return brokers[0];
+        else
+            return {};
+    };
+    MqttProvider.prototype.isOnline = function () {
+        if (this.platform.is('cordova')) {
+            return navigator.connection.type !== Connection.NONE;
+        }
+        else {
+            return navigator.onLine;
+        }
+    };
+    MqttProvider = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["A" /* Injectable */])(),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__ionic_storage__["b" /* Storage */],
+            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["q" /* Platform */],
+            __WEBPACK_IMPORTED_MODULE_0__angular_http__["b" /* Http */],
+            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* Events */]])
+    ], MqttProvider);
+    return MqttProvider;
+}());
+
+//# sourceMappingURL=mqtt.js.map
+
+/***/ }),
+
+/***/ 444:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__providers_api_service__ = __webpack_require__(91);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_platform_browser__ = __webpack_require__(38);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_splash_screen__ = __webpack_require__(416);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_status_bar__ = __webpack_require__(417);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__ionic_storage__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__app_component__ = __webpack_require__(601);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__pages_home_home__ = __webpack_require__(421);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__providers_auth_auth__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ionic_native_device__ = __webpack_require__(331);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__providers_mqtt_mqtt__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__ionic_native_push__ = __webpack_require__(333);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__providers_push_push_service__ = __webpack_require__(117);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__providers_alert__ = __webpack_require__(116);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_ionic2_super_tabs__ = __webpack_require__(420);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__pages_device_console_device_console__ = __webpack_require__(418);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__pages_device_info_device_info__ = __webpack_require__(419);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var AppModule = (function () {
+    function AppModule() {
+    }
+    AppModule = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["I" /* NgModule */])({
+            declarations: [
+                __WEBPACK_IMPORTED_MODULE_8__app_component__["a" /* MyApp */],
+                __WEBPACK_IMPORTED_MODULE_9__pages_home_home__["b" /* PopoverPage */],
+                __WEBPACK_IMPORTED_MODULE_17__pages_device_console_device_console__["a" /* DeviceConsolePage */],
+                __WEBPACK_IMPORTED_MODULE_18__pages_device_info_device_info__["a" /* DeviceInfoPage */]
+            ],
+            imports: [
+                __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* HttpModule */],
+                __WEBPACK_IMPORTED_MODULE_2__angular_platform_browser__["a" /* BrowserModule */],
+                __WEBPACK_IMPORTED_MODULE_16_ionic2_super_tabs__["a" /* SuperTabsModule */].forRoot(),
+                __WEBPACK_IMPORTED_MODULE_7__ionic_storage__["a" /* IonicStorageModule */].forRoot(),
+                __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["k" /* IonicModule */].forRoot(__WEBPACK_IMPORTED_MODULE_8__app_component__["a" /* MyApp */], {
+                    preloadModules: true
+                }, {
+                    links: [
+                        { loadChildren: '../pages/device/device.module#HomePageModule', name: 'DevicePage', segment: 'device/:id', priority: 'low', defaultHistory: [] },
+                        { loadChildren: '../pages/home/home.module#HomePageModule', name: 'HomePage', segment: 'home', priority: 'low', defaultHistory: [] },
+                        { loadChildren: '../pages/login/login.module#LoginPageModule', name: 'LoginPage', segment: 'login', priority: 'high', defaultHistory: [] },
+                        { loadChildren: '../pages/settings/settings.module#SettingsPageModule', name: 'SettingsPage', segment: 'settings', priority: 'low', defaultHistory: ['HomePage'] }
+                    ]
+                })
+            ],
+            bootstrap: [__WEBPACK_IMPORTED_MODULE_4_ionic_angular__["i" /* IonicApp */]],
+            entryComponents: [
+                __WEBPACK_IMPORTED_MODULE_8__app_component__["a" /* MyApp */],
+                __WEBPACK_IMPORTED_MODULE_9__pages_home_home__["b" /* PopoverPage */],
+                __WEBPACK_IMPORTED_MODULE_17__pages_device_console_device_console__["a" /* DeviceConsolePage */],
+                __WEBPACK_IMPORTED_MODULE_18__pages_device_info_device_info__["a" /* DeviceInfoPage */]
+            ],
+            providers: [
+                __WEBPACK_IMPORTED_MODULE_6__ionic_native_status_bar__["a" /* StatusBar */],
+                __WEBPACK_IMPORTED_MODULE_5__ionic_native_splash_screen__["a" /* SplashScreen */],
+                __WEBPACK_IMPORTED_MODULE_11__ionic_native_device__["a" /* Device */],
+                { provide: __WEBPACK_IMPORTED_MODULE_3__angular_core__["u" /* ErrorHandler */], useClass: __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["j" /* IonicErrorHandler */] },
+                __WEBPACK_IMPORTED_MODULE_10__providers_auth_auth__["a" /* AuthProvider */],
+                __WEBPACK_IMPORTED_MODULE_12__providers_mqtt_mqtt__["a" /* MqttProvider */],
+                __WEBPACK_IMPORTED_MODULE_13__ionic_native_push__["a" /* Push */],
+                __WEBPACK_IMPORTED_MODULE_14__providers_push_push_service__["a" /* PushServiceProvider */],
+                __WEBPACK_IMPORTED_MODULE_15__providers_alert__["a" /* AlertProvider */],
+                __WEBPACK_IMPORTED_MODULE_0__providers_api_service__["a" /* ApiService */]
+            ]
+        })
+    ], AppModule);
+    return AppModule;
+}());
+
+//# sourceMappingURL=app.module.js.map
+
+/***/ }),
+
+/***/ 476:
+/***/ (function(module, exports, __webpack_require__) {
+
+var map = {
+	"./af": 205,
+	"./af.js": 205,
+	"./ar": 206,
+	"./ar-dz": 207,
+	"./ar-dz.js": 207,
+	"./ar-kw": 208,
+	"./ar-kw.js": 208,
+	"./ar-ly": 209,
+	"./ar-ly.js": 209,
+	"./ar-ma": 210,
+	"./ar-ma.js": 210,
+	"./ar-sa": 211,
+	"./ar-sa.js": 211,
+	"./ar-tn": 212,
+	"./ar-tn.js": 212,
+	"./ar.js": 206,
+	"./az": 213,
+	"./az.js": 213,
+	"./be": 214,
+	"./be.js": 214,
+	"./bg": 215,
+	"./bg.js": 215,
+	"./bm": 216,
+	"./bm.js": 216,
+	"./bn": 217,
+	"./bn.js": 217,
+	"./bo": 218,
+	"./bo.js": 218,
+	"./br": 219,
+	"./br.js": 219,
+	"./bs": 220,
+	"./bs.js": 220,
+	"./ca": 221,
+	"./ca.js": 221,
+	"./cs": 222,
+	"./cs.js": 222,
+	"./cv": 223,
+	"./cv.js": 223,
+	"./cy": 224,
+	"./cy.js": 224,
+	"./da": 225,
+	"./da.js": 225,
+	"./de": 226,
+	"./de-at": 227,
+	"./de-at.js": 227,
+	"./de-ch": 228,
+	"./de-ch.js": 228,
+	"./de.js": 226,
+	"./dv": 229,
+	"./dv.js": 229,
+	"./el": 230,
+	"./el.js": 230,
+	"./en-au": 231,
+	"./en-au.js": 231,
+	"./en-ca": 232,
+	"./en-ca.js": 232,
+	"./en-gb": 233,
+	"./en-gb.js": 233,
+	"./en-ie": 234,
+	"./en-ie.js": 234,
+	"./en-nz": 235,
+	"./en-nz.js": 235,
+	"./eo": 236,
+	"./eo.js": 236,
+	"./es": 237,
+	"./es-do": 238,
+	"./es-do.js": 238,
+	"./es-us": 239,
+	"./es-us.js": 239,
+	"./es.js": 237,
+	"./et": 240,
+	"./et.js": 240,
+	"./eu": 241,
+	"./eu.js": 241,
+	"./fa": 242,
+	"./fa.js": 242,
+	"./fi": 243,
+	"./fi.js": 243,
+	"./fo": 244,
+	"./fo.js": 244,
+	"./fr": 245,
+	"./fr-ca": 246,
+	"./fr-ca.js": 246,
+	"./fr-ch": 247,
+	"./fr-ch.js": 247,
+	"./fr.js": 245,
+	"./fy": 248,
+	"./fy.js": 248,
+	"./gd": 249,
+	"./gd.js": 249,
+	"./gl": 250,
+	"./gl.js": 250,
+	"./gom-latn": 251,
+	"./gom-latn.js": 251,
+	"./gu": 252,
+	"./gu.js": 252,
+	"./he": 253,
+	"./he.js": 253,
+	"./hi": 254,
+	"./hi.js": 254,
+	"./hr": 255,
+	"./hr.js": 255,
+	"./hu": 256,
+	"./hu.js": 256,
+	"./hy-am": 257,
+	"./hy-am.js": 257,
+	"./id": 258,
+	"./id.js": 258,
+	"./is": 259,
+	"./is.js": 259,
+	"./it": 260,
+	"./it.js": 260,
+	"./ja": 261,
+	"./ja.js": 261,
+	"./jv": 262,
+	"./jv.js": 262,
+	"./ka": 263,
+	"./ka.js": 263,
+	"./kk": 264,
+	"./kk.js": 264,
+	"./km": 265,
+	"./km.js": 265,
+	"./kn": 266,
+	"./kn.js": 266,
+	"./ko": 267,
+	"./ko.js": 267,
+	"./ky": 268,
+	"./ky.js": 268,
+	"./lb": 269,
+	"./lb.js": 269,
+	"./lo": 270,
+	"./lo.js": 270,
+	"./lt": 271,
+	"./lt.js": 271,
+	"./lv": 272,
+	"./lv.js": 272,
+	"./me": 273,
+	"./me.js": 273,
+	"./mi": 274,
+	"./mi.js": 274,
+	"./mk": 275,
+	"./mk.js": 275,
+	"./ml": 276,
+	"./ml.js": 276,
+	"./mr": 277,
+	"./mr.js": 277,
+	"./ms": 278,
+	"./ms-my": 279,
+	"./ms-my.js": 279,
+	"./ms.js": 278,
+	"./mt": 280,
+	"./mt.js": 280,
+	"./my": 281,
+	"./my.js": 281,
+	"./nb": 282,
+	"./nb.js": 282,
+	"./ne": 283,
+	"./ne.js": 283,
+	"./nl": 284,
+	"./nl-be": 285,
+	"./nl-be.js": 285,
+	"./nl.js": 284,
+	"./nn": 286,
+	"./nn.js": 286,
+	"./pa-in": 287,
+	"./pa-in.js": 287,
+	"./pl": 288,
+	"./pl.js": 288,
+	"./pt": 289,
+	"./pt-br": 290,
+	"./pt-br.js": 290,
+	"./pt.js": 289,
+	"./ro": 291,
+	"./ro.js": 291,
+	"./ru": 292,
+	"./ru.js": 292,
+	"./sd": 293,
+	"./sd.js": 293,
+	"./se": 294,
+	"./se.js": 294,
+	"./si": 295,
+	"./si.js": 295,
+	"./sk": 296,
+	"./sk.js": 296,
+	"./sl": 297,
+	"./sl.js": 297,
+	"./sq": 298,
+	"./sq.js": 298,
+	"./sr": 299,
+	"./sr-cyrl": 300,
+	"./sr-cyrl.js": 300,
+	"./sr.js": 299,
+	"./ss": 301,
+	"./ss.js": 301,
+	"./sv": 302,
+	"./sv.js": 302,
+	"./sw": 303,
+	"./sw.js": 303,
+	"./ta": 304,
+	"./ta.js": 304,
+	"./te": 305,
+	"./te.js": 305,
+	"./tet": 306,
+	"./tet.js": 306,
+	"./th": 307,
+	"./th.js": 307,
+	"./tl-ph": 308,
+	"./tl-ph.js": 308,
+	"./tlh": 309,
+	"./tlh.js": 309,
+	"./tr": 310,
+	"./tr.js": 310,
+	"./tzl": 311,
+	"./tzl.js": 311,
+	"./tzm": 312,
+	"./tzm-latn": 313,
+	"./tzm-latn.js": 313,
+	"./tzm.js": 312,
+	"./uk": 314,
+	"./uk.js": 314,
+	"./ur": 315,
+	"./ur.js": 315,
+	"./uz": 316,
+	"./uz-latn": 317,
+	"./uz-latn.js": 317,
+	"./uz.js": 316,
+	"./vi": 318,
+	"./vi.js": 318,
+	"./x-pseudo": 319,
+	"./x-pseudo.js": 319,
+	"./yo": 320,
+	"./yo.js": 320,
+	"./zh-cn": 321,
+	"./zh-cn.js": 321,
+	"./zh-hk": 322,
+	"./zh-hk.js": 322,
+	"./zh-tw": 323,
+	"./zh-tw.js": 323
+};
+function webpackContext(req) {
+	return __webpack_require__(webpackContextResolve(req));
+};
+function webpackContextResolve(req) {
+	var id = map[req];
+	if(!(id + 1)) // check for number or string
+		throw new Error("Cannot find module '" + req + "'.");
+	return id;
+};
+webpackContext.keys = function webpackContextKeys() {
+	return Object.keys(map);
+};
+webpackContext.resolve = webpackContextResolve;
+module.exports = webpackContext;
+webpackContext.id = 476;
+
+/***/ }),
+
+/***/ 601:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyApp; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__providers_config__ = __webpack_require__(415);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__providers_mqtt_mqtt__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__providers_push_push_service__ = __webpack_require__(117);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ionic_native_status_bar__ = __webpack_require__(417);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ionic_native_splash_screen__ = __webpack_require__(416);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__providers_auth_auth__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_firebase_app__ = __webpack_require__(334);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_firebase_app___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_firebase_app__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_firebase_messaging__ = __webpack_require__(365);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_firebase_messaging___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_firebase_messaging__);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+
+
+
+
+var MyApp = (function () {
+    function MyApp(platform, statusBar, splashScreen, auth, mqtt, events, push) {
+        var _this = this;
+        this.auth = auth;
+        this.mqtt = mqtt;
+        this.events = events;
+        this.push = push;
+        this.rootPage = '';
+        platform.ready().then(function () {
+            // Okay, so the platform is ready and our plugins are available.
+            // Here you can do any higher level native things you might need.
+            _this.mqtt.prepareReady();
+            if (platform.is('core'))
+                __WEBPACK_IMPORTED_MODULE_8_firebase_app__["initializeApp"](__WEBPACK_IMPORTED_MODULE_0__providers_config__["c" /* firebaseConfig */]);
+            if (platform.is('mobile'))
+                statusBar.styleDefault();
+            // init push service
+            if (platform.is('mobile')) {
+                _this.push.init();
+            }
+            else {
+                _this.push.initDesktop();
+            }
+            _this.auth.checkAuthentication().then(function (allowed) {
+                if (allowed) {
+                    _this.events.publish('user:login');
+                    _this.rootPage = 'HomePage';
+                }
+                else
+                    _this.rootPage = 'LoginPage';
+                if (platform.is('mobile'))
+                    splashScreen.hide();
+            });
+        });
+    }
+    MyApp = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["m" /* Component */])({template:/*ion-inline-start:"/home/beng/GitHub/Personal/toshiba-tec-project/ionic/src/app/app.html"*/`<ion-nav [root]="rootPage"></ion-nav>\n`/*ion-inline-end:"/home/beng/GitHub/Personal/toshiba-tec-project/ionic/src/app/app.html"*/
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_4_ionic_angular__["q" /* Platform */],
+            __WEBPACK_IMPORTED_MODULE_5__ionic_native_status_bar__["a" /* StatusBar */],
+            __WEBPACK_IMPORTED_MODULE_6__ionic_native_splash_screen__["a" /* SplashScreen */],
+            __WEBPACK_IMPORTED_MODULE_7__providers_auth_auth__["a" /* AuthProvider */],
+            __WEBPACK_IMPORTED_MODULE_1__providers_mqtt_mqtt__["a" /* MqttProvider */],
+            __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["g" /* Events */],
+            __WEBPACK_IMPORTED_MODULE_2__providers_push_push_service__["a" /* PushServiceProvider */]])
+    ], MyApp);
+    return MyApp;
+}());
+
+//# sourceMappingURL=app.component.js.map
+
+/***/ }),
+
+/***/ 64:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AuthProvider; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mqtt_mqtt__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ionic_storage__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular__ = __webpack_require__(15);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+//import { HttpClient } from '@angular/common/http';
+
+
+/*
+  Generated class for the AuthProvider provider.
+
+  See https://angular.io/guide/dependency-injection for more info on providers
+  and Angular DI.
+*/
+var AuthProvider = (function () {
+    function AuthProvider(
+        //public http: HttpClient, 
+        storage, mqtt, events) {
+        this.storage = storage;
+        this.mqtt = mqtt;
+        this.events = events;
+        this.username = 'toshiba';
+        this.password = 'toshibatec1234';
+        this.isAuthenticated = false;
+    }
+    AuthProvider.prototype.login = function (credentials) {
+        var _this = this;
+        return new Promise(function (rs, rj) {
+            _this.isAuthenticated =
+                (credentials.username == _this.username && credentials.password == _this.password);
+            _this.storage.set('isAuthenticated', _this.isAuthenticated).then(function () {
+                rs(_this.isAuthenticated);
+            });
+        });
+    };
+    AuthProvider.prototype.logout = function () {
+        var _this = this;
+        return new Promise(function (rs, rj) {
+            _this.isAuthenticated = false;
+            _this.storage.set('isAuthenticated', _this.isAuthenticated).then(function () {
+                _this.storage.clear();
+                _this.mqtt.reset();
+                _this.events.publish('user:logout');
+                rs(_this.isAuthenticated);
+            });
+        });
+    };
+    AuthProvider.prototype.checkAuthentication = function () {
+        return this.storage.get('isAuthenticated');
+    };
+    AuthProvider = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["A" /* Injectable */])(),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__ionic_storage__["b" /* Storage */],
+            __WEBPACK_IMPORTED_MODULE_0__mqtt_mqtt__["a" /* MqttProvider */],
+            __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["g" /* Events */]])
+    ], AuthProvider);
+    return AuthProvider;
+}());
+
+//# sourceMappingURL=auth.js.map
+
+/***/ }),
+
+/***/ 91:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ApiService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_http__ = __webpack_require__(66);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_retry__ = __webpack_require__(590);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_retry___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_retry__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_timeout__ = __webpack_require__(593);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_timeout___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_timeout__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_operator_delay__ = __webpack_require__(597);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_operator_delay___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_add_operator_delay__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_operator_map__ = __webpack_require__(330);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_rxjs_add_operator_map__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__ionic_storage__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__config__ = __webpack_require__(415);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__auth_auth__ = __webpack_require__(64);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+
+
+
+// Storage
+
+// Config
+
+
+var ApiService = (function () {
+    function ApiService(platform, http, zone, storage, events, auth) {
+        this.platform = platform;
+        this.http = http;
+        this.zone = zone;
+        this.storage = storage;
+        this.events = events;
+        this.auth = auth;
+        this.connect_timeout = 25000;
+        this.retry = 1;
+        this.username = '';
+        this.password = '';
+        var config = new __WEBPACK_IMPORTED_MODULE_9__config__["a" /* Config */]();
+        this.host = config.host;
+        this.endpoint = config.endpoint;
+    }
+    ApiService.prototype.getControllers = function () {
+        return this.getRequest('getRegisteredControllers');
+    };
+    ApiService.prototype.addController = function (params) {
+        return this.postRequest('addController', params, true);
+    };
+    ApiService.prototype.registerDevice = function (params) {
+        return this.postRequest('addDeviceId', params, true);
+    };
+    ApiService.prototype.unregisterDevice = function (params) {
+        return this.postRequest('removeDeviceId', params, true);
+    };
+    ApiService.prototype.getRequest = function (uri, params) {
+        var _this = this;
+        return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].create(function (observer) {
+            var _getRequest = function () {
+                var url = _this.endpoint + '/' + uri;
+                console.log('[API] Get request endpoint', url);
+                var headers = new __WEBPACK_IMPORTED_MODULE_0__angular_http__["a" /* Headers */]({
+                    'Authorization': 'Basic ' + btoa(_this.auth.username + ':' + _this.auth.password)
+                });
+                var options = new __WEBPACK_IMPORTED_MODULE_0__angular_http__["d" /* RequestOptions */]({
+                    headers: headers,
+                    search: params ? _this.json2url(params) : null
+                });
+                console.log('[API] Get request params', options.search ? options.search.toString() : 'none');
+                _this.http.get(url, options).timeout(_this.connect_timeout).retry(_this.retry)
+                    .subscribe(function (data) {
+                    var _data = data.json();
+                    console.log('[API] Get request response', _data);
+                    observer.next(_data);
+                    observer.complete();
+                }, function (error) {
+                    //console.debug('ERROR', error)
+                    console.log('[API] Get request error', error.status, error);
+                    //handle unauthorized by refresh token
+                    if (error.status == 401) { }
+                    else if (error.status == 404) {
+                        observer.next({
+                            success: false,
+                            message: __WEBPACK_IMPORTED_MODULE_9__config__["b" /* Constants */].NOT_FOUND,
+                            result: null
+                        });
+                        observer.complete();
+                    }
+                    else if (error.status == 500) {
+                        var _msg = '';
+                        if (!_this.isOnline()) {
+                            _msg = __WEBPACK_IMPORTED_MODULE_9__config__["b" /* Constants */].OFFLINE_MESSAGE;
+                        }
+                        else
+                            _msg = __WEBPACK_IMPORTED_MODULE_9__config__["b" /* Constants */].SERVER_ERR;
+                        observer.next({
+                            success: false,
+                            message: _msg,
+                            result: null
+                        });
+                        observer.complete();
+                    }
+                    else {
+                        observer.next({
+                            success: false,
+                            message: error.message,
+                            result: null
+                        });
+                        observer.complete();
+                    }
+                }, function () {
+                    console.log('[API] Get request completed');
+                });
+            };
+            // start the get request
+            _getRequest();
+        });
+    };
+    ApiService.prototype.postRequest = function (uri, params, isAuthorized, isJSON) {
+        var _this = this;
+        return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].create(function (observer) {
+            var _postRequest = function () {
+                var url = _this.endpoint + '/' + uri;
+                console.log('[API] Post request endpoint', url);
+                var headers = new __WEBPACK_IMPORTED_MODULE_0__angular_http__["a" /* Headers */]({
+                    'Authorization': isAuthorized ? ('Basic ' + btoa(_this.auth.username + ':' + _this.auth.password)) : null,
+                    'Content-Type': isJSON ? 'application/json' : 'application/x-www-form-urlencoded'
+                });
+                var options = new __WEBPACK_IMPORTED_MODULE_0__angular_http__["d" /* RequestOptions */]({
+                    headers: headers
+                });
+                var body = isJSON ? params : _this.json2url(params).toString();
+                console.log('[API] Post request params', body);
+                _this.http.post(url, body, options).timeout(_this.connect_timeout).retry(_this.retry)
+                    .subscribe(function (data) {
+                    var _data = data.json();
+                    console.log('[API] Post request response', _data);
+                    observer.next(_data);
+                    observer.complete();
+                }, function (error) {
+                    console.log('[API] Post request error', error.status, error);
+                    //handle unauthorized by refresh token
+                    if (error.status == 401) { }
+                    else if (error.status == 404) {
+                        observer.next({
+                            success: false,
+                            message: __WEBPACK_IMPORTED_MODULE_9__config__["b" /* Constants */].NOT_FOUND,
+                            result: null
+                        });
+                        observer.complete();
+                    }
+                    else if (error.status == 500) {
+                        var _msg = '';
+                        if (!_this.isOnline()) {
+                            _msg = __WEBPACK_IMPORTED_MODULE_9__config__["b" /* Constants */].OFFLINE_MESSAGE;
+                        }
+                        else
+                            _msg = __WEBPACK_IMPORTED_MODULE_9__config__["b" /* Constants */].SERVER_ERR;
+                        observer.next({
+                            success: false,
+                            message: _msg,
+                            result: null
+                        });
+                        observer.complete();
+                    }
+                    else {
+                        observer.next({
+                            success: false,
+                            message: error.message,
+                            result: null
+                        });
+                        observer.complete();
+                    }
+                }, function () {
+                    console.log('[API] Post request completed');
+                });
+            };
+            // start the post request
+            _postRequest();
+        });
+    };
+    ApiService.prototype.json2url = function (json) {
+        var params = new __WEBPACK_IMPORTED_MODULE_0__angular_http__["e" /* URLSearchParams */]();
+        for (var p in json) {
+            if (json.hasOwnProperty(p)) {
+                params.append(p, json[p]);
+            }
+        }
+        return params;
+    };
+    ApiService.prototype.isOnline = function () {
+        if (this.platform.is('cordova')) {
+            return navigator.connection.type !== Connection.NONE;
+        }
+        else {
+            return navigator.onLine;
+        }
+    };
+    ApiService = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["A" /* Injectable */])(),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2_ionic_angular__["q" /* Platform */],
+            __WEBPACK_IMPORTED_MODULE_0__angular_http__["b" /* Http */],
+            __WEBPACK_IMPORTED_MODULE_1__angular_core__["M" /* NgZone */],
+            __WEBPACK_IMPORTED_MODULE_8__ionic_storage__["b" /* Storage */],
+            __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["g" /* Events */],
+            __WEBPACK_IMPORTED_MODULE_10__auth_auth__["a" /* AuthProvider */]])
+    ], ApiService);
+    return ApiService;
+}());
+
+//# sourceMappingURL=api-service.js.map
+
+/***/ })
+
+},[422]);
+//# sourceMappingURL=main.js.map

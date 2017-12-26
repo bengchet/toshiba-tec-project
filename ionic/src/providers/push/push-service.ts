@@ -16,6 +16,7 @@ import * as moment from 'moment';
 import { ApiService } from '../api-service';
 import * as firebase from 'firebase';
 declare var window;
+declare var navigator;
 
 @Injectable()
 export class PushServiceProvider {
@@ -50,6 +51,10 @@ export class PushServiceProvider {
   registerFunc: any;
   isLoggedIn: boolean = false;
   messaging: any;
+
+  //desktop
+  _desktopReadyPromise: Promise<any>;
+  _desktopResolve: any;
 
   constructor(
     public platform: Platform,
@@ -100,6 +105,9 @@ export class PushServiceProvider {
         guid += screen.pixelDepth || '';
 
         this.device_uuid = guid;
+
+        this._desktopReadyPromise = new Promise(rs=>{this._desktopResolve = rs})
+        this.triggerReady();
       }
     })
 
@@ -369,18 +377,39 @@ export class PushServiceProvider {
   }
 
   initDesktop() {
-    this.messaging = firebase.messaging();
-    this.messaging.onTokenRefresh(() => {
-      this.messaging.getToken().then(token => {
-        this.setTokenSentToServer(false);
-        this.sendTokenToServer(token)
-        this.resetUI();
+    navigator.serviceWorker.register('service-worker.js')
+      .then((registration) => {
+        this.messaging = firebase.messaging();
+        this.messaging.useServiceWorker(registration);
+        this.messaging.onTokenRefresh(() => {
+          this.messaging.getToken().then(token => {
+            this.setTokenSentToServer(false);
+            this.sendTokenToServer(token)
+            this.resetUI();
+          })
+        })
+        this.messaging.onMessage((payload) => {
+          console.log(payload)
+        })
+      
+        this.resetUI()
+        this.isDeviceRegistered = true;
+        this.events.publish('desktopPush:ready')
       })
-    })
-    this.messaging.onMessage((payload) => {
-      console.log(payload)
-    })
-    this.resetUI()
+  }
+
+  onDesktopReady(){
+    return this._desktopReadyPromise;
+  }
+  triggerReady(){
+    if(this.isDeviceRegistered){
+      this._desktopResolve()
+    }
+    else{
+      this.events.subscribe('desktopPush:ready', ()=>{
+        this._desktopResolve()
+      })
+    }
   }
 
   isTokenSentToServer() {

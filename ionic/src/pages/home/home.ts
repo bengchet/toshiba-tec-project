@@ -57,16 +57,18 @@ export class HomePage {
   }
 
   ionViewDidLoad() {
-    if(this.platform.is('core') && !this.push.isPermissionGranted()){
+    if (this.platform.is('core') && !this.push.isPermissionGranted()) {
       // asking permission for notification
-      this.push.requestPermission()
+      this.push.onDesktopReady().then(() => {
+        this.push.requestPermission()
+      })
     }
   }
 
   refresh() {
     this.isLoading = true;
     this.api.getControllers().subscribe(res => {
-      if (res.success){
+      if (res.success) {
         console.log(res.result)
         this.devices = res.result;
       }
@@ -113,11 +115,11 @@ export class HomePage {
       return item.id == id
     })
     if (dev.length == 0) {
-      this.api.addController({id: id}).subscribe((res)=>{
-        if(res.success){
+      this.api.addController({ id: id }).subscribe((res) => {
+        if (res.success) {
           this.refresh()
         }
-        else{
+        else {
           this.alert.showToast(res.msg, 3000, true)
         }
       })

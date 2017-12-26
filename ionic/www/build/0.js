@@ -1,1 +1,112 @@
-webpackJsonp([0],{530:function(l,n,u){"use strict";function t(l){return o._21(0,[(l()(),o.Z(0,0,null,null,1,"ion-icon",[["color","secondary"],["name","ios-checkmark-circle"],["role","img"]],[[2,"hide",null]],null,null,null,null)),o.Y(1,147456,[[12,4]],0,k.a,[j.a,o.j,o.z],{color:[0,"color"],name:[1,"name"]},null)],function(l,n){l(n,1,0,"secondary","ios-checkmark-circle")},function(l,n){l(n,0,0,o._13(n,1)._hidden)})}function e(l){return o._21(0,[(l()(),o.Z(0,0,null,null,2,"button",[["clear",""],["ion-button",""],["item-right",""]],null,[[null,"click"]],function(l,n,u){var t=!0;if("click"===n){t=!1!==l.component.setAsDefaultMQTTServer(l.parent.context.$implicit)&&t}return t},Z.b,Z.a)),o.Y(1,1097728,[[11,4]],0,C.a,[[8,""],j.a,o.j,o.z],{clear:[0,"clear"]},null),(l()(),o._19(-1,0,["Set as Default"]))],function(l,n){l(n,1,0,"")},null)}function a(l){return o._21(0,[(l()(),o.Z(0,0,null,null,28,"ion-item",[["class","item item-block"]],null,null,null,T.b,T.a)),o.Y(1,1097728,null,3,y.a,[z.a,j.a,o.j,o.z,[2,M.a]],null,null),o._17(335544320,10,{contentLabel:0}),o._17(603979776,11,{_buttons:1}),o._17(603979776,12,{_icons:1}),o.Y(5,16384,null,0,q.a,[],null,null),(l()(),o._19(-1,2,["\n          "])),(l()(),o.Z(7,0,null,2,7,"h2",[],null,null,null,null,null)),(l()(),o._19(-1,null,["\n            "])),(l()(),o.Z(9,0,null,null,1,"b",[],null,null,null,null,null)),(l()(),o._19(10,null,["",""])),(l()(),o._19(-1,null,["\n            "])),(l()(),o.U(16777216,null,null,1,null,t)),o.Y(13,16384,null,0,P.j,[o.I,o.F],{ngIf:[0,"ngIf"]},null),(l()(),o._19(-1,null,["\n          "])),(l()(),o._19(-1,2,["\n          "])),(l()(),o.Z(16,0,null,2,1,"p",[],null,null,null,null,null)),(l()(),o._19(17,null,["Port: ",""])),(l()(),o._19(-1,2,["\n          "])),(l()(),o.U(16777216,null,4,1,null,e)),o.Y(20,16384,null,0,P.j,[o.I,o.F],{ngIf:[0,"ngIf"]},null),(l()(),o._19(-1,2,["\n          "])),(l()(),o.Z(22,0,null,4,5,"button",[["clear",""],["icon-only",""],["ion-button",""],["item-right",""]],null,[[null,"click"]],function(l,n,u){var t=!0;if("click"===n){t=!1!==l.component.removeMQTTServer(l.context.$implicit)&&t}return t},Z.b,Z.a)),o.Y(23,1097728,[[11,4]],0,C.a,[[8,""],j.a,o.j,o.z],{clear:[0,"clear"]},null),(l()(),o._19(-1,0,["\n            "])),(l()(),o.Z(25,0,null,0,1,"ion-icon",[["name","trash"],["role","img"]],[[2,"hide",null]],null,null,null,null)),o.Y(26,147456,null,0,k.a,[j.a,o.j,o.z],{name:[0,"name"]},null),(l()(),o._19(-1,0,["\n          "])),(l()(),o._19(-1,2,["\n        "]))],function(l,n){l(n,13,0,n.context.$implicit.default);l(n,20,0,!n.context.$implicit.default);l(n,23,0,"");l(n,26,0,"trash")},function(l,n){l(n,10,0,n.context.$implicit.url);l(n,17,0,n.context.$implicit.port);l(n,25,0,o._13(n,26)._hidden)})}function i(l){return o._21(0,[(l()(),o._19(-1,null,["\n"])),(l()(),o.Z(1,0,null,null,10,"ion-header",[],null,null,null,null,null)),o.Y(2,16384,null,0,S.a,[j.a,o.j,o.z,[2,Q.a]],null,null),(l()(),o._19(-1,null,["\n\n  "])),(l()(),o.Z(4,0,null,null,6,"ion-navbar",[["class","toolbar"]],[[8,"hidden",0],[2,"statusbar-padding",null]],null,null,x.b,x.a)),o.Y(5,49152,null,0,I.a,[B.a,[2,Q.a],[2,D.a],j.a,o.j,o.z],null,null),(l()(),o._19(-1,3,["\n    "])),(l()(),o.Z(7,0,null,3,2,"ion-title",[],null,null,null,F.b,F.a)),o.Y(8,49152,null,0,L.a,[j.a,o.j,o.z,[2,U.a],[2,I.a]],null,null),(l()(),o._19(-1,0,["Settings"])),(l()(),o._19(-1,3,["\n  "])),(l()(),o._19(-1,null,["\n\n"])),(l()(),o._19(-1,null,["\n\n"])),(l()(),o.Z(13,0,null,null,69,"ion-content",[],[[2,"statusbar-padding",null],[2,"has-refresher",null]],null,null,$.b,$.a)),o.Y(14,4374528,null,0,A.a,[j.a,V.a,w.a,o.j,o.z,B.a,O.a,o.u,[2,Q.a],[2,D.a]],null,null),(l()(),o._19(-1,1,["\n    "])),(l()(),o.Z(16,0,null,1,38,"ion-list",[],null,null,null,null,null)),o.Y(17,16384,null,0,N.a,[j.a,o.j,o.z,V.a,R.l,w.a],null,null),(l()(),o._19(-1,null,["\n      "])),(l()(),o.Z(19,0,null,null,16,"ion-item",[["class","item item-block"]],null,null,null,T.b,T.a)),o.Y(20,1097728,null,3,y.a,[z.a,j.a,o.j,o.z,[2,M.a]],null,null),o._17(335544320,1,{contentLabel:0}),o._17(603979776,2,{_buttons:1}),o._17(603979776,3,{_icons:1}),o.Y(24,16384,null,0,q.a,[],null,null),(l()(),o._19(-1,2,["\n        "])),(l()(),o.Z(26,0,null,1,2,"ion-label",[["stacked",""]],null,null,null,null,null)),o.Y(27,16384,[[1,4]],0,E.a,[j.a,o.j,o.z,[8,null],[8,""],[8,null],[8,null]],null,null),(l()(),o._19(-1,null,["MQTT Broker Url"])),(l()(),o._19(-1,2,["\n        "])),(l()(),o.Z(30,0,null,3,4,"ion-input",[["placeholder","e.g. broker.hivemq.com"],["type","text"]],[[2,"ng-untouched",null],[2,"ng-touched",null],[2,"ng-pristine",null],[2,"ng-dirty",null],[2,"ng-valid",null],[2,"ng-invalid",null],[2,"ng-pending",null]],[[null,"ngModelChange"]],function(l,n,u){var t=!0;if("ngModelChange"===n){t=!1!==(l.component.input.url=u)&&t}return t},J.b,J.a)),o.Y(31,671744,null,0,W.l,[[8,null],[8,null],[8,null],[8,null]],{model:[0,"model"]},{update:"ngModelChange"}),o._16(2048,null,W.i,null,[W.l]),o.Y(33,16384,null,0,W.j,[W.i],null,null),o.Y(34,5423104,null,0,X.a,[j.a,V.a,z.a,B.a,o.j,o.z,[2,A.a],[2,y.a],[2,W.i],w.a],{type:[0,"type"],placeholder:[1,"placeholder"]},null),(l()(),o._19(-1,2,["\n      "])),(l()(),o._19(-1,null,["\n      "])),(l()(),o.Z(37,0,null,null,16,"ion-item",[["class","item item-block"]],null,null,null,T.b,T.a)),o.Y(38,1097728,null,3,y.a,[z.a,j.a,o.j,o.z,[2,M.a]],null,null),o._17(335544320,4,{contentLabel:0}),o._17(603979776,5,{_buttons:1}),o._17(603979776,6,{_icons:1}),o.Y(42,16384,null,0,q.a,[],null,null),(l()(),o._19(-1,2,["\n        "])),(l()(),o.Z(44,0,null,1,2,"ion-label",[["stacked",""]],null,null,null,null,null)),o.Y(45,16384,[[4,4]],0,E.a,[j.a,o.j,o.z,[8,null],[8,""],[8,null],[8,null]],null,null),(l()(),o._19(-1,null,["MQTT Broker Port"])),(l()(),o._19(-1,2,["\n        "])),(l()(),o.Z(48,0,null,3,4,"ion-input",[["placeholder","e.g. 8000"],["type","number"]],[[2,"ng-untouched",null],[2,"ng-touched",null],[2,"ng-pristine",null],[2,"ng-dirty",null],[2,"ng-valid",null],[2,"ng-invalid",null],[2,"ng-pending",null]],[[null,"ngModelChange"]],function(l,n,u){var t=!0;if("ngModelChange"===n){t=!1!==(l.component.input.port=u)&&t}return t},J.b,J.a)),o.Y(49,671744,null,0,W.l,[[8,null],[8,null],[8,null],[8,null]],{model:[0,"model"]},{update:"ngModelChange"}),o._16(2048,null,W.i,null,[W.l]),o.Y(51,16384,null,0,W.j,[W.i],null,null),o.Y(52,5423104,null,0,X.a,[j.a,V.a,z.a,B.a,o.j,o.z,[2,A.a],[2,y.a],[2,W.i],w.a],{type:[0,"type"],placeholder:[1,"placeholder"]},null),(l()(),o._19(-1,2,["\n      "])),(l()(),o._19(-1,null,["\n    "])),(l()(),o._19(-1,1,["\n    "])),(l()(),o.Z(56,0,null,1,5,"div",[["padding-bottom",""],["text-center",""]],null,null,null,null,null)),(l()(),o._19(-1,null,["\n      "])),(l()(),o.Z(58,0,null,null,2,"button",[["ion-button",""]],null,[[null,"click"]],function(l,n,u){var t=!0;if("click"===n){t=!1!==l.component.addMQTTServer()&&t}return t},Z.b,Z.a)),o.Y(59,1097728,null,0,C.a,[[8,""],j.a,o.j,o.z],null,null),(l()(),o._19(-1,0,["\n        Add New MQTT Broker\n      "])),(l()(),o._19(-1,null,["\n    "])),(l()(),o._19(-1,1,["\n    "])),(l()(),o.Z(63,0,null,1,18,"ion-list",[],null,null,null,null,null)),o.Y(64,16384,null,0,N.a,[j.a,o.j,o.z,V.a,R.l,w.a],null,null),(l()(),o._19(-1,null,["\n      "])),(l()(),o.Z(66,0,null,null,14,"ion-item-group",[],null,null,null,null,null)),o.Y(67,16384,null,0,G.a,[],null,null),(l()(),o._19(-1,null,["\n        "])),(l()(),o.Z(69,0,null,null,6,"ion-item-divider",[["class","item item-divider"],["color","light"]],null,null,null,T.b,T.a)),o.Y(70,1097728,null,3,y.a,[z.a,j.a,o.j,o.z,[2,M.a]],{color:[0,"color"]},null),o._17(335544320,7,{contentLabel:0}),o._17(603979776,8,{_buttons:1}),o._17(603979776,9,{_icons:1}),o.Y(74,16384,null,0,H.a,[j.a,o.j,o.z],{color:[0,"color"]},null),(l()(),o._19(-1,2,["\n          MQTT Server List\n        "])),(l()(),o._19(-1,null,["\n        "])),(l()(),o.U(16777216,null,null,2,null,a)),o.Y(78,802816,null,0,P.i,[o.I,o.F,o.p],{ngForOf:[0,"ngForOf"]},null),o._14(131072,P.b,[o.g]),(l()(),o._19(-1,null,["\n      "])),(l()(),o._19(-1,null,["\n    "])),(l()(),o._19(-1,1,["\n  \n  "])),(l()(),o._19(-1,null,["\n"]))],function(l,n){var u=n.component;l(n,31,0,u.input.url);l(n,34,0,"text","e.g. broker.hivemq.com");l(n,49,0,u.input.port);l(n,52,0,"number","e.g. 8000");l(n,70,0,"light");l(n,74,0,"light");l(n,78,0,o._20(n,78,0,o._13(n,79).transform(u.mqtt.getRegisteredBrokerList())))},function(l,n){l(n,4,0,o._13(n,5)._hidden,o._13(n,5)._sbPadding);l(n,13,0,o._13(n,14).statusbarPadding,o._13(n,14)._hasRefresher);l(n,30,0,o._13(n,33).ngClassUntouched,o._13(n,33).ngClassTouched,o._13(n,33).ngClassPristine,o._13(n,33).ngClassDirty,o._13(n,33).ngClassValid,o._13(n,33).ngClassInvalid,o._13(n,33).ngClassPending);l(n,48,0,o._13(n,51).ngClassUntouched,o._13(n,51).ngClassTouched,o._13(n,51).ngClassPristine,o._13(n,51).ngClassDirty,o._13(n,51).ngClassValid,o._13(n,51).ngClassInvalid,o._13(n,51).ngClassPending)})}Object.defineProperty(n,"__esModule",{value:!0});var o=u(0),r=(u(5),u(20),u(48)),c=u(30),_=function(){function l(l,n,u,t){this.navCtrl=l,this.navParams=n,this.mqtt=u,this.auth=t,this.input={url:"broker.hivemq.com",port:8e3}}return l.prototype.ionViewCanEnter=function(){return this.auth.checkAuthentication()},l.prototype.addMQTTServer=function(){this.mqtt.addBroker(this.input.url,this.input.port)},l.prototype.removeMQTTServer=function(l){this.mqtt.removeBroker(l.url)},l.prototype.setAsDefaultMQTTServer=function(l){var n=this;this.mqtt.setDefaultBroker(l.url).then(function(){n.mqtt.startBroker()})},l}(),s=function(){return function(){}}(),d=u(395),g=u(396),p=u(397),m=u(398),h=u(399),f=u(400),b=u(401),v=u(402),Y=u(403),k=u(32),j=u(3),Z=u(35),C=u(24),T=u(83),y=u(18),z=u(17),M=u(39),q=u(59),P=u(16),S=u(115),Q=u(7),x=u(404),I=u(41),B=u(9),D=u(22),F=u(405),L=u(84),U=u(57),$=u(114),A=u(25),V=u(6),w=u(12),O=u(33),N=u(40),R=u(8),E=u(58),J=u(406),W=u(21),X=u(81),G=u(120),H=u(119),K=u(14),ll=o.X({encapsulation:2,styles:[],data:{}}),nl=o.V("page-settings",_,function(l){return o._21(0,[(l()(),o.Z(0,0,null,null,1,"page-settings",[],null,null,null,i,ll)),o.Y(1,49152,null,0,_,[D.a,K.a,c.a,r.a],null,null)],null,null)},{},{},[]),ul=u(170),tl=u(56);u.d(n,"SettingsPageModuleNgFactory",function(){return el});var el=o.W(s,[],function(l){return o._10([o._11(512,o.i,o.S,[[8,[d.a,g.a,p.a,m.a,h.a,f.a,b.a,v.a,Y.a,nl]],[3,o.i],o.s]),o._11(4608,P.l,P.k,[o.r,[2,P.t]]),o._11(4608,W.q,W.q,[]),o._11(4608,W.d,W.d,[]),o._11(512,P.c,P.c,[]),o._11(512,W.o,W.o,[]),o._11(512,W.g,W.g,[]),o._11(512,W.m,W.m,[]),o._11(512,ul.a,ul.a,[]),o._11(512,ul.b,ul.b,[]),o._11(512,s,s,[]),o._11(256,tl.a,_,[])])})}});
+webpackJsonp([0],{
+
+/***/ 605:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SettingsPageModule", function() { return SettingsPageModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__settings__ = __webpack_require__(608);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+
+var SettingsPageModule = (function () {
+    function SettingsPageModule() {
+    }
+    SettingsPageModule = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["I" /* NgModule */])({
+            declarations: [
+                __WEBPACK_IMPORTED_MODULE_2__settings__["a" /* SettingsPage */],
+            ],
+            imports: [
+                __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* IonicPageModule */].forChild(__WEBPACK_IMPORTED_MODULE_2__settings__["a" /* SettingsPage */]),
+            ],
+        })
+    ], SettingsPageModule);
+    return SettingsPageModule;
+}());
+
+//# sourceMappingURL=settings.module.js.map
+
+/***/ }),
+
+/***/ 608:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SettingsPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__providers_auth_auth__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__providers_mqtt_mqtt__ = __webpack_require__(44);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+/**
+ * Generated class for the SettingsPage page.
+ *
+ * See https://ionicframework.com/docs/components/#navigation for more info on
+ * Ionic pages and navigation.
+ */
+var SettingsPage = (function () {
+    function SettingsPage(navCtrl, navParams, mqtt, auth) {
+        this.navCtrl = navCtrl;
+        this.navParams = navParams;
+        this.mqtt = mqtt;
+        this.auth = auth;
+        this.input = {
+            url: 'broker.hivemq.com',
+            port: 8000
+        };
+    }
+    SettingsPage.prototype.ionViewCanEnter = function () {
+        return this.auth.checkAuthentication();
+    };
+    SettingsPage.prototype.addMQTTServer = function () {
+        this.mqtt.addBroker(this.input.url, this.input.port);
+    };
+    SettingsPage.prototype.removeMQTTServer = function (broker) {
+        this.mqtt.removeBroker(broker.url);
+    };
+    SettingsPage.prototype.setAsDefaultMQTTServer = function (broker) {
+        var _this = this;
+        this.mqtt.setDefaultBroker(broker.url).then(function () {
+            _this.mqtt.startBroker();
+        });
+    };
+    SettingsPage = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["m" /* Component */])({
+            selector: 'page-settings',template:/*ion-inline-start:"/home/beng/GitHub/Personal/toshiba-tec-project/ionic/src/pages/settings/settings.html"*/`<!--\n  Generated template for the SettingsPage page.\n\n  See http://ionicframework.com/docs/components/#navigation for more info on\n  Ionic pages and navigation.\n-->\n<ion-header>\n\n  <ion-navbar>\n    <ion-title>Settings</ion-title>\n  </ion-navbar>\n\n</ion-header>\n\n<ion-content>\n    <ion-list>\n      <ion-item>\n        <ion-label stacked>MQTT Broker Url</ion-label>\n        <ion-input type="text" placeholder="e.g. broker.hivemq.com" [(ngModel)]="input.url"></ion-input>\n      </ion-item>\n      <ion-item>\n        <ion-label stacked>MQTT Broker Port</ion-label>\n        <ion-input type="number" placeholder="e.g. 8000" [(ngModel)]="input.port"></ion-input>\n      </ion-item>\n    </ion-list>\n    <div text-center padding-bottom>\n      <button ion-button (click)="addMQTTServer()">\n        Add New MQTT Broker\n      </button>\n    </div>\n    <ion-list>\n      <ion-item-group>\n        <ion-item-divider color="light">\n          MQTT Server List\n        </ion-item-divider>\n        <ion-item *ngFor="let broker of mqtt.getRegisteredBrokerList() | async">\n          <h2>\n            <b>{{ broker.url }}</b>\n            <ion-icon *ngIf="broker.default" color="secondary" name="ios-checkmark-circle"></ion-icon>\n          </h2>\n          <p>Port: {{ broker.port }}</p>\n          <button *ngIf="!broker.default" ion-button clear item-right (click)="setAsDefaultMQTTServer(broker)">Set as Default</button>\n          <button ion-button clear icon-only item-right (click)="removeMQTTServer(broker)">\n            <ion-icon name="trash"></ion-icon>\n          </button>\n        </ion-item>\n      </ion-item-group>\n    </ion-list>\n  \n  </ion-content>\n`/*ion-inline-end:"/home/beng/GitHub/Personal/toshiba-tec-project/ionic/src/pages/settings/settings.html"*/,
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2_ionic_angular__["n" /* NavController */],
+            __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["p" /* NavParams */],
+            __WEBPACK_IMPORTED_MODULE_3__providers_mqtt_mqtt__["a" /* MqttProvider */],
+            __WEBPACK_IMPORTED_MODULE_0__providers_auth_auth__["a" /* AuthProvider */]])
+    ], SettingsPage);
+    return SettingsPage;
+}());
+
+//# sourceMappingURL=settings.js.map
+
+/***/ })
+
+});
+//# sourceMappingURL=0.js.map

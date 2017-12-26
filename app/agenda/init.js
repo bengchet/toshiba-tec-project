@@ -27,7 +27,7 @@ agenda.define('Ping', (job, done) => {
     let id = job.attrs.data.device.id;
     //if (!id) return done()
 
-    let client = mqtt.connect(process.env.MQTT_BROKER_URL),
+    let client = mqtt.connect(process.env.MQTT_BROKER_URL, { clientId: 'mqttjs_' + id }),
         clientConnectTimeout,
         status = 0,
         retries = job.attrs.data.device.retries;
@@ -41,7 +41,7 @@ agenda.define('Ping', (job, done) => {
                 if (retries == 3) {
                     // fire notification once
                     agenda.now('Send Notification', {id: job.attrs.data.device.id, code: 1, messageCount:job.attrs.data.device.messageCount})
-                    job.attrs.data.device.messageCount = (job.attrs.data.device.messageCount + 1) % 10;
+                    job.attrs.data.device.messageCount = (job.attrs.data.device.messageCount + 1) % 65536;
                 }
                 job.attrs.data.device.retries = retries;
             }
@@ -49,7 +49,7 @@ agenda.define('Ping', (job, done) => {
         else {
             if (retries == 3) {
                 agenda.now('Send Notification', {id: job.attrs.data.device.id, code: 0, messageCount:job.attrs.data.device.messageCount})
-                job.attrs.data.device.messageCount = (job.attrs.data.device.messageCount + 1) % 10;
+                job.attrs.data.device.messageCount = (job.attrs.data.device.messageCount + 1) % 65536;
             }
             retries = job.attrs.data.device.retries = 0;
         }
@@ -63,13 +63,12 @@ agenda.define('Ping', (job, done) => {
         job.save()
     }
 
-    clientConnectTimeout = setTimeout(() => {
-        console.log('Timeout')
-        disconnect()
-    }, 10000)
-
     client.on('connect', function () {
         //console.log('Connected.')
+        clientConnectTimeout = setTimeout(() => {
+            console.log('Timeout')
+            disconnect()
+        }, 10000)
         client.subscribe(id + '/OUT/CHECK', { qos: 1 })
         client.publish(id + '/IN/CHECK',
             JSON.stringify({ CTRL_ID: id }),
