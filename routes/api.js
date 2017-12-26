@@ -30,7 +30,7 @@ router.get('/getRegisteredControllers', function(req, res, next){
 router.post('/addController', 
     passport.authenticate('basic', {session: false}),
     function(req, res, next){
-    Controller.findOne().then(controller=>{
+    Controller.findOne({ id: req.body.id }).then(controller=>{
         if(!controller){
             new Controller({
                 id: req.body.id,
