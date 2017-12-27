@@ -25,16 +25,17 @@ agenda.define('Ping', (job, done) => {
     }
 
     let id = job.attrs.data.device.id;
-    //if (!id) return done()
+    if (!id) return done()
 
     let client = mqtt.connect(process.env.MQTT_BROKER_URL, { clientId: 'mqttjs_' + id }),
         clientConnectTimeout,
         status = 0,
-        retries = job.attrs.data.device.retries;
+        retries = job.attrs.data.device.retries,
+        reason = ''
 
-    console.log('Status: ' + job.attrs.data.device.status, 'Retries: ' + job.attrs.data.device.retries.toString())
+    console.log('Status from device ' + id + ': ' + job.attrs.data.device.status, ', Retries: ' + job.attrs.data.device.retries.toString())
 
-    var disconnect = function () {
+    var summarize = function () {
         if (status == 0) {
             if (retries < 3) {
                 retries = retries + 1;
@@ -54,20 +55,14 @@ agenda.define('Ping', (job, done) => {
             retries = job.attrs.data.device.retries = 0;
         }
         job.attrs.data.device.status = status;
-        if (clientConnectTimeout) {
-            clearTimeout(clientConnectTimeout)
-            clientConnectTimeout = null
-        }
-        client.removeAllListeners();
-        client.end();
         job.save()
     }
 
     client.on('connect', function () {
         //console.log('Connected.')
         clientConnectTimeout = setTimeout(() => {
-            console.log('Timeout')
-            disconnect()
+            reason = 'response timeout'
+            client.end()
         }, 10000)
         client.subscribe(id + '/OUT/CHECK', { qos: 1 })
         client.publish(id + '/IN/CHECK',
@@ -83,12 +78,24 @@ agenda.define('Ping', (job, done) => {
             console.log(new Date() + ' Connection alive from device ' + id + '!')
             client.unsubscribe(id + '/OUT/CHECK')
         }
-        disconnect()
+        client.end()
+    })
+
+    client.on('close', function(){
+        console.log('Connection closed.' + (reason? ' Reason: ' + reason:''));
+        client.removeAllListeners();
+        client = null;
+        if (clientConnectTimeout) {
+            clearTimeout(clientConnectTimeout)
+            clientConnectTimeout = null
+        }
+        summarize();
     })
 
     client.on('error', function (e) {
         console.log(e)
-        disconnect()
+        reason = e.toString()
+        client.end()
     })
 
     return done()
