@@ -29,13 +29,24 @@ app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'ionic/www/assets/icon', 'favicon.ico')));
-app.use(logger('dev'));
+//app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'ionic/www')));
 app.use(passport.initialize())
 app.use('/api', api);
+
+// socket.io
+var server = require("http").Server(app);
+var io = require("socket.io")(server);
+
+//initialise mqtt socketio bridge with mqtt brokers
+let bridge = require('./app/mqtt-socketio-bridge/mqtt-socketio-bridge')(io)
+bridge.initialize('13.58.141.26');
+bridge.initialize('broker.hivemq.com');
+bridge.initialize('cytronpg.no-ip.org');
+bridge.initialize(); //localhost
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -69,4 +80,4 @@ app.use(function(err, req, res, next) {
 });
 
 
-module.exports = app;
+module.exports = { app:app, server: server };

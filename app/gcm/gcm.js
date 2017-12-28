@@ -8,7 +8,17 @@ const sender = new gcm.Sender(process.env.GCM_API_KEY); //create a new sender
 let constructMessage = (type, msg) => {
     if (type == 'ios') {
         let ios_msg = {};
-
+        ios_msg.priority = "high"
+        ios_msg.notification = {
+            title: msg.data.title,
+            message: msg.data.message,
+            sound: "default",
+            content_available: "true"
+        }
+        ios_msg.data = {
+            notId: msg.data.notId,
+            timestamp: msg.data.timestamp
+        }
         return ios_msg;
     }
     else if (type == 'browser') {
@@ -17,7 +27,7 @@ let constructMessage = (type, msg) => {
             "title": msg.data.title,
             "body": msg.data.message,
             "icon": "assets/icon/icon.png",
-            "click_action": "http://localhost:8100",
+            "click_action": process.env.ENDPOINT,
             "sound": "default"
         }
         return browser_msg

@@ -1,6 +1,7 @@
 import Agenda from 'agenda'
 import mqtt from 'mqtt'
 import gcm from '../gcm/gcm'
+let clients = [];
 
 //const agenda = new Agenda()
 const agenda = new Agenda(
@@ -26,76 +27,91 @@ agenda.define('Ping', (job, done) => {
 
     let id = job.attrs.data.device.id;
     if (!id) return done()
+    if (!(id in clients)) {
+        // create a new client array
+        clients[id] = {
+            client: null,
+            clientConnectTimeout: null,
+            status: 0,
+            retries: job.attrs.data.device.retries,
+            disconnectReason: ''
+        }
+    }
 
-    let client = mqtt.connect(process.env.MQTT_BROKER_URL, { clientId: 'mqttjs_' + id }),
-        clientConnectTimeout,
-        status = 0,
-        retries = job.attrs.data.device.retries,
-        reason = ''
+    if (clients[id].client) return done()
+
+    clients[id].client = mqtt.connect(process.env.MQTT_BROKER_URL,
+        {
+            clientId: 'mqttjs_' + id,
+            connectTimeout: 5 * 1000
+        }
+    )
 
     console.log('Status from device ' + id + ': ' + job.attrs.data.device.status, ', Retries: ' + job.attrs.data.device.retries.toString())
 
     var summarize = function () {
-        if (status == 0) {
-            if (retries < 3) {
-                retries = retries + 1;
-                if (retries == 3) {
+        if (clients[id].status == 0) {
+            if (clients[id].retries < 3) {
+                clients[id].retries = clients[id].retries + 1;
+                if (clients[id].retries == 3) {
                     // fire notification once
-                    agenda.now('Send Notification', {id: job.attrs.data.device.id, code: 1, messageCount:job.attrs.data.device.messageCount})
+                    agenda.now('Send Notification', { id: job.attrs.data.device.id, code: 1, messageCount: job.attrs.data.device.messageCount })
                     job.attrs.data.device.messageCount = (job.attrs.data.device.messageCount + 1) % 65536;
                 }
-                job.attrs.data.device.retries = retries;
+                job.attrs.data.device.retries = clients[id].retries;
             }
         }
         else {
-            if (retries == 3) {
-                agenda.now('Send Notification', {id: job.attrs.data.device.id, code: 0, messageCount:job.attrs.data.device.messageCount})
+            if (clients[id].retries == 3) {
+                agenda.now('Send Notification', { id: job.attrs.data.device.id, code: 0, messageCount: job.attrs.data.device.messageCount })
                 job.attrs.data.device.messageCount = (job.attrs.data.device.messageCount + 1) % 65536;
             }
-            retries = job.attrs.data.device.retries = 0;
+            clients[id].retries = job.attrs.data.device.retries = 0;
         }
-        job.attrs.data.device.status = status;
+        job.attrs.data.device.status = clients[id].status;
         job.save()
+        //console.log(clients[id])
     }
 
-    client.on('connect', function () {
+    clients[id].client.on('connect', function () {
         //console.log('Connected.')
-        clientConnectTimeout = setTimeout(() => {
-            reason = 'response timeout'
-            client.end()
+        clients[id].clientConnectTimeout = setTimeout(() => {
+            clients[id].disconnectReason = 'response timeout'
+            clients[id].client.end()
         }, 10000)
-        client.subscribe(id + '/OUT/CHECK', { qos: 1 })
-        client.publish(id + '/IN/CHECK',
+        clients[id].client.subscribe(id + '/OUT/CHECK', { qos: 1 })
+        clients[id].client.publish(id + '/IN/CHECK',
             JSON.stringify({ CTRL_ID: id }),
             { qos: 1 })
     })
 
-    client.on('message', function (topic, message) {
+    clients[id].client.on('message', function (topic, message) {
         //console.log('Message arrived.')
         if (topic == id + '/OUT/CHECK' &&
             JSON.parse(message.toString())['CTRL_ID'] == id) {
-            status = 1;
+            clients[id].status = 1;
             console.log(new Date() + ' Connection alive from device ' + id + '!')
-            client.unsubscribe(id + '/OUT/CHECK')
+            clients[id].client.unsubscribe(id + '/OUT/CHECK')
         }
-        client.end()
+        clients[id].client.end()
     })
 
-    client.on('close', function(){
-        console.log('Connection closed.' + (reason? ' Reason: ' + reason:''));
-        client.removeAllListeners();
-        client = null;
-        if (clientConnectTimeout) {
-            clearTimeout(clientConnectTimeout)
-            clientConnectTimeout = null
+    clients[id].client.on('close', function () {
+        console.log('Connection closed from device ' + id + '.' + (clients[id].disconnectReason ? ' Reason: ' + clients[id].disconnectReason : ''));
+        clients[id].client.removeAllListeners();
+        clients[id].client = null;
+        if (clients[id].clientConnectTimeout) {
+            clearTimeout(clients[id].clientConnectTimeout)
+            clients[id].clientConnectTimeout = null
         }
+        clients[id].disconnectReason =  '';
         summarize();
     })
 
-    client.on('error', function (e) {
+    clients[id].client.on('error', function (e) {
         console.log(e)
-        reason = e.toString()
-        client.end()
+        clients[id].disconnectReason = e.toString()
+        clients[id].client.end()
     })
 
     return done()
@@ -108,7 +124,7 @@ agenda.on('ready', () => {
         { lockedAt: { $exists: true } },
         { $set: { lockedAt: null } })
         .then(() => {
-            agenda.processEvery('10 seconds');
+            //agenda.processEvery('2 hours');
 
             // start the agenda
             agenda.start();

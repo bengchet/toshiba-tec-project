@@ -10,9 +10,18 @@
         <span class="subheader" *ngIf="mqtt.mqttRegisteredBrokerList.length > 0 && !mqtt.mqttUrl">
           Please choose a MQTT broker
         </span>
-        <span class="subheader" *ngIf="mqtt.mqttRegisteredBrokerList.length > 0 && mqtt.mqttUrl">
+        <!--<span class="subheader" *ngIf="mqtt.mqttRegisteredBrokerList.length > 0 && mqtt.mqttUrl">
           {{ mqtt.mqttConnectionStatus? 'MQTT Connected' : 'Connecting to MQTT...'}}
-        </span>
+        </span>-->
+        <div *ngIf="mqtt.mqttRegisteredBrokerList.length > 0 && mqtt.mqttUrl">
+          <!--<span class="subheader">{{ mqtt.mqttConnectionStatus? 'MQTT Connected' : 'Connecting to MQTT...'}}
+          </span>-->
+          <span class="subheader" *ngIf="socket.isAuthorized == -1">Checking authentication...</span>
+          <span class="subheader" *ngIf="socket.isAuthorized == 0">Authentication failed</span>
+          <span class="subheader" *ngIf="socket.isAuthorized == 1">
+            {{ socket.connectionStatus? 'MQTT Connected' : 'Connecting to MQTT...'}}
+          </span>
+        </div>
       </div>
     </ion-title>
     <ion-buttons end>
@@ -33,7 +42,7 @@
       </button>
     </ion-list-header>
     <ion-item-sliding *ngFor="let device of devices">
-      <button [disabled]="!mqtt.mqttConnectionStatus" detail-none ion-item (click)="goToDevicePage(device)">
+      <button [disabled]="!socket.connectionStatus" detail-none ion-item (click)="goToDevicePage(device)">
         <ion-icon large name="md-desktop" item-start padding-left></ion-icon>
         <h2>
           <b>{{ device }}</b>

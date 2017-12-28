@@ -8,7 +8,8 @@
   <ion-navbar>
     <ion-title>
       <span class="header">Device {{ ctrlID }}</span>
-      <span class="subheader">{{ mqtt.mqttConnectionStatus? 'MQTT Connected' : 'Connecting to MQTT...'}}</span>
+      <!--<span class="subheader">{{ mqtt.mqttConnectionStatus? 'MQTT Connected' : 'Connecting to MQTT...'}}</span>-->
+      <span class="subheader">{{ socket.connectionStatus? 'MQTT Connected' : 'Connecting to MQTT...'}}</span>
     </ion-title>
   </ion-navbar>
 </ion-header>

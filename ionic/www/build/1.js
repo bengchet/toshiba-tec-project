@@ -1,1 +1,111 @@
-webpackJsonp([1],{530:function(l,n,u){"use strict";Object.defineProperty(n,"__esModule",{value:!0});var a=u(0),o=(u(5),u(20),u(48)),i=u(21),e=function(){function l(l,n,u,a,o){this.navCtrl=l,this.navParams=n,this.formBuilder=u,this.auth=a,this.events=o,this.showPassword=!1,this.loginForm=this.formBuilder.group({username:["",i.n.required],password:["",i.n.required]})}return l.prototype.ionViewDidLoad=function(){},l.prototype.login=function(){var l=this;this.auth.login(this.loginForm.value).then(function(n){n&&(l.events.publish("user:login"),l.navCtrl.setRoot("HomePage"))})},l}(),t=function(){return function(){}}(),s=u(396),r=u(397),g=u(398),_=u(399),d=u(400),c=u(401),m=u(402),h=u(403),p=u(404),f=u(114),b=u(25),v=u(3),C=u(6),Y=u(12),w=u(9),y=u(33),P=u(7),Z=u(22),j=u(118),k=u(117),z=u(40),F=u(8),x=u(83),D=u(18),q=u(17),L=u(39),V=u(59),U=u(58),B=u(32),I=u(407),N=u(81),R=u(16),T=u(35),M=u(24),S=u(14),A=u(60),H=a.X({encapsulation:2,styles:[],data:{}});function J(l){return a._21(0,[(l()(),a._19(-1,null,["\n"])),(l()(),a.Z(1,0,null,null,87,"ion-content",[],[[2,"statusbar-padding",null],[2,"has-refresher",null]],null,null,f.b,f.a)),a.Y(2,4374528,null,0,b.a,[v.a,C.a,Y.a,a.j,a.z,w.a,y.a,a.u,[2,P.a],[2,Z.a]],null,null),(l()(),a._19(-1,1,["\n  "])),(l()(),a.Z(4,0,null,1,83,"ion-row",[["class","login-page-container row"]],null,null,null,null,null)),a.Y(5,16384,null,0,j.a,[],null,null),(l()(),a._19(-1,null,["\n    "])),(l()(),a.Z(7,0,null,null,79,"ion-col",[["class","col"],["col-12",""],["col-lg-6",""],["col-md-6",""],["col-xl-6",""]],null,null,null,null,null)),a.Y(8,16384,null,0,k.a,[],null,null),(l()(),a._19(-1,null,["\n      "])),(l()(),a.Z(10,0,null,null,75,"div",[["class","login-container"]],null,null,null,null,null)),(l()(),a._19(-1,null,["\n        "])),(l()(),a.Z(12,0,null,null,3,"div",[["class","logo-container"]],null,null,null,null,null)),(l()(),a._19(-1,null,["\n          "])),(l()(),a.Z(14,0,null,null,0,"img",[["src","assets/imgs/logo.png"]],null,null,null,null,null)),(l()(),a._19(-1,null,["\n        "])),(l()(),a._19(-1,null,["\n        "])),(l()(),a.Z(17,0,null,null,67,"div",[["class","login-box"],["padding",""]],null,null,null,null,null)),(l()(),a._19(-1,null,["\n          "])),(l()(),a.Z(19,0,null,null,64,"form",[["novalidate",""]],[[2,"ng-untouched",null],[2,"ng-touched",null],[2,"ng-pristine",null],[2,"ng-dirty",null],[2,"ng-valid",null],[2,"ng-invalid",null],[2,"ng-pending",null]],[[null,"submit"],[null,"reset"]],function(l,n,u){var o=!0;if("submit"===n){o=!1!==a._13(l,21).onSubmit(u)&&o}if("reset"===n){o=!1!==a._13(l,21).onReset()&&o}return o},null,null)),a.Y(20,16384,null,0,i.p,[],null,null),a.Y(21,540672,null,0,i.f,[[8,null],[8,null]],{form:[0,"form"]},null),a._16(2048,null,i.b,null,[i.f]),a.Y(23,16384,null,0,i.k,[i.b],null,null),(l()(),a._19(-1,null,["\n            "])),(l()(),a.Z(25,0,null,null,53,"ion-list",[],null,null,null,null,null)),a.Y(26,16384,null,0,z.a,[v.a,a.j,a.z,C.a,F.l,Y.a],null,null),(l()(),a._19(-1,null,["\n              "])),(l()(),a.Z(28,0,null,null,19,"ion-item",[["class","item item-block"]],null,null,null,x.b,x.a)),a.Y(29,1097728,null,3,D.a,[q.a,v.a,a.j,a.z,[2,L.a]],null,null),a._17(335544320,1,{contentLabel:0}),a._17(603979776,2,{_buttons:1}),a._17(603979776,3,{_icons:1}),a.Y(33,16384,null,0,V.a,[],null,null),(l()(),a._19(-1,2,["\n                "])),(l()(),a.Z(35,0,null,1,5,"ion-label",[["floating",""]],null,null,null,null,null)),a.Y(36,16384,[[1,4]],0,U.a,[v.a,a.j,a.z,[8,""],[8,null],[8,null],[8,null]],null,null),(l()(),a._19(-1,null,["\n                  "])),(l()(),a.Z(38,0,null,null,1,"ion-icon",[["margin-right",""],["name","md-person"],["role","img"]],[[2,"hide",null]],null,null,null,null)),a.Y(39,147456,null,0,B.a,[v.a,a.j,a.z],{name:[0,"name"]},null),(l()(),a._19(-1,null,["\n                  Username"])),(l()(),a._19(-1,2,["\n                "])),(l()(),a.Z(42,0,null,3,4,"ion-input",[["formControlName","username"],["type","text"]],[[2,"ng-untouched",null],[2,"ng-touched",null],[2,"ng-pristine",null],[2,"ng-dirty",null],[2,"ng-valid",null],[2,"ng-invalid",null],[2,"ng-pending",null]],[[null,"input"]],function(l,n,u){var a=!0,o=l.component;if("input"===n){a=!1!==(o.loginForm.value.username=o.loginForm.value.username.trim())&&a}return a},I.b,I.a)),a.Y(43,671744,null,0,i.e,[[3,i.b],[8,null],[8,null],[8,null]],{name:[0,"name"]},null),a._16(2048,null,i.i,null,[i.e]),a.Y(45,16384,null,0,i.j,[i.i],null,null),a.Y(46,5423104,null,0,N.a,[v.a,C.a,q.a,w.a,a.j,a.z,[2,b.a],[2,D.a],[2,i.i],Y.a],{type:[0,"type"]},{input:"input"}),(l()(),a._19(-1,2,["\n              "])),(l()(),a._19(-1,null,["\n              "])),(l()(),a.Z(49,0,null,null,28,"ion-item",[["class","item item-block"]],null,null,null,x.b,x.a)),a.Y(50,1097728,null,3,D.a,[q.a,v.a,a.j,a.z,[2,L.a]],null,null),a._17(335544320,4,{contentLabel:0}),a._17(603979776,5,{_buttons:1}),a._17(603979776,6,{_icons:1}),a.Y(54,16384,null,0,V.a,[],null,null),(l()(),a._19(-1,2,["\n                "])),(l()(),a.Z(56,0,null,1,5,"ion-label",[["floating",""]],null,null,null,null,null)),a.Y(57,16384,[[4,4]],0,U.a,[v.a,a.j,a.z,[8,""],[8,null],[8,null],[8,null]],null,null),(l()(),a._19(-1,null,["\n                  "])),(l()(),a.Z(59,0,null,null,1,"ion-icon",[["margin-right",""],["name","md-key"],["role","img"]],[[2,"hide",null]],null,null,null,null)),a.Y(60,147456,null,0,B.a,[v.a,a.j,a.z],{name:[0,"name"]},null),(l()(),a._19(-1,null,["\n                  Password"])),(l()(),a._19(-1,2,["\n                "])),(l()(),a.Z(63,0,null,3,6,"ion-input",[["formControlName","password"],["type","text"]],[[2,"ng-untouched",null],[2,"ng-touched",null],[2,"ng-pristine",null],[2,"ng-dirty",null],[2,"ng-valid",null],[2,"ng-invalid",null],[2,"ng-pending",null]],null,null,I.b,I.a)),a.Y(64,278528,null,0,R.h,[a.p,a.q,a.j,a.A],{ngClass:[0,"ngClass"]},null),a._15(65,{isPassword:0}),a.Y(66,671744,null,0,i.e,[[3,i.b],[8,null],[8,null],[8,null]],{name:[0,"name"]},null),a._16(2048,null,i.i,null,[i.e]),a.Y(68,16384,null,0,i.j,[i.i],null,null),a.Y(69,5423104,null,0,N.a,[v.a,C.a,q.a,w.a,a.j,a.z,[2,b.a],[2,D.a],[2,i.i],Y.a],{type:[0,"type"]},null),(l()(),a._19(-1,2,["\n                "])),(l()(),a.Z(71,0,null,4,5,"button",[["class","showPasswordBtn"],["clear",""],["color","dark"],["ion-button",""],["item-right",""]],null,[[null,"click"],[null,"touchend"]],function(l,n,u){var a=!0,o=l.component;if("click"===n){o.showPassword=!o.showPassword;a=!1!==u.preventDefault()&&a}if("touchend"===n){o.showPassword=!o.showPassword;a=!1!==u.preventDefault()&&a}return a},T.b,T.a)),a.Y(72,1097728,[[5,4]],0,M.a,[[8,""],v.a,a.j,a.z],{color:[0,"color"],clear:[1,"clear"]},null),(l()(),a._19(-1,0,["\n                  "])),(l()(),a.Z(74,0,null,0,1,"ion-icon",[["role","img"]],[[2,"hide",null]],null,null,null,null)),a.Y(75,147456,null,0,B.a,[v.a,a.j,a.z],{name:[0,"name"]},null),(l()(),a._19(-1,0,["\n                "])),(l()(),a._19(-1,2,["\n              "])),(l()(),a._19(-1,null,["\n            "])),(l()(),a._19(-1,null,["\n            "])),(l()(),a.Z(80,0,null,null,2,"button",[["block",""],["color","danger"],["ion-button",""],["large",""],["margin-top",""]],[[8,"disabled",0]],[[null,"click"]],function(l,n,u){var a=!0;if("click"===n){a=!1!==l.component.login()&&a}return a},T.b,T.a)),a.Y(81,1097728,null,0,M.a,[[8,""],v.a,a.j,a.z],{color:[0,"color"],large:[1,"large"],block:[2,"block"]},null),(l()(),a._19(-1,0,["\n              Login\n            "])),(l()(),a._19(-1,null,["\n          "])),(l()(),a._19(-1,null,["\n        "])),(l()(),a._19(-1,null,["\n      "])),(l()(),a._19(-1,null,["\n    "])),(l()(),a._19(-1,null,["\n  "])),(l()(),a._19(-1,1,["\n"]))],function(l,n){var u=n.component;l(n,21,0,u.loginForm);l(n,39,0,"md-person");l(n,43,0,"username");l(n,46,0,"text");l(n,60,0,"md-key");l(n,64,0,l(n,65,0,!u.showPassword));l(n,66,0,"password");l(n,69,0,"text");l(n,72,0,"dark","");l(n,75,0,u.showPassword?"eye":"eye-off");l(n,81,0,"danger","","")},function(l,n){var u=n.component;l(n,1,0,a._13(n,2).statusbarPadding,a._13(n,2)._hasRefresher);l(n,19,0,a._13(n,23).ngClassUntouched,a._13(n,23).ngClassTouched,a._13(n,23).ngClassPristine,a._13(n,23).ngClassDirty,a._13(n,23).ngClassValid,a._13(n,23).ngClassInvalid,a._13(n,23).ngClassPending);l(n,38,0,a._13(n,39)._hidden);l(n,42,0,a._13(n,45).ngClassUntouched,a._13(n,45).ngClassTouched,a._13(n,45).ngClassPristine,a._13(n,45).ngClassDirty,a._13(n,45).ngClassValid,a._13(n,45).ngClassInvalid,a._13(n,45).ngClassPending);l(n,59,0,a._13(n,60)._hidden);l(n,63,0,a._13(n,68).ngClassUntouched,a._13(n,68).ngClassTouched,a._13(n,68).ngClassPristine,a._13(n,68).ngClassDirty,a._13(n,68).ngClassValid,a._13(n,68).ngClassInvalid,a._13(n,68).ngClassPending);l(n,74,0,a._13(n,75)._hidden);l(n,80,0,!u.loginForm.valid)})}var O=a.V("page-login",e,function(l){return a._21(0,[(l()(),a.Z(0,0,null,null,1,"page-login",[],null,null,null,J,H)),a.Y(1,49152,null,0,e,[Z.a,S.a,i.d,o.a,A.a],null,null)],null,null)},{},{},[]),W=u(170),X=u(56);u.d(n,"LoginPageModuleNgFactory",function(){return E});var E=a.W(t,[],function(l){return a._10([a._11(512,a.i,a.S,[[8,[s.a,r.a,g.a,_.a,d.a,c.a,m.a,h.a,p.a,O]],[3,a.i],a.s]),a._11(4608,R.l,R.k,[a.r,[2,R.t]]),a._11(4608,i.q,i.q,[]),a._11(4608,i.d,i.d,[]),a._11(512,R.c,R.c,[]),a._11(512,i.o,i.o,[]),a._11(512,i.g,i.g,[]),a._11(512,i.m,i.m,[]),a._11(512,W.a,W.a,[]),a._11(512,W.b,W.b,[]),a._11(512,t,t,[]),a._11(256,X.a,e,[])])})}});
+webpackJsonp([1],{
+
+/***/ 605:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LoginPageModule", function() { return LoginPageModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__login__ = __webpack_require__(608);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+
+var LoginPageModule = (function () {
+    function LoginPageModule() {
+    }
+    LoginPageModule = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["I" /* NgModule */])({
+            declarations: [
+                __WEBPACK_IMPORTED_MODULE_2__login__["a" /* LoginPage */],
+            ],
+            imports: [
+                __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["l" /* IonicPageModule */].forChild(__WEBPACK_IMPORTED_MODULE_2__login__["a" /* LoginPage */]),
+            ],
+        })
+    ], LoginPageModule);
+    return LoginPageModule;
+}());
+
+//# sourceMappingURL=login.module.js.map
+
+/***/ }),
+
+/***/ 608:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__providers_auth_auth__ = __webpack_require__(52);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__(25);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+/**
+ * Generated class for the LoginPage page.
+ *
+ * See https://ionicframework.com/docs/components/#navigation for more info on
+ * Ionic pages and navigation.
+ */
+var LoginPage = (function () {
+    function LoginPage(navCtrl, navParams, formBuilder, auth, events) {
+        this.navCtrl = navCtrl;
+        this.navParams = navParams;
+        this.formBuilder = formBuilder;
+        this.auth = auth;
+        this.events = events;
+        this.showPassword = false;
+        this.loginForm = this.formBuilder.group({
+            username: ['', __WEBPACK_IMPORTED_MODULE_3__angular_forms__["f" /* Validators */].required],
+            password: ['', __WEBPACK_IMPORTED_MODULE_3__angular_forms__["f" /* Validators */].required]
+        });
+    }
+    LoginPage.prototype.ionViewDidLoad = function () {
+    };
+    LoginPage.prototype.login = function () {
+        var _this = this;
+        this.auth.login(this.loginForm.value).then(function (allowed) {
+            if (allowed) {
+                _this.events.publish('user:login');
+                _this.navCtrl.setRoot('HomePage');
+            }
+        });
+    };
+    LoginPage = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["m" /* Component */])({
+            selector: 'page-login',template:/*ion-inline-start:"/home/beng/Desktop/toshiba_tec_project (nightly)/ionic/src/pages/login/login.html"*/`<!--\n  Generated template for the LoginPage page.\n\n  See http://ionicframework.com/docs/components/#navigation for more info on\n  Ionic pages and navigation.\n-->\n<ion-content>\n  <ion-row class="login-page-container">\n    <ion-col col-12 col-md-6 col-lg-6 col-xl-6>\n      <div class="login-container">\n        <div class="logo-container">\n          <img src="assets/imgs/logo.png" />\n        </div>\n        <div class="login-box" padding>\n          <form [formGroup]="loginForm">\n            <ion-list>\n              <ion-item>\n                <ion-label floating>\n                  <ion-icon name="md-person" margin-right></ion-icon>\n                  Username</ion-label>\n                <ion-input type="text" formControlName="username" (input)="loginForm.value.username = loginForm.value.username.trim()"></ion-input>\n              </ion-item>\n              <ion-item>\n                <ion-label floating>\n                  <ion-icon name="md-key" margin-right></ion-icon>\n                  Password</ion-label>\n                <ion-input type="text" formControlName="password" [ngClass]="{\'isPassword\':!showPassword}"></ion-input>\n                <button ion-button clear color="dark" class="showPasswordBtn" item-right (click)="showPassword=!showPassword;$event.preventDefault();" (touchend)="showPassword=!showPassword;$event.preventDefault();">\n                  <ion-icon [name]="showPassword?\'eye\':\'eye-off\'"></ion-icon>\n                </button>\n              </ion-item>\n            </ion-list>\n            <button large color="danger" margin-top ion-button block (click)="login()" [disabled]="!loginForm.valid">\n              Login\n            </button>\n          </form>\n        </div>\n      </div>\n    </ion-col>\n  </ion-row>\n</ion-content>`/*ion-inline-end:"/home/beng/Desktop/toshiba_tec_project (nightly)/ionic/src/pages/login/login.html"*/,
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2_ionic_angular__["n" /* NavController */],
+            __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["p" /* NavParams */],
+            __WEBPACK_IMPORTED_MODULE_3__angular_forms__["a" /* FormBuilder */],
+            __WEBPACK_IMPORTED_MODULE_0__providers_auth_auth__["a" /* AuthProvider */],
+            __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["g" /* Events */]])
+    ], LoginPage);
+    return LoginPage;
+}());
+
+//# sourceMappingURL=login.js.map
+
+/***/ })
+
+});
+//# sourceMappingURL=1.js.map

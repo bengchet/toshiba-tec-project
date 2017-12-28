@@ -1,3 +1,4 @@
+import { SocketIoProvider } from './../../providers/socket-io/socket-io';
 import { Storage } from '@ionic/storage';
 import { MqttProvider } from './../../providers/mqtt/mqtt';
 import { AuthProvider } from './../../providers/auth/auth';
@@ -34,6 +35,7 @@ export class HomePage {
     public navCtrl: NavController,
     private popover: PopoverController,
     public mqtt: MqttProvider,
+    private socket: SocketIoProvider,
     private auth: AuthProvider,
     private platform: Platform,
     private storage: Storage,
@@ -172,7 +174,8 @@ export class PopoverPage {
     public viewCtrl: ViewController,
     private auth: AuthProvider,
     private app: App,
-    private mqtt: MqttProvider
+    private socket: SocketIoProvider
+    //private mqtt: MqttProvider
   ) { }
 
   close(action?) {
@@ -189,7 +192,8 @@ export class PopoverPage {
       if (!isAuthenticated)
         this.close(() => {
           // clear topics
-          this.mqtt.unsubscribeAllTopics();
+          //this.mqtt.unsubscribeAllTopics();
+          this.socket.unsubscribeAllTopics();
           this.app.getRootNavs()[0].setRoot('LoginPage')
         })
     })

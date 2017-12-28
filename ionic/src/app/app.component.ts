@@ -10,6 +10,7 @@ import { Nav } from 'ionic-angular';
 
 import * as firebase from 'firebase/app';
 import 'firebase/messaging'
+import { SocketIoProvider } from '../providers/socket-io/socket-io';
 
 @Component({
   templateUrl: 'app.html'
@@ -21,6 +22,7 @@ export class MyApp {
     platform: Platform,
     statusBar: StatusBar,
     splashScreen: SplashScreen,
+    private socket: SocketIoProvider,
     private auth: AuthProvider,
     private mqtt: MqttProvider,
     private events: Events,
@@ -29,9 +31,7 @@ export class MyApp {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
-
-      this.mqtt.prepareReady();
-
+      
       if (platform.is('core'))
         firebase.initializeApp(firebaseConfig);
 

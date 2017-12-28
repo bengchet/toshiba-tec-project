@@ -3,6 +3,8 @@ import { HomePage } from './../home/home';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { MqttProvider } from '../../providers/mqtt/mqtt';
+import { Platform } from 'ionic-angular/platform/platform';
+import { SocketIoProvider } from '../../providers/socket-io/socket-io';
 
 /**
  * Generated class for the SettingsPage page.
@@ -31,7 +33,9 @@ export class SettingsPage {
     public navCtrl: NavController, 
     public navParams: NavParams,
     public mqtt: MqttProvider,
-    private auth: AuthProvider
+    private socket: SocketIoProvider,
+    private auth: AuthProvider,
+    public platform: Platform
   ) {
   }
 
@@ -50,6 +54,7 @@ export class SettingsPage {
   setAsDefaultMQTTServer(broker){
     this.mqtt.setDefaultBroker(broker.url).then(()=>{
       this.mqtt.startBroker();
+      this.socket.initialise();
     })
   }
 

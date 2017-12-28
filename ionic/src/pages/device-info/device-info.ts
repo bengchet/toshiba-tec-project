@@ -1,3 +1,4 @@
+import { SocketIoProvider } from './../../providers/socket-io/socket-io';
 import { MqttProvider } from './../../providers/mqtt/mqtt';
 import { ViewChild, Component, NgZone } from '@angular/core';
 import { Events, NavController, NavParams, Content } from 'ionic-angular';
@@ -42,6 +43,7 @@ export class DeviceInfoPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private mqtt: MqttProvider,
+    private socket:SocketIoProvider,
     private events: Events,
     private zone: NgZone
   ) {
@@ -61,9 +63,10 @@ export class DeviceInfoPage {
     })
 
     this.events.subscribe('subscription:mqtt', this.processPayload.bind(this))
-    this.mqtt.ready().then(() => {
+    /*this.mqtt.ready().then(() => {
       this.refresh();
-    })
+    })*/
+    this.refresh();
 
     this.content.ionScrollEnd.subscribe(() => {
       //console.log(this.content.scrollTop, this.content.scrollHeight, this.content.contentHeight)
@@ -200,7 +203,10 @@ export class DeviceInfoPage {
       this.pingInProgress = false;
       this.pingSetTimeout = null;
     }, this.pingTimeout)
-    this.mqtt.publish(this.ctrlID + '/IN/CHECK', JSON.stringify(
+    /*this.mqtt.publish(this.ctrlID + '/IN/CHECK', JSON.stringify(
+      { CTRL_ID: this.ctrlID }
+    ), 1)*/
+    this.socket.publish(this.ctrlID + '/IN/CHECK', JSON.stringify(
       { CTRL_ID: this.ctrlID }
     ), 1)
   }
@@ -208,21 +214,34 @@ export class DeviceInfoPage {
   refresh() {
     this.refreshInProgress = true;
     this.resetSensors();
-    this.mqtt.publish(this.ctrlID + '/IN/CTRL/REFRESH', JSON.stringify(
+    /*this.mqtt.publish(this.ctrlID + '/IN/CTRL/REFRESH', JSON.stringify(
+      { CTRL_ID: this.ctrlID }
+    ), 1)*/
+    this.socket.publish(this.ctrlID + '/IN/CTRL/REFRESH', JSON.stringify(
       { CTRL_ID: this.ctrlID }
     ), 1)
   }
 
   reboot() {
-    this.mqtt.publish(this.ctrlID + '/REBOOT', "\"REBOOT\"", 1)
+    //this.mqtt.publish(this.ctrlID + '/REBOOT', "\"REBOOT\"", 1)
+    this.socket.publish(this.ctrlID + '/REBOOT', "\"REBOOT\"", 1)
   }
 
   setIntervals() {
-    this.mqtt.publish(this.ctrlID + '/IN/INTERVAL', JSON.stringify(this.device.intervals), 1)
+    //this.mqtt.publish(this.ctrlID + '/IN/INTERVAL', JSON.stringify(this.device.intervals), 1)
+    this.socket.publish(this.ctrlID + '/IN/INTERVAL', JSON.stringify(this.device.intervals), 1)
   }
 
   overrideLED(device, state: string) {
-    this.mqtt.publish(this.ctrlID + '/IN/RFID/LED1', JSON.stringify(
+    /*this.mqtt.publish(this.ctrlID + '/IN/RFID/LED1', JSON.stringify(
+      {
+        CTRL_ID: this.ctrlID,
+        RFID: device.currentRFID,
+        POS: device.pos.toString(),
+        LED: state
+      }
+    ), 1)*/
+    this.socket.publish(this.ctrlID + '/IN/RFID/LED1', JSON.stringify(
       {
         CTRL_ID: this.ctrlID,
         RFID: device.currentRFID,

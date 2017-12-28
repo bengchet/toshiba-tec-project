@@ -4,15 +4,7 @@ import cors from 'cors'
 import Device from '../app/models/device'
 import Controller from '../app/models/controller'
 
-var passport      = require('passport');
-var BasicStrategy = require('passport-http').BasicStrategy;
-
-passport.use(new BasicStrategy(function(username, password, done) {
-    if (username == process.env.USERNAME && password == process.env.PASSWORD) {
-        return done(null, true);
-	}
-	return done(null, false);
-}));
+var passport = require('../app/passport/passport');
 
 router.use(cors())
 
@@ -36,6 +28,7 @@ router.post('/addController',
                 id: req.body.id,
             }).save((err)=>{
                 if(!err) return res.json({success: true, msg: 'Successfully register controller'})
+                console.log(err)
                 return res.json({success: false, msg: 'Error register controller'})
             })
         }

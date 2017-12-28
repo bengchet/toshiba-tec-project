@@ -68,7 +68,7 @@ export class ApiService {
         console.log('[API] Get request endpoint', url);
 
         let headers = new Headers({
-          'Authorization': 'Basic ' + btoa(this.auth.username + ':' + this.auth.password)
+          'Authorization': 'Basic ' + this.auth.token
         });
 
         let options = new RequestOptions({
@@ -144,7 +144,7 @@ export class ApiService {
         console.log('[API] Post request endpoint', url);
 
         let headers = new Headers({
-          'Authorization': isAuthorized ? ('Basic ' + btoa(this.auth.username + ':' + this.auth.password)) : null,
+          'Authorization': isAuthorized ? ('Basic ' + this.auth.token) : null,
           'Content-Type': isJSON ? 'application/json' : 'application/x-www-form-urlencoded'
         });
 

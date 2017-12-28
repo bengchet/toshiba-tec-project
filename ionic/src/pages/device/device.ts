@@ -5,6 +5,7 @@ import { MqttProvider } from './../../providers/mqtt/mqtt';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { Subscription } from 'rxjs/Subscription';
+import { SocketIoProvider } from '../../providers/socket-io/socket-io';
 
 @IonicPage(
   {
@@ -22,13 +23,15 @@ export class DevicePage {
   tabs = [];
   topic: string;
   isMqttInit: boolean = false;
+  socketSubscription: Subscription;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private mqtt: MqttProvider,
     private events: Events,
-    private auth: AuthProvider
+    private auth: AuthProvider,
+    private socket: SocketIoProvider
   ) {
 
   }
@@ -40,9 +43,16 @@ export class DevicePage {
   ionViewWillLeave() {
     // stop all subscription
     this.events.publish('subscription:stop');
-    if (this.isMqttInit){
-      this.mqtt.unsubscribeTopic(this.topic);
+    /*if (this.isMqttInit){
+      if(this.topic)
+        this.mqtt.unsubscribeTopic(this.topic);
       this.mqtt.unregisterCallback(this.ctrlID);
+    }*/
+    if (this.topic) {
+      this.socket.unsubscribeTopic(this.topic)
+    }
+    if (this.socketSubscription) {
+      this.socketSubscription.unsubscribe();
     }
   }
 
@@ -67,13 +77,18 @@ export class DevicePage {
         }
       ]
 
-      console.log(this.tabs)
+      this.topic = this.ctrlID + '/#';
+
       // register callback
-      this.mqtt.ready().then(() => {
+      /*this.mqtt.ready().then(() => {
         this.isMqttInit = true;
-        this.topic = this.ctrlID + '/#';
         this.mqtt.subscribeTopic(this.topic, 1);
         this.mqtt.registerCallback(this.ctrlID, this.callback.bind(this))
+      })*/
+
+      this.socket.subscribeTopic(this.topic, 1);
+      this.socketSubscription = this.socket.getMessages().subscribe(data => {
+        this.callback(data)
       })
     }
   }
@@ -82,4 +97,5 @@ export class DevicePage {
     //console.log(message)
     this.events.publish('subscription:mqtt', message)
   }
+
 }

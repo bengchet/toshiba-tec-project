@@ -15,6 +15,7 @@ export class AuthProvider {
   username =  'toshiba';
   password = 'toshibatec1234';
   isAuthenticated = false;
+  token: string = '';
 
   constructor(
     //public http: HttpClient, 
@@ -22,6 +23,10 @@ export class AuthProvider {
     private mqtt: MqttProvider,
     private events: Events
   ) {
+    this.storage.get('token').then(token=>{
+      if(token)
+        this.token = token
+    })
   }
 
   login(credentials): Promise<boolean>{
@@ -29,6 +34,10 @@ export class AuthProvider {
       this.isAuthenticated = 
         (credentials.username == this.username && credentials.password == this.password);
       this.storage.set('isAuthenticated', this.isAuthenticated).then(()=>{
+        if(this.isAuthenticated){
+          this.token = btoa(this.username+':'+this.password);
+          this.storage.set('token', this.token)
+        }
         rs(this.isAuthenticated)
       })
     })
@@ -37,6 +46,7 @@ export class AuthProvider {
   logout(){
     return new Promise((rs, rj)=>{
       this.isAuthenticated = false;
+      this.token = '';
       this.storage.set('isAuthenticated', this.isAuthenticated).then(()=>{
         this.storage.clear()
         this.mqtt.reset()

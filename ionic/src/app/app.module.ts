@@ -18,6 +18,7 @@ import { SuperTabsModule } from 'ionic2-super-tabs';
 import { DeviceConsolePage } from '../pages/device-console/device-console';
 import { DeviceInfoPage } from '../pages/device-info/device-info';
 import { DevicePage } from '../pages/device/device';
+import { SocketIoProvider } from '../providers/socket-io/socket-io';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { DevicePage } from '../pages/device/device';
     Push,
     PushServiceProvider,
     AlertProvider,
-    ApiService
+    ApiService,
+    SocketIoProvider
   ]
 })
 export class AppModule {}

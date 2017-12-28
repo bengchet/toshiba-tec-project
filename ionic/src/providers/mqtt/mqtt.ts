@@ -27,8 +27,8 @@ export class MqttProvider {
   observer: any;
   callbacks: any = [];
   noReconnect: boolean = false;
-  failureTimeout:any;
-  disconnectTimeout:any;
+  failureTimeout: any;
+  disconnectTimeout: any;
   private _readyPromise: Promise<any>;
   private _readyResolve: any;
 
@@ -39,8 +39,9 @@ export class MqttProvider {
     private events: Events
   ) {
     console.log('[mqtt] Initiating MQTT...')
+    this.prepareReady();
     // create observer
-    this._readyPromise = new Promise(res => { this._readyResolve = res; } );
+    this._readyPromise = new Promise(res => { this._readyResolve = res; });
     // check for default broker from broker list
     this.storage.get('mqttBrokers').then(value => {
       if (value && value.length > 0) {
@@ -54,36 +55,36 @@ export class MqttProvider {
       }
     })
   }
-  
-  ready(): Promise<boolean>{
+
+  ready(): Promise<boolean> {
     return this._readyPromise;
   }
 
-  private triggerReady(){
+  private triggerReady() {
     this._readyResolve()
   }
 
-  prepareReady(){
-    if(this.mqttConnectionStatus)
+  prepareReady() {
+    if (this.mqttConnectionStatus)
       this.triggerReady()
-    else{
+    else {
       this.events.subscribe('mqtt:ready', this.completed.bind(this))
     }
   }
 
-  private completed(){
+  private completed() {
     this.events.unsubscribe('mqtt:ready')
     this.triggerReady()
   }
 
-  reset(){
+  reset() {
     this.mqttRegisteredBrokerList = [];
     this.callbacks = [];
-    if(this.disconnectTimeout){
+    if (this.disconnectTimeout) {
       clearTimeout(this.disconnectTimeout)
       this.disconnectTimeout = null;
     }
-    if(this.failureTimeout){
+    if (this.failureTimeout) {
       clearTimeout(this.failureTimeout)
       this.failureTimeout = null;
     }
@@ -101,14 +102,14 @@ export class MqttProvider {
     if (!defaultBroker.url) return;
 
     this.mqttUrl = defaultBroker.url;
-    this.mqttPort = defaultBroker.port? parseInt(defaultBroker.port): 8000;
+    this.mqttPort = defaultBroker.port ? parseInt(defaultBroker.port) : 8000;
     this.mqttOptions = defaultBroker.options ? defaultBroker.options : this.mqttOptions;
 
-    if(this.failureTimeout)
+    if (this.failureTimeout)
       clearTimeout(this.failureTimeout);
-    if(this.disconnectTimeout)
+    if (this.disconnectTimeout)
       clearTimeout(this.disconnectTimeout);
-      
+
     let reconnectOnStart = () => {
       setTimeout(() => {
         if (this.isOnline()) {
@@ -118,7 +119,8 @@ export class MqttProvider {
         else reconnectOnStart()
       }, 2000)
     }
-    reconnectOnStart();
+    //reconnectOnStart();
+    this.triggerReady();
   }
 
   callback(message: Paho.MQTT.Message) {
@@ -131,8 +133,8 @@ export class MqttProvider {
   registerCallback(id, cb) {
     this.callbacks[id] = cb;
   }
-  unregisterCallback(id){
-    this.callbacks = this.callbacks.filter((item, key)=>{
+  unregisterCallback(id) {
+    this.callbacks = this.callbacks.filter((item, key) => {
       return key != id;
     })
   }
@@ -222,7 +224,7 @@ export class MqttProvider {
   }
 
   connect() {
-    console.log('[mqtt] Connecting...')
+    /*console.log('[mqtt] Connecting...')
     this.mqttClient = new Paho.MQTT.Client(this.mqttUrl, this.mqttPort, "clientId_" + Math.random().toString(16).substring(2, 8));
 
     this.mqttClient.onConnectionLost = this.onLostConnection.bind(this);
@@ -232,7 +234,7 @@ export class MqttProvider {
     options.onSuccess = this.onConnected.bind(this);
     options.onFailure = this.onFailure.bind(this);
 
-    this.mqttClient.connect(options);
+    this.mqttClient.connect(options);*/
   }
 
   getAllSubscribedTopics(): Observable<any> {
@@ -254,7 +256,7 @@ export class MqttProvider {
       else {
         this.mqttRegisteredBrokerList.push({
           'url': url,
-          'port': port? port:8000,
+          'port': port ? port : 8000,
           'options': options ? options : this.mqttOptions,
           'default': false
         })
@@ -282,7 +284,7 @@ export class MqttProvider {
     if (this.mqttClient) {
       console.log('[mqtt] Got client, disconnect first...')
       this.noReconnect = true;
-      if (this.isOnline() && this.mqttClient.isConnected()){
+      if (this.isOnline() && this.mqttClient.isConnected()) {
         this.mqttClient.disconnect();
         this.unsubscribeAllTopics();
       }
