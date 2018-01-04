@@ -4,8 +4,11 @@ let _io;
 
 var initialize = function (url) {
 
+    url = url || 'localhost'
     let broker_url = url;
-    //url = '/' + url;
+    
+    url = '/' + url;
+
     if(broker_url && broker_url.indexOf('mqtt://') == -1){
         broker_url = 'mqtt://' + broker_url;
     }

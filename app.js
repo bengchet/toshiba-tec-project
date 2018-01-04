@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var passport = require('passport');
+var index = require('./routes/index');
 var api = require('./routes/api');
 
 //database
@@ -33,8 +34,10 @@ app.use(favicon(path.join(__dirname, 'ionic/www/assets/icon', 'favicon.ico')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'ionic/www')));
+app.use('/dashboard', express.static(path.join(__dirname, 'ionic/www')));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize())
+app.use('/', index);
 app.use('/api', api);
 
 // socket.io
