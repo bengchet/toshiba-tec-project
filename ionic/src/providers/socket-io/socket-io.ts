@@ -53,7 +53,7 @@ export class SocketIoProvider {
       this.socket.close();
     }
     let defaultBroker = this.mqtt.getDefaultBroker();
-    this.socket = io(defaultBroker.url ? ('/' + defaultBroker.url) : '', { path: '/toshiba-tec-project/socket.io'})
+    this.socket = io(new Config().host + defaultBroker.url ? ('/' + defaultBroker.url) : '', { path: '/toshiba-tec-project/socket.io'})
 
     this.socket.on('connect', () => {
       console.log('[SOCKET] Connected to server, checking authentication...')
