@@ -5,8 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthProvider } from '../auth/auth';
 import { MqttProvider } from '../mqtt/mqtt';
-
-declare var io;
+import * as io from 'socket.io-client';
+//declare var io;
 
 @Injectable()
 export class SocketIoProvider {
