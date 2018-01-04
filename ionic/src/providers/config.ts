@@ -4,7 +4,7 @@ export class Config {
 	endpoint: string;
 
 	constructor(){
-		this.host = 'https://iot.cytron.io/toshiba-tec-project';
+		this.host = 'http://localhost:3001';
 		this.endpoint = this.host + '/api';
 	}
 }

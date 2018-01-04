@@ -3,15 +3,13 @@ import { Storage } from '@ionic/storage';
 import { MqttProvider } from './../../providers/mqtt/mqtt';
 import { AuthProvider } from './../../providers/auth/auth';
 import { Component, NgZone } from '@angular/core';
-import { Platform, IonicPage, NavController, PopoverController, AlertController } from 'ionic-angular';
+import { Platform, NavController, PopoverController, AlertController } from 'ionic-angular';
 import * as moment from 'moment';
 import { ViewController } from 'ionic-angular/navigation/view-controller';
 import { App } from 'ionic-angular/components/app/app';
 import { ApiService } from '../../providers/api-service';
 import { AlertProvider } from '../../providers/alert';
 import { PushServiceProvider } from '../../providers/push/push-service';
-
-@IonicPage()
 
 @Component({
   selector: 'page-home',

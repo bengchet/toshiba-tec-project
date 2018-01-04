@@ -7,7 +7,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { IonicStorageModule } from '@ionic/storage';
 import { MyApp } from './app.component';
-import { PopoverPage } from '../pages/home/home';
+import { PopoverPage, HomePage } from '../pages/home/home';
 import { AuthProvider } from '../providers/auth/auth';
 import { Device } from '@ionic-native/device';
 import { MqttProvider } from '../providers/mqtt/mqtt';
@@ -23,6 +23,7 @@ import { SocketIoProvider } from '../providers/socket-io/socket-io';
 @NgModule({
   declarations: [
     MyApp,
+    HomePage,
     PopoverPage,
     DeviceConsolePage,
     DeviceInfoPage
@@ -39,6 +40,7 @@ import { SocketIoProvider } from '../providers/socket-io/socket-io';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
+    HomePage,
     PopoverPage,
     DeviceConsolePage,
     DeviceInfoPage

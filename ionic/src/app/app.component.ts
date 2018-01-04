@@ -11,6 +11,7 @@ import { Nav } from 'ionic-angular';
 import * as firebase from 'firebase/app';
 import 'firebase/messaging'
 import { SocketIoProvider } from '../providers/socket-io/socket-io';
+import { HomePage } from '../pages/home/home';
 
 @Component({
   templateUrl: 'app.html'
@@ -49,7 +50,7 @@ export class MyApp {
       this.auth.checkAuthentication().then((allowed) => {
         if (allowed) {
           this.events.publish('user:login')
-          this.rootPage = 'HomePage';
+          this.rootPage = HomePage;
         }
         else
           this.rootPage = 'LoginPage';

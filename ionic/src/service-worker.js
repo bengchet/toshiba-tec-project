@@ -5,7 +5,7 @@
 
 
 'use strict';
-/*importScripts('./build/sw-toolbox.js');
+importScripts('./build/sw-toolbox.js');
 
 self.toolbox.options.cache = {
   name: 'ionic-cache'
@@ -28,7 +28,7 @@ self.toolbox.router.any('/*', self.toolbox.fastest);
 
 // for any other requests go to the network, cache,
 // and then only use that cached resource if your user goes offline
-self.toolbox.router.default = self.toolbox.networkFirst;*/
+self.toolbox.router.default = self.toolbox.networkFirst;
 
 // firebase desktop messaging
 importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-app.js');
