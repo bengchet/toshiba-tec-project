@@ -3,17 +3,15 @@ var passport = require('../passport/passport');
 let _io;
 
 var initialize = function (url) {
-
-    url = url || 'localhost'
-    let broker_url = url;
     
-    url = '/' + url;
-
+    url = url || 'localhost';
+    let broker_url = url;
+	url = '/toshiba-tec-project/' + url;
     if(broker_url && broker_url.indexOf('mqtt://') == -1){
         broker_url = 'mqtt://' + broker_url;
     }
 
-    let client = mqtt.connect( broker_url || 'mqtt://localhost', {
+    let client = mqtt.connect( broker_url, {
         connectTimeout: 5 * 1000
     }), clientStatus = false;
     
