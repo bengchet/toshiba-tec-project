@@ -48,7 +48,12 @@ agenda.define('Ping', (job, done) => {
     )
 
     console.log('Status from device ' + id + ': ' + job.attrs.data.device.status, ', Retries: ' + job.attrs.data.device.retries.toString())
-
+    
+    // obtain the retries record
+    clients[id].retries = job.attrs.data.device.retries;
+    // reset status
+    clients[id].status = 0;
+    
     var summarize = function () {
         if (clients[id].status == 0) {
             if (clients[id].retries < 3) {
