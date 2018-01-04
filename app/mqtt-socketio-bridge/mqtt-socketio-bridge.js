@@ -6,7 +6,8 @@ var initialize = function (url) {
     
     url = url || 'localhost';
     let broker_url = url;
-	url = '/toshiba-tec-project/' + url;
+    //url = '/toshiba-tec-project/' + url;
+    console.log(url);
     if(broker_url && broker_url.indexOf('mqtt://') == -1){
         broker_url = 'mqtt://' + broker_url;
     }
