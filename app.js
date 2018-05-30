@@ -1,7 +1,8 @@
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
-var logger = require('morgan');
+//var logger = require('morgan');
+var logger = require('./app/logger/logger');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
@@ -49,6 +50,8 @@ bridge.initialize('13.58.141.26');
 bridge.initialize('broker.hivemq.com');
 bridge.initialize('cytronpg.no-ip.org');
 bridge.initialize(); //localhost
+
+logger.info('IoT server initialized');
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

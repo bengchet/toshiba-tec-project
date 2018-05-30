@@ -1,6 +1,8 @@
 import Agenda from 'agenda'
 import mqtt from 'mqtt'
 import gcm from '../gcm/gcm'
+import logger from '../logger/logger'
+
 let clients = [];
 var mqttClient = mqtt.connect(process.env.MQTT_BROKER_URL,
         {
@@ -21,6 +23,7 @@ mqttClient.on('message', function(topic, msg) {
 	    var message = 'The button from device with position ' + pos + ' has been ';
  	    message += (btn == "0")? 'turned off': 'triggered';
 	    console.log(message);
+            logger.info(message);
             gcm.sendCustomGCMMessage(message);	    
         }
 })
