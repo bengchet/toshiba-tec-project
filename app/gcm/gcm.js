@@ -35,6 +35,67 @@ let constructMessage = (type, msg) => {
     return msg;
 }
 
+let sendCustomGCMMessage = (msg) => {
+    let message = {};
+    let notId= new Date().getTime() % 65536
+    let data = {
+        'title': 'Toshiba Tec Project',
+        'sound': 'default',
+        'content-available': '1',
+        'notId': notId,
+        'timestamp': new Date().getTime()
+    };
+    data.message = msg;
+    message.data = data;
+    message.priority = "high";
+    message.restricted_package_name = "com.cytron.toshibatec";
+
+    Device.find({}).then((devices) => {
+        // browser
+        var browserRegistrationTokens = devices.filter(item => { return item.deviceType == 'browser' }).map(item => {
+            return item.deviceToken
+        })
+        if (browserRegistrationTokens.length > 0) {
+            sender.send(new gcm.Message(constructMessage('browser', message)), { registrationTokens: browserRegistrationTokens }, retry_times,
+                function (result) {
+                    console.log(result)
+                },
+                function (err) {
+                    console.log(err)
+                })
+        }
+        // ios
+        var iosRegistrationTokens = devices.filter(item => { return item.deviceType == 'ios' }).map(item => {
+            return item.deviceToken
+        })
+        if (iosRegistrationTokens.length > 0) {
+            sender.send(new gcm.Message(constructMessage('ios', message)), { registrationTokens: iosRegistrationTokens }, retry_times,
+                function (result) {
+                    console.log(result)
+        },
+                function (err) {
+                    console.log(err)
+                })
+        }
+        //android
+        var androidRegistrationTokens = devices.filter(item => { return item.deviceType == 'android' }).map(item => {
+            return item.deviceToken
+        })
+        if (androidRegistrationTokens.length > 0) {
+            sender.send(new gcm.Message(message), { registrationTokens: androidRegistrationTokens }, retry_times,
+                function (result) {
+                    console.log(result)
+                },
+                function (err) {
+                    console.log(err)
+                })
+        }
+    }).catch((err) => {
+        console.log(err)
+    });
+
+}
+
 let sendGCMMessage = (id, code, count) => {
 
     //create a new message
@@ -101,5 +162,6 @@ let sendGCMMessage = (id, code, count) => {
 }
 
 module.exports = {
-    sendGCMMessage
+    sendGCMMessage,
+    sendCustomGCMMessage
 }

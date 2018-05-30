@@ -2,6 +2,28 @@ import Agenda from 'agenda'
 import mqtt from 'mqtt'
 import gcm from '../gcm/gcm'
 let clients = [];
+var mqttClient = mqtt.connect(process.env.MQTT_BROKER_URL,
+        {
+            clientId: 'mqttjs_toshiba',
+            connectTimeout: 5 * 1000
+        })
+
+mqttClient.on('connect', function() {
+	console.log('mqtt for check button trigger connected');
+	mqttClient.subscribe('+/OUT/RFID/BTN1', {qos:1});
+})
+
+mqttClient.on('message', function(topic, msg) {
+	if (topic.indexOf('/OUT/RFID/BTN1') != -1) {
+            var json = JSON.parse(msg.toString());
+	    var pos = json['POS'];
+	    var btn = json['BUTTON'];
+	    var message = 'The button from device with position ' + pos + ' has been ';
+ 	    message += (btn == "0")? 'turned off': 'triggered';
+	    console.log(message);
+            gcm.sendCustomGCMMessage(message);	    
+        }
+})
 
 //const agenda = new Agenda()
 const agenda = new Agenda(
@@ -9,6 +31,7 @@ const agenda = new Agenda(
 );
 
 // define jobs here
+
 agenda.define('Send Notification', (job, done) => {
     console.log('Firing notification...')
     gcm.sendGCMMessage(job.attrs.data.id, job.attrs.data.code, job.attrs.data.messageCount)
