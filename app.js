@@ -5,7 +5,8 @@ var favicon = require('serve-favicon');
 var logger = require('./app/logger/logger');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var serveStatic = require('serve-static');
+var serveIndex = require('serve-index');
 var passport = require('passport');
 var index = require('./routes/index');
 var api = require('./routes/api');
@@ -36,7 +37,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'ionic/www')));
-app.use('/resources', express.static(path.join(__dirname, 'public')));
+app.use('/log', express.static(path.join(__dirname, 'log')), serveIndex('log', {'icons': true}));
 app.use(passport.initialize())
 app.use('/api', api);
 
