@@ -52,6 +52,10 @@ export class MqttProvider {
 
         // start broker
         this.startBroker();
+      } else { // we set default values
+        this.addBroker('13.58.141.26').then(()=>{
+          this.startBroker();
+        })
       }
     })
   }
