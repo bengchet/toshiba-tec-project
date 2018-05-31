@@ -44,6 +44,8 @@ export class SocketIoProvider {
       if (this.brokerReadyResolve){
         this.mqttReady = true;
         this.brokerReadyResolve();
+      } else {
+        this.mqttReady = true;
       }
     })
   }
