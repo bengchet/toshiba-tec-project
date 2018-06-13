@@ -31,7 +31,7 @@ mqttClient.on('message', function(topic, msg) {
 	    var pos = json['POS'];
 	    var rfid = json['RFID'];
 	    var led = json['BUTTON'];
-	    var id = topic.substring(topic.indexOf('/'));
+	    var id = topic.substring(0, topic.indexOf('/'));
 	    console.log(pos, rfid, led, id);
 	    mqttClient.publish(
 	    id + '/IN/RFID/LED',
