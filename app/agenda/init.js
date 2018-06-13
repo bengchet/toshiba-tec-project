@@ -11,8 +11,8 @@ var mqttClient = mqtt.connect(process.env.MQTT_BROKER_URL,
         })
 
 mqttClient.on('connect', function() {
-	console.log('mqtt for check button trigger connected');
-	mqttClient.subscribe('+/OUT/RFID/BTN1', {qos:1});
+	console.log('Mqtt for check status & button trigger is now connected');
+	mqttClient.subscribe('+/OUT/RFID/+', {qos:1});
 })
 
 mqttClient.on('message', function(topic, msg) {
@@ -26,6 +26,18 @@ mqttClient.on('message', function(topic, msg) {
             logger.info(message);
             gcm.sendCustomGCMMessage(message);	    
         }
+	else if(topic.indexOf('/OUT/RFID/STATUS') !=-1) {
+	    var json = JSON.parse(msg.toString());
+	    var pos = json['POS'];
+	    var rfid = json['RFID'];
+	    var led = json['BUTTON'];
+	    var id = topic.substring(topic.indexOf('/'));
+	    console.log(pos, rfid, led, id);
+	    mqttClient.publish(
+	    id + '/IN/RFID/LED',
+            JSON.stringify({ CTRL_ID: id, RFID: rfid, POS: pos, LED: led == "0"? "1":"0"}),
+            { qos: 1 });
+	}
 })
 
 //const agenda = new Agenda()
