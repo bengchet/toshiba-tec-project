@@ -35,7 +35,7 @@ mqttClient.on('message', function(topic, msg) {
 	    console.log(pos, rfid, led, id);
 	    mqttClient.publish(
 	    id + '/IN/RFID/LED',
-            JSON.stringify({ CTRL_ID: id, RFID: rfid, POS: pos, LED: led == "0"? "1":"0"}),
+            JSON.stringify({ CTRL_ID: id, RFID: rfid, POS: pos, LED: led == "0"? "ON":"OFF"}),
             { qos: 1 });
 	}
 })
