@@ -2,6 +2,7 @@ import Agenda from 'agenda'
 import mqtt from 'mqtt'
 import gcm from '../gcm/gcm'
 import logger from '../logger/logger'
+import t from './create'
 
 let clients = [];
 var mqttClient = mqtt.connect(process.env.MQTT_BROKER_URL,
@@ -189,6 +190,21 @@ agenda.on('ready', () => {
 
             // start the agenda
             agenda.start();
+	    
+	    // temporary register controller with check status schedule
+	    let controllerID = '8534858';
+	    t.createJob('Check Status', '10 seconds',
+		{
+		    device: {
+			id: controllerID
+		    }
+		})
+		.then((job)=>{
+		     if(job)
+		       console.log('Job for check status is created for controller ID ' + controllerID + '.');
+		     else
+		       console.log('Job for check status is already created for this controller ID!');
+	    	})
 
         }).catch(err => {
             console.log(err.toString())
