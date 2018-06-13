@@ -2,7 +2,6 @@ import Agenda from 'agenda'
 import mqtt from 'mqtt'
 import gcm from '../gcm/gcm'
 import logger from '../logger/logger'
-import t from './create'
 
 let clients = [];
 var mqttClient = mqtt.connect(process.env.MQTT_BROKER_URL,
@@ -181,7 +180,7 @@ agenda.define('Ping', (job, done) => {
 
 // agenda ready, starts agenda
 agenda.on('ready', () => {
-    console.log('Agenda ready');
+    console.log('Agenda ready', agenda);
     agenda._collection.update(
         { lockedAt: { $exists: true } },
         { $set: { lockedAt: null } })
@@ -193,6 +192,7 @@ agenda.on('ready', () => {
 	    
 	    // temporary register controller with check status schedule
 	    let controllerID = '8534858';
+	    var t = require('./create');
 	    t.createJob('Check Status', '10 seconds',
 		{
 		    device: {
