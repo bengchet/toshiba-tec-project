@@ -54,6 +54,24 @@ agenda.define('Send Notification', (job, done) => {
     job.remove()
 })
 
+agenda.define('Check Status', (job, done) => {
+    console.log('Checking status of all registered controllers');
+    if (job.attrs.data.runAtFirstTime == true) {
+        job.attrs.data.runAtFirstTime = false;
+        job.repeatEvery('5 seconds');
+        job.schedule('5 seconds');
+        job.save();
+        return done();
+    }
+    let id = job.attrs.data.device.id;
+    mqttClient.publish(
+	    id + '/IN/CTRL/REFRESH',
+            JSON.stringify({ CTRL_ID: id }),
+            { qos: 1 });
+	
+    return done();
+});
+
 agenda.define('Ping', (job, done) => {
     if (job.attrs.data.runAtFirstTime == true) {
         job.attrs.data.runAtFirstTime = false;
